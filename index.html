@@ -3,7 +3,14 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+
 <title>Devon Shunn Portfolio</title>
+
+<!-- =========================================================
+     🌐 FAVICON (browser tab icon)
+     Put favicon.ico or favicon.png in repo root
+========================================================= -->
+<link rel="icon" type="image/png" href="favicon.png">
 
 <style>
 /* =========================================================
@@ -23,15 +30,15 @@ body {
 }
 
 /* =========================================================
-   🎥 CANVAS BACKGROUND (YOUR FRAME REEL)
-   - This is where all frame animation is drawn
+   🎥 VIDEO BACKGROUND (SCROLL CONTROLLED)
 ========================================================= */
-canvas {
+#bgVideo {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100vh;
+    object-fit: cover;
     z-index: -2;
 }
 
@@ -48,7 +55,6 @@ canvas {
 
 /* =========================================================
    📄 SCROLL SECTIONS
-   Each section is one "chapter" of your portfolio
 ========================================================= */
 .section {
     min-height: 100vh;
@@ -58,7 +64,6 @@ canvas {
     padding: 80px 20px;
 }
 
-/* Glass card style */
 .card {
     max-width: 900px;
     width: 100%;
@@ -70,7 +75,6 @@ canvas {
     box-shadow: 0 20px 60px rgba(0,0,0,0.6);
 }
 
-/* Typography */
 h1 { font-size: 3rem; margin-bottom: 10px; }
 h2 { font-size: 2rem; margin-bottom: 15px; }
 p  { font-size: 1.1rem; line-height: 1.6; opacity: 0.9; }
@@ -83,7 +87,6 @@ p  { font-size: 1.1rem; line-height: 1.6; opacity: 0.9; }
     margin-bottom: 10px;
 }
 
-/* Lists */
 ul {
     margin-top: 15px;
     padding-left: 20px;
@@ -92,193 +95,136 @@ ul {
 li {
     margin-bottom: 8px;
 }
-
-/* =========================================================
-   OPTIONAL: smooth fade animation (unused but ready)
-========================================================= */
-.fade {
-    opacity: 0;
-    transform: translateY(20px);
-    animation: fadeIn 1s ease forwards;
-}
-
-@keyframes fadeIn {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
 </style>
 </head>
 
 <body>
 
 <!-- =========================================================
-     🎥 CANVAS LAYER (FRAME ANIMATION BACKGROUND)
+     🎥 BACKGROUND VIDEO
 ========================================================= -->
-<canvas id="reel"></canvas>
+<video id="bgVideo" muted playsinline preload="auto">
+    <source src="background.mp4" type="video/mp4">
+</video>
+
 <div class="overlay"></div>
 
 <!-- =========================================================
-     SECTION 1 — HERO
+     SECTION 1
 ========================================================= -->
 <div class="section">
-    <div class="card fade">
+    <div class="card">
         <div class="label">INTRO</div>
         <h1>Hi, I’m Devon Shunn</h1>
         <p>
             I build systems that combine software, hardware, and design.
-            This site uses a scroll-driven cinematic frame animation.
+            This site uses scroll-controlled cinematic playback.
         </p>
     </div>
 </div>
 
-<!-- =========================================================
-     SECTION 2 — ABOUT
-========================================================= -->
+<!-- SECTION 2 -->
 <div class="section">
     <div class="card">
         <div class="label">ABOUT</div>
         <h2>What I Do</h2>
-        <p>
-            I work on engineering projects, 3D printing, embedded systems,
-            and early-stage software development.
-        </p>
+        <p>Engineering, 3D printing, embedded systems, and software projects.</p>
     </div>
 </div>
 
-<!-- =========================================================
-     SECTION 3 — SKILLS
-========================================================= -->
+<!-- SECTION 3 -->
 <div class="section">
     <div class="card">
         <div class="label">SKILLS</div>
         <h2>Strengths</h2>
-
         <ul>
             <li>Arduino / embedded systems</li>
-            <li>3D printing & CAD design</li>
-            <li>JavaScript / web development</li>
-            <li>Rapid prototyping mindset</li>
+            <li>3D printing & CAD</li>
+            <li>JavaScript / web dev</li>
+            <li>Rapid prototyping</li>
         </ul>
     </div>
 </div>
 
-<!-- =========================================================
-     SECTION 4 — PROJECTS
-========================================================= -->
+<!-- SECTION 4 -->
 <div class="section">
     <div class="card">
         <div class="label">PROJECTS</div>
         <h2>What I’ve Built</h2>
-
         <ul>
-            <li>LED strip animation systems</li>
-            <li>3D printed mechanical props</li>
+            <li>LED animation systems</li>
+            <li>3D printed props</li>
             <li>Game prototypes</li>
-            <li>Embedded hardware experiments</li>
         </ul>
     </div>
 </div>
 
-<!-- =========================================================
-     SECTION 5 — CONTACT
-========================================================= -->
+<!-- SECTION 5 -->
 <div class="section">
     <div class="card">
         <div class="label">CONTACT</div>
         <h2>Let’s Connect</h2>
-        <p>
-            Open to collaboration, projects, and engineering opportunities.
-        </p>
+        <p>Open to collaboration and engineering opportunities.</p>
     </div>
 </div>
 
 <!-- =========================================================
-     🎥 FRAME ANIMATION SCRIPT
+     🎬 SCROLL → VIDEO SCRIPT
 ========================================================= -->
 <script>
-/* ================================
-   ⚙️ CONFIG (EDIT THESE)
-================================ */
+const video = document.getElementById("bgVideo");
 
-/* Number of frames in your sequence */
-const frameCount = 200; // 👈 CHANGE THIS to match your frames
+/* =========================================================
+   ⚙️ CONFIG (THIS IS YOUR CONTROL KNOB)
+========================================================= */
 
-/* Frame file path */
-const framePath = (i) => `frames/frame-${i + 1}.png`;
+/*
+   scrollSensitivity:
+   - higher = faster video scrubbing
+   - lower = slower, more gradual motion
 
-/* ================================
-   SETUP CANVAS
-================================ */
-const canvas = document.getElementById("reel");
-const ctx = canvas.getContext("2d");
+   Try:
+   0.8 = slow cinematic
+   1.0 = normal
+   1.5 = fast scroll response
+*/
+const scrollSensitivity = 1.0;
 
-let width, height;
+/*
+   smoothing:
+   - makes motion less jittery
+   - higher = smoother but slightly laggy feel
+*/
+const smoothing = 0.08;
 
-function resize() {
-    width = canvas.width = window.innerWidth;
-    height = canvas.height = window.innerHeight;
-}
-window.addEventListener("resize", resize);
-resize();
+let targetTime = 0;
+let currentTime = 0;
 
-/* ================================
-   LOAD FRAMES
-   (preloads all images)
-================================ */
-const frames = [];
+/* =========================================================
+   WAIT FOR VIDEO TO LOAD
+========================================================= */
+video.addEventListener("loadedmetadata", () => {
 
-for (let i = 0; i < frameCount; i++) {
-    const img = new Image();
-    img.src = framePath(i);
-    frames.push(img);
-}
+    window.addEventListener("scroll", () => {
 
-/* ================================
-   SCROLL → FRAME MAPPING
-================================ */
-window.addEventListener("scroll", () => {
+        const scrollTop = window.scrollY;
+        const maxScroll = document.body.scrollHeight - window.innerHeight;
 
-    const scrollTop = window.scrollY;
-    const maxScroll = document.body.scrollHeight - window.innerHeight;
+        const scrollProgress = scrollTop / maxScroll;
 
-    /* 0 → 1 scroll progress */
-    const progress = scrollTop / maxScroll;
+        /* map scroll → video time */
+        targetTime = scrollProgress * video.duration * scrollSensitivity;
+    });
 
-    /* convert scroll → frame index */
-    const frameIndex = Math.min(
-        frameCount - 1,
-        Math.floor(progress * frameCount)
-    );
+    /* smooth animation loop */
+    function animate() {
+        currentTime += (targetTime - currentTime) * smoothing;
+        video.currentTime = currentTime;
+        requestAnimationFrame(animate);
+    }
 
-    render(frameIndex);
+    animate();
 });
-
-/* ================================
-   DRAW FRAME
-================================ */
-function render(i) {
-    const img = frames[i];
-
-    if (!img || !img.complete) return;
-
-    ctx.clearRect(0, 0, width, height);
-
-    /* scale image to fill screen */
-    const scale = Math.max(
-        width / img.width,
-        height / img.height
-    );
-
-    const x = (width - img.width * scale) / 2;
-    const y = (height - img.height * scale) / 2;
-
-    ctx.drawImage(img, x, y, img.width * scale, img.height * scale);
-}
-
-/* initial frame */
-render(0);
 </script>
 
 </body>
