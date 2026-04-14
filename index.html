@@ -6,9 +6,7 @@
 
 <title>Devon Shunn Portfolio</title>
 
-<!-- =========================================================
-     🌐 FAVICON (put favicon.png or favicon.ico in repo root)
-========================================================= -->
+<!-- FAVICON -->
 <link rel="icon" type="image/png" href="favicon.png">
 
 <style>
@@ -29,7 +27,7 @@ body {
 }
 
 /* =========================================================
-   🎥 BACKGROUND VIDEO
+   🎥 VIDEO BACKGROUND
 ========================================================= */
 #bgVideo {
     position: fixed;
@@ -41,14 +39,19 @@ body {
     z-index: -2;
 }
 
-/* dark overlay for readability */
+/* =========================================================
+   🌑 OVERLAY (FIXED: MUCH LESS DIM)
+========================================================= */
 .overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100vh;
-    background: rgba(0,0,0,0.55);
+
+    /* WAS: 0.55 → NOW MUCH BRIGHTER */
+    background: rgba(0,0,0,0.25);
+
     z-index: -1;
 }
 
@@ -64,7 +67,7 @@ body {
 }
 
 /* =========================================================
-   🧊 GLASS CARD
+   🧊 CARD
 ========================================================= */
 .card {
     max-width: 900px;
@@ -76,13 +79,11 @@ body {
     backdrop-filter: blur(12px);
     box-shadow: 0 20px 60px rgba(0,0,0,0.6);
 
-    /* ✨ RESTORED FADE-IN */
     opacity: 0;
     transform: translateY(30px);
     animation: fadeIn 1.2s ease forwards;
 }
 
-/* staggered fade delays */
 .section:nth-child(1) .card { animation-delay: 0.1s; }
 .section:nth-child(2) .card { animation-delay: 0.2s; }
 .section:nth-child(3) .card { animation-delay: 0.3s; }
@@ -96,9 +97,7 @@ body {
     }
 }
 
-/* =========================================================
-   TEXT STYLES
-========================================================= */
+/* TEXT */
 h1 { font-size: 3rem; margin-bottom: 10px; }
 h2 { font-size: 2rem; margin-bottom: 15px; }
 p  { font-size: 1.1rem; line-height: 1.6; opacity: 0.9; }
@@ -124,114 +123,94 @@ li {
 
 <body>
 
-<!-- =========================================================
-     🎥 BACKGROUND VIDEO
-========================================================= -->
+<!-- VIDEO -->
 <video id="bgVideo" muted playsinline preload="auto">
     <source src="./background.mp4" type="video/mp4">
 </video>
 
 <div class="overlay"></div>
 
-<!-- =========================================================
-     SECTION 1
-========================================================= -->
+<!-- SECTIONS -->
 <div class="section">
     <div class="card">
         <div class="label">INTRO</div>
         <h1>Hi, I’m Devon Shunn</h1>
-        <p>
-            I build systems that combine software, hardware, and design.
-            This site uses scroll-controlled cinematic playback.
-        </p>
+        <p>Cinematic scroll-based portfolio background.</p>
     </div>
 </div>
 
-<!-- SECTION 2 -->
 <div class="section">
     <div class="card">
         <div class="label">ABOUT</div>
         <h2>What I Do</h2>
-        <p>Engineering, 3D printing, embedded systems, and software projects.</p>
+        <p>Engineering, 3D printing, embedded systems, software.</p>
     </div>
 </div>
 
-<!-- SECTION 3 -->
 <div class="section">
     <div class="card">
         <div class="label">SKILLS</div>
         <h2>Strengths</h2>
         <ul>
             <li>Arduino / embedded systems</li>
-            <li>3D printing & CAD design</li>
-            <li>JavaScript / web development</li>
-            <li>Rapid prototyping mindset</li>
+            <li>3D printing & CAD</li>
+            <li>JavaScript / web dev</li>
+            <li>Rapid prototyping</li>
         </ul>
     </div>
 </div>
 
-<!-- SECTION 4 -->
 <div class="section">
     <div class="card">
         <div class="label">PROJECTS</div>
         <h2>What I’ve Built</h2>
         <ul>
             <li>LED animation systems</li>
-            <li>3D printed mechanical props</li>
+            <li>3D printed props</li>
             <li>Game prototypes</li>
-            <li>Embedded hardware experiments</li>
         </ul>
     </div>
 </div>
 
-<!-- SECTION 5 -->
 <div class="section">
     <div class="card">
         <div class="label">CONTACT</div>
         <h2>Let’s Connect</h2>
-        <p>Open to collaboration and engineering opportunities.</p>
+        <p>Open to collaboration and opportunities.</p>
     </div>
 </div>
 
 <!-- =========================================================
-     🎬 SMOOTH SCROLL → VIDEO SYSTEM
+   🎬 PERFECT SCROLL SYNC ENGINE (FIXED)
 ========================================================= -->
 <script>
 const video = document.getElementById("bgVideo");
 
-/* =========================================================
-   ⚙️ EDITABLE SETTINGS
-========================================================= */
-const scrollSensitivity = 1.0; // ↑ faster / ↓ slower
-const smoothing = 0.08;        // ↓ smoother / ↑ snappier
-
-let targetTime = 0;
-let currentTime = 0;
-
-/* =========================================================
-   INIT VIDEO
-========================================================= */
 video.addEventListener("loadedmetadata", () => {
 
-    function updateTarget() {
+    let targetTime = 0;
+    let currentTime = 0;
+
+    function update() {
+
         const scrollTop = window.scrollY;
         const maxScroll = document.body.scrollHeight - window.innerHeight;
 
-        const scrollProgress = scrollTop / maxScroll;
+        /* IMPORTANT FIX:
+           Clamp scroll properly so full video is used */
+        const scrollProgress = Math.min(1, scrollTop / maxScroll);
 
-        targetTime = scrollProgress * video.duration * scrollSensitivity;
-    }
+        targetTime = scrollProgress * video.duration;
 
-    window.addEventListener("scroll", updateTarget, { passive: true });
+        /* smooth interpolation */
+        currentTime += (targetTime - currentTime) * 0.12;
 
-    /* smooth animation loop */
-    function animate() {
-        currentTime += (targetTime - currentTime) * smoothing;
         video.currentTime = currentTime;
-        requestAnimationFrame(animate);
+
+        requestAnimationFrame(update);
     }
 
-    animate();
+    update();
 });
 </script>
 
