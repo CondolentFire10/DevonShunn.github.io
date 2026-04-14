@@ -6,13 +6,9 @@
 
 <title>Devon Shunn Portfolio</title>
 
-<!-- FAVICON -->
 <link rel="icon" type="image/png" href="favicon.png">
 
 <style>
-/* =========================================================
-   GLOBAL RESET
-========================================================= */
 * {
     margin: 0;
     padding: 0;
@@ -21,43 +17,35 @@
 }
 
 body {
-    background: #000;
+    background: black;
     color: white;
     overflow-x: hidden;
 }
 
 /* =========================================================
-   🎥 VIDEO BACKGROUND
+   🎥 CANVAS BACKGROUND (FIXES VIDEO JANK)
 ========================================================= */
-#bgVideo {
+canvas {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100vh;
-    object-fit: cover;
     z-index: -2;
 }
 
-/* =========================================================
-   🌑 OVERLAY (FIXED: MUCH LESS DIM)
-========================================================= */
+/* overlay (lighter like you wanted) */
 .overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100vh;
-
-    /* WAS: 0.55 → NOW MUCH BRIGHTER */
     background: rgba(0,0,0,0.25);
-
     z-index: -1;
 }
 
-/* =========================================================
-   📄 SECTIONS
-========================================================= */
+/* sections */
 .section {
     min-height: 100vh;
     display: flex;
@@ -66,151 +54,102 @@ body {
     padding: 80px 20px;
 }
 
-/* =========================================================
-   🧊 CARD
-========================================================= */
 .card {
     max-width: 900px;
     width: 100%;
-    background: rgba(20, 20, 20, 0.7);
-    border: 1px solid rgba(255,255,255,0.1);
+    background: rgba(20,20,20,0.7);
     border-radius: 20px;
     padding: 40px;
     backdrop-filter: blur(12px);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
 
     opacity: 0;
     transform: translateY(30px);
     animation: fadeIn 1.2s ease forwards;
 }
 
-.section:nth-child(1) .card { animation-delay: 0.1s; }
-.section:nth-child(2) .card { animation-delay: 0.2s; }
-.section:nth-child(3) .card { animation-delay: 0.3s; }
-.section:nth-child(4) .card { animation-delay: 0.4s; }
-.section:nth-child(5) .card { animation-delay: 0.5s; }
-
 @keyframes fadeIn {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* TEXT */
-h1 { font-size: 3rem; margin-bottom: 10px; }
-h2 { font-size: 2rem; margin-bottom: 15px; }
-p  { font-size: 1.1rem; line-height: 1.6; opacity: 0.9; }
-
-.label {
-    font-size: 0.85rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    opacity: 0.6;
-    margin-bottom: 10px;
-}
-
-ul {
-    margin-top: 15px;
-    padding-left: 20px;
-}
-
-li {
-    margin-bottom: 8px;
+    to { opacity: 1; transform: translateY(0); }
 }
 </style>
 </head>
 
 <body>
 
-<!-- VIDEO -->
-<video id="bgVideo" muted playsinline preload="auto">
-    <source src="./background.mp4" type="video/mp4">
-</video>
-
+<canvas id="bg"></canvas>
 <div class="overlay"></div>
 
-<!-- SECTIONS -->
-<div class="section">
-    <div class="card">
-        <div class="label">INTRO</div>
-        <h1>Hi, I’m Devon Shunn</h1>
-        <p>Cinematic scroll-based portfolio background.</p>
-    </div>
-</div>
+<!-- CONTENT -->
+<div class="section"><div class="card"><h1>Devon Shunn</h1></div></div>
+<div class="section"><div class="card"><h2>About</h2></div></div>
+<div class="section"><div class="card"><h2>Skills</h2></div></div>
+<div class="section"><div class="card"><h2>Projects</h2></div></div>
+<div class="section"><div class="card"><h2>Contact</h2></div></div>
 
-<div class="section">
-    <div class="card">
-        <div class="label">ABOUT</div>
-        <h2>What I Do</h2>
-        <p>Engineering, 3D printing, embedded systems, software.</p>
-    </div>
-</div>
-
-<div class="section">
-    <div class="card">
-        <div class="label">SKILLS</div>
-        <h2>Strengths</h2>
-        <ul>
-            <li>Arduino / embedded systems</li>
-            <li>3D printing & CAD</li>
-            <li>JavaScript / web dev</li>
-            <li>Rapid prototyping</li>
-        </ul>
-    </div>
-</div>
-
-<div class="section">
-    <div class="card">
-        <div class="label">PROJECTS</div>
-        <h2>What I’ve Built</h2>
-        <ul>
-            <li>LED animation systems</li>
-            <li>3D printed props</li>
-            <li>Game prototypes</li>
-        </ul>
-    </div>
-</div>
-
-<div class="section">
-    <div class="card">
-        <div class="label">CONTACT</div>
-        <h2>Let’s Connect</h2>
-        <p>Open to collaboration and opportunities.</p>
-    </div>
-</div>
-
-<!-- =========================================================
-   🎬 PERFECT SCROLL SYNC ENGINE (FIXED)
-========================================================= -->
 <script>
-const video = document.getElementById("bgVideo");
+const canvas = document.getElementById("bg");
+const ctx = canvas.getContext("2d");
+
+const video = document.createElement("video");
+video.src = "background.mp4";
+video.muted = true;
+video.playsInline = true;
+video.preload = "auto";
+video.loop = false;
+
+let width, height;
+
+function resize(){
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+}
+window.addEventListener("resize", resize);
+resize();
+
+/* smooth scroll driver */
+let target = 0;
+let current = 0;
 
 video.addEventListener("loadedmetadata", () => {
 
-    let targetTime = 0;
-    let currentTime = 0;
-
-    function update() {
+    function loop(){
 
         const scrollTop = window.scrollY;
         const maxScroll = document.body.scrollHeight - window.innerHeight;
 
-        /* IMPORTANT FIX:
-           Clamp scroll properly so full video is used */
-        const scrollProgress = Math.min(1, scrollTop / maxScroll);
+        const progress = Math.min(1, scrollTop / maxScroll);
 
-        targetTime = scrollProgress * video.duration;
+        target = progress * video.duration;
 
         /* smooth interpolation */
-        currentTime += (targetTime - currentTime) * 0.12;
+        current += (target - current) * 0.12;
 
-        video.currentTime = currentTime;
+        video.currentTime = current;
 
-        requestAnimationFrame(update);
+        draw();
+
+        requestAnimationFrame(loop);
     }
 
-    update();
+    function draw(){
+        if (!video.videoWidth) return;
+
+        ctx.clearRect(0,0,width,height);
+
+        const scale = Math.max(
+            width / video.videoWidth,
+            height / video.videoHeight
+        );
+
+        const x = (width - video.videoWidth * scale)/2;
+        const y = (height - video.videoHeight * scale)/2;
+
+        ctx.drawImage(video, x, y,
+            video.videoWidth * scale,
+            video.videoHeight * scale
+        );
+    }
+
+    loop();
 });
 </script>
 
