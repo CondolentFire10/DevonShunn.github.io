@@ -7,8 +7,7 @@
 <title>Devon Shunn Portfolio</title>
 
 <!-- =========================================================
-     🌐 FAVICON (browser tab icon)
-     Put favicon.ico or favicon.png in repo root
+     🌐 FAVICON (put favicon.png or favicon.ico in repo root)
 ========================================================= -->
 <link rel="icon" type="image/png" href="favicon.png">
 
@@ -30,7 +29,7 @@ body {
 }
 
 /* =========================================================
-   🎥 VIDEO BACKGROUND (SCROLL CONTROLLED)
+   🎥 BACKGROUND VIDEO
 ========================================================= */
 #bgVideo {
     position: fixed;
@@ -54,7 +53,7 @@ body {
 }
 
 /* =========================================================
-   📄 SCROLL SECTIONS
+   📄 SECTIONS
 ========================================================= */
 .section {
     min-height: 100vh;
@@ -64,6 +63,9 @@ body {
     padding: 80px 20px;
 }
 
+/* =========================================================
+   🧊 GLASS CARD
+========================================================= */
 .card {
     max-width: 900px;
     width: 100%;
@@ -73,8 +75,30 @@ body {
     padding: 40px;
     backdrop-filter: blur(12px);
     box-shadow: 0 20px 60px rgba(0,0,0,0.6);
+
+    /* ✨ RESTORED FADE-IN */
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeIn 1.2s ease forwards;
 }
 
+/* staggered fade delays */
+.section:nth-child(1) .card { animation-delay: 0.1s; }
+.section:nth-child(2) .card { animation-delay: 0.2s; }
+.section:nth-child(3) .card { animation-delay: 0.3s; }
+.section:nth-child(4) .card { animation-delay: 0.4s; }
+.section:nth-child(5) .card { animation-delay: 0.5s; }
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* =========================================================
+   TEXT STYLES
+========================================================= */
 h1 { font-size: 3rem; margin-bottom: 10px; }
 h2 { font-size: 2rem; margin-bottom: 15px; }
 p  { font-size: 1.1rem; line-height: 1.6; opacity: 0.9; }
@@ -104,7 +128,7 @@ li {
      🎥 BACKGROUND VIDEO
 ========================================================= -->
 <video id="bgVideo" muted playsinline preload="auto">
-    <source src="background.mp4" type="video/mp4">
+    <source src="./background.mp4" type="video/mp4">
 </video>
 
 <div class="overlay"></div>
@@ -139,9 +163,9 @@ li {
         <h2>Strengths</h2>
         <ul>
             <li>Arduino / embedded systems</li>
-            <li>3D printing & CAD</li>
-            <li>JavaScript / web dev</li>
-            <li>Rapid prototyping</li>
+            <li>3D printing & CAD design</li>
+            <li>JavaScript / web development</li>
+            <li>Rapid prototyping mindset</li>
         </ul>
     </div>
 </div>
@@ -153,8 +177,9 @@ li {
         <h2>What I’ve Built</h2>
         <ul>
             <li>LED animation systems</li>
-            <li>3D printed props</li>
+            <li>3D printed mechanical props</li>
             <li>Game prototypes</li>
+            <li>Embedded hardware experiments</li>
         </ul>
     </div>
 </div>
@@ -169,52 +194,35 @@ li {
 </div>
 
 <!-- =========================================================
-     🎬 SCROLL → VIDEO SCRIPT
+     🎬 SMOOTH SCROLL → VIDEO SYSTEM
 ========================================================= -->
 <script>
 const video = document.getElementById("bgVideo");
 
 /* =========================================================
-   ⚙️ CONFIG (THIS IS YOUR CONTROL KNOB)
+   ⚙️ EDITABLE SETTINGS
 ========================================================= */
-
-/*
-   scrollSensitivity:
-   - higher = faster video scrubbing
-   - lower = slower, more gradual motion
-
-   Try:
-   0.8 = slow cinematic
-   1.0 = normal
-   1.5 = fast scroll response
-*/
-const scrollSensitivity = 1.0;
-
-/*
-   smoothing:
-   - makes motion less jittery
-   - higher = smoother but slightly laggy feel
-*/
-const smoothing = 0.08;
+const scrollSensitivity = 1.0; // ↑ faster / ↓ slower
+const smoothing = 0.08;        // ↓ smoother / ↑ snappier
 
 let targetTime = 0;
 let currentTime = 0;
 
 /* =========================================================
-   WAIT FOR VIDEO TO LOAD
+   INIT VIDEO
 ========================================================= */
 video.addEventListener("loadedmetadata", () => {
 
-    window.addEventListener("scroll", () => {
-
+    function updateTarget() {
         const scrollTop = window.scrollY;
         const maxScroll = document.body.scrollHeight - window.innerHeight;
 
         const scrollProgress = scrollTop / maxScroll;
 
-        /* map scroll → video time */
         targetTime = scrollProgress * video.duration * scrollSensitivity;
-    });
+    }
+
+    window.addEventListener("scroll", updateTarget, { passive: true });
 
     /* smooth animation loop */
     function animate() {
