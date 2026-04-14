@@ -6,15 +6,9 @@
 
 <title>Devon Shunn Portfolio</title>
 
-<!-- =========================================================
-   🌐 FAVICON
-========================================================= -->
 <link rel="icon" type="image/png" href="favicon.png">
 
 <style>
-/* =========================================================
-   RESET
-========================================================= */
 * {
     margin: 0;
     padding: 0;
@@ -29,7 +23,7 @@ body {
 }
 
 /* =========================================================
-   🎥 BACKGROUND VIDEO
+   🎥 VIDEO BACKGROUND (NO JS CONTROL)
 ========================================================= */
 #bgVideo {
     position: fixed;
@@ -39,16 +33,22 @@ body {
     height: 100vh;
     object-fit: cover;
     z-index: -2;
+
+    /* helps performance */
+    transform: translateZ(0);
 }
 
-/* lighter overlay (you asked for this earlier) */
+/* lighter overlay (you asked earlier) */
 .overlay {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100vh;
-    background: rgba(0,0,0,0.25);
+
+    /* MUCH lighter than before */
+    background: rgba(0,0,0,0.2);
+
     z-index: -1;
 }
 
@@ -63,11 +63,10 @@ body {
     padding: 80px 20px;
 }
 
-/* glass card */
 .card {
     max-width: 900px;
     width: 100%;
-    background: rgba(20, 20, 20, 0.7);
+    background: rgba(20,20,20,0.7);
     border: 1px solid rgba(255,255,255,0.1);
     border-radius: 20px;
     padding: 40px;
@@ -92,7 +91,7 @@ body {
     }
 }
 
-/* typography */
+/* text */
 h1 { font-size: 3rem; margin-bottom: 10px; }
 h2 { font-size: 2rem; margin-bottom: 15px; }
 
@@ -116,92 +115,27 @@ li {
 <body>
 
 <!-- =========================================================
-   🎥 BACKGROUND VIDEO (PING-PONG LOOP)
+   🎥 VIDEO (SIMPLE LOOP — NO CONTROL)
 ========================================================= -->
-<video id="bgVideo" muted playsinline autoplay></video>
+<video
+    id="bgVideo"
+    autoplay
+    muted
+    loop
+    playsinline
+    preload="auto"
+>
+    <source src="./background.mp4" type="video/mp4">
+</video>
+
 <div class="overlay"></div>
 
-<!-- =========================================================
-   CONTENT
-========================================================= -->
-<div class="section">
-    <div class="card">
-        <h1>Hi, I’m Devon Shunn</h1>
-        <p>Cinematic portfolio with looping background animation.</p>
-    </div>
-</div>
-
-<div class="section">
-    <div class="card">
-        <h2>About</h2>
-        <p>Engineering, 3D printing, embedded systems, software.</p>
-    </div>
-</div>
-
-<div class="section">
-    <div class="card">
-        <h2>Skills</h2>
-        <ul>
-            <li>Arduino / embedded systems</li>
-            <li>3D printing & CAD</li>
-            <li>JavaScript / web dev</li>
-            <li>Rapid prototyping</li>
-        </ul>
-    </div>
-</div>
-
-<div class="section">
-    <div class="card">
-        <h2>Projects</h2>
-        <ul>
-            <li>LED animation systems</li>
-            <li>3D printed props</li>
-            <li>Game prototypes</li>
-        </ul>
-    </div>
-</div>
-
-<div class="section">
-    <div class="card">
-        <h2>Contact</h2>
-        <p>Open to collaboration and opportunities.</p>
-    </div>
-</div>
-
-<!-- =========================================================
-   🎬 PING-PONG VIDEO LOGIC
-========================================================= -->
-<script>
-const video = document.getElementById("bgVideo");
-
-video.src = "./background.mp4";
-
-let direction = 1; // 1 = forward, -1 = reverse
-
-video.addEventListener("loadedmetadata", () => {
-
-    video.play();
-
-    function loop() {
-
-        // advance time manually
-        video.currentTime += 0.04 * direction;
-
-        // reverse at ends
-        if (video.currentTime >= video.duration) {
-            direction = -1;
-        }
-
-        if (video.currentTime <= 0) {
-            direction = 1;
-        }
-
-        requestAnimationFrame(loop);
-    }
-
-    loop();
-});
-</script>
+<!-- CONTENT -->
+<div class="section"><div class="card"><h1>Hi, I’m Devon Shunn</h1></div></div>
+<div class="section"><div class="card"><h2>About</h2></div></div>
+<div class="section"><div class="card"><h2>Skills</h2></div></div>
+<div class="section"><div class="card"><h2>Projects</h2></div></div>
+<div class="section"><div class="card"><h2>Contact</h2></div></div>
 
 </body>
 </html>
