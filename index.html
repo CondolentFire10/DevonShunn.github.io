@@ -10,7 +10,7 @@
 
 <style>
 /* =========================================================
-   BASE RESET
+   BASE
 ========================================================= */
 * {
     margin: 0;
@@ -20,7 +20,8 @@
 }
 
 body {
-    background: linear-gradient(135deg, #0b0f14, #111827);
+    /* 🌌 DARK NAVY BACKGROUND */
+    background: #070b18;
     color: white;
     overflow-x: hidden;
 }
@@ -36,17 +37,24 @@ body {
     padding: 60px 20px;
 }
 
-/* MAIN CARD */
+/* =========================================================
+   🧊 GLASS CARD (REFINED)
+========================================================= */
 .card {
     max-width: 1200px;
     width: 100%;
-    background: rgba(255,255,255,0.04);
+
+    background: rgba(255,255,255,0.05);
     border: 1px solid rgba(255,255,255,0.08);
+
     border-radius: 18px;
     padding: 50px;
+
+    backdrop-filter: blur(14px);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
 }
 
-/* TYPOGRAPHY */
+/* TEXT */
 h1 { font-size: 3rem; margin-bottom: 15px; }
 h2 { font-size: 2rem; margin-bottom: 15px; }
 
@@ -56,6 +64,12 @@ p {
     opacity: 0.9;
 }
 
+/* GOLD ACCENT TEXT (use sparingly) */
+.gold {
+    color: #d4af37;
+}
+
+/* LABEL */
 .label {
     font-size: 0.85rem;
     letter-spacing: 2px;
@@ -64,7 +78,9 @@ p {
     margin-bottom: 10px;
 }
 
-/* LAYOUT ROW */
+/* =========================================================
+   LAYOUT ROW
+========================================================= */
 .row {
     display: flex;
     gap: 40px;
@@ -72,13 +88,14 @@ p {
     align-items: center;
 }
 
-/* PROFILE IMAGE */
 .profile {
     width: 240px;
     border-radius: 14px;
 }
 
-/* BUTTONS */
+/* =========================================================
+   🔘 BUTTON SYSTEM (UPDATED HOVER EFFECT)
+========================================================= */
 .button-row {
     margin-top: 25px;
     display: flex;
@@ -88,52 +105,57 @@ p {
 
 .button-img {
     height: 70px;
-    transition: 0.2s ease;
+    transition: all 0.25s ease;
+    border-radius: 10px;
 }
 
+/* 🔵 HOVER GLOW + SCALE */
 .button-img:hover {
-    transform: scale(1.05);
+    transform: scale(1.08);
+
+    /* blue glow */
+    filter: drop-shadow(0 0 10px rgba(80,180,255,0.8))
+            drop-shadow(0 0 20px rgba(80,180,255,0.4));
 }
 
-/* DREAM IMAGE */
+/* IMAGE BLOCK */
 .full-image {
     width: 100%;
     margin-top: 30px;
     border-radius: 14px;
+    border: 1px solid rgba(255,255,255,0.08);
 }
 </style>
 </head>
 
 <body>
 
-<!-- =========================================================
-   HERO
-========================================================= -->
+<!-- HERO -->
 <div class="section">
 <div class="card">
 
 <div class="row">
 
-<!-- PHOTO -->
 <img src="me.jpg" class="profile">
 
-<!-- TEXT -->
 <div>
+
 <div class="label">INTRO</div>
-<h1>Hi, I’m Devon Shunn</h1>
+
+<h1>
+Hi, I’m <span class="gold">Devon Shunn</span>
+</h1>
 
 <p>
 I’m a student engineer focused on building real systems that combine
-software, hardware, and design. I enjoy turning ideas into working
-prototypes — especially things that move, light up, or interact with the real world.
+software, hardware, and design.
 </p>
 
 <p style="margin-top:12px;">
-Over time, my interests have evolved from simple curiosity projects into
-structured engineering work involving embedded systems, 3D printing, and software development.
+I enjoy turning ideas into working prototypes — especially physical systems,
+interactive designs, and engineering projects that bridge software and hardware.
 </p>
 
-<!-- NAV BUTTONS -->
 <div class="button-row">
 <a href="projects.html">
     <img src="button-projects.png" class="button-img">
@@ -147,51 +169,42 @@ structured engineering work involving embedded systems, 3D printing, and softwar
 </div>
 </div>
 
-<!-- DREAM JOB IMAGE -->
 <img src="dream-jobs.png" class="full-image">
 
 </div>
 </div>
 
-<!-- =========================================================
-   ABOUT
-========================================================= -->
+<!-- ABOUT -->
 <div class="section">
 <div class="card">
 
 <div class="label">ABOUT</div>
+
 <h2>What I Do</h2>
 
 <p>
-I work across engineering disciplines, focusing on hands-on creation.
-My projects include Arduino-based systems, 3D printed mechanical designs,
-software prototypes, and experimental builds that explore how hardware and
-software interact.
-</p>
-
-<p style="margin-top:12px;">
-I’m especially interested in rapid prototyping — building something quickly,
-testing it, and improving it through iteration rather than theory alone.
+I focus on hands-on engineering: embedded systems, 3D printing, CAD design,
+and software development. I enjoy working across disciplines to build
+systems that actually function in the real world.
 </p>
 
 </div>
 </div>
 
-<!-- =========================================================
-   SKILLS PREVIEW (optional homepage summary)
-========================================================= -->
+<!-- SKILLS -->
 <div class="section">
 <div class="card">
 
 <div class="label">SKILLS</div>
+
 <h2>Core Strengths</h2>
 
 <p>
 • Embedded systems (Arduino, microcontrollers)<br>
-• 3D printing & CAD design<br>
+• 3D printing & CAD<br>
 • JavaScript & web development<br>
-• Physical + digital system integration<br>
-• Rapid prototyping mindset
+• Rapid prototyping<br>
+• Systems thinking & problem solving
 </p>
 
 </div>
