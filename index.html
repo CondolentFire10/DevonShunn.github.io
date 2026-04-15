@@ -9,6 +9,9 @@
 <link rel="icon" type="image/png" href="favicon.png">
 
 <style>
+/* =========================================================
+   BASE RESET
+========================================================= */
 * {
     margin: 0;
     padding: 0;
@@ -17,208 +20,181 @@
 }
 
 body {
-    background: black;
+    background: linear-gradient(135deg, #0b0f14, #111827);
     color: white;
     overflow-x: hidden;
 }
 
-/* VIDEO */
-#bgVideo {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    object-fit: cover;
-    z-index: -2;
-}
-
-.overlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background: rgba(0,0,0,0.2);
-    z-index: -1;
-}
-
-/* SECTIONS */
+/* =========================================================
+   LAYOUT
+========================================================= */
 .section {
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 80px 20px;
+    padding: 60px 20px;
 }
 
-/* CARD (40% WIDER) */
+/* MAIN CARD */
 .card {
-    max-width: 1300px; /* increased from ~900 */
+    max-width: 1200px;
     width: 100%;
-    background: rgba(20,20,20,0.7);
-    border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 20px;
+    background: rgba(255,255,255,0.04);
+    border: 1px solid rgba(255,255,255,0.08);
+    border-radius: 18px;
     padding: 50px;
-    backdrop-filter: blur(12px);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.6);
-
-    opacity: 0;
-    transform: translateY(30px);
-    animation: fadeIn 1.2s ease forwards;
 }
 
-.section:nth-child(1) .card { animation-delay: 0.1s; }
-.section:nth-child(2) .card { animation-delay: 0.2s; }
-.section:nth-child(3) .card { animation-delay: 0.3s; }
-.section:nth-child(4) .card { animation-delay: 0.4s; }
-.section:nth-child(5) .card { animation-delay: 0.5s; }
-
-@keyframes fadeIn {
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
-}
-
-/* TEXT */
-h1 { font-size: 3.2rem; margin-bottom: 15px; }
-h2 { font-size: 2.2rem; margin-bottom: 20px; }
+/* TYPOGRAPHY */
+h1 { font-size: 3rem; margin-bottom: 15px; }
+h2 { font-size: 2rem; margin-bottom: 15px; }
 
 p {
-    font-size: 1.2rem;
+    font-size: 1.15rem;
     line-height: 1.7;
     opacity: 0.9;
 }
 
 .label {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     letter-spacing: 2px;
     text-transform: uppercase;
-    opacity: 0.6;
-    margin-bottom: 15px;
-}
-
-/* LIST */
-ul {
-    margin-top: 20px;
-    padding-left: 25px;
-}
-
-li {
+    opacity: 0.5;
     margin-bottom: 10px;
-    font-size: 1.1rem;
 }
 
-/* BUTTON IMAGES */
-.button-row {
-    margin-top: 30px;
+/* LAYOUT ROW */
+.row {
     display: flex;
-    gap: 20px;
+    gap: 40px;
+    flex-wrap: wrap;
+    align-items: center;
+}
+
+/* PROFILE IMAGE */
+.profile {
+    width: 240px;
+    border-radius: 14px;
+}
+
+/* BUTTONS */
+.button-row {
+    margin-top: 25px;
+    display: flex;
+    gap: 15px;
     flex-wrap: wrap;
 }
 
 .button-img {
-    height: 80px;
-    cursor: pointer;
-    transition: transform 0.2s ease;
+    height: 70px;
+    transition: 0.2s ease;
 }
 
 .button-img:hover {
     transform: scale(1.05);
+}
+
+/* DREAM IMAGE */
+.full-image {
+    width: 100%;
+    margin-top: 30px;
+    border-radius: 14px;
 }
 </style>
 </head>
 
 <body>
 
-<!-- VIDEO -->
-<video id="bgVideo" autoplay muted loop playsinline preload="auto">
-    <source src="./background.mp4" type="video/mp4">
-</video>
-
-<div class="overlay"></div>
-
-<!-- HERO -->
+<!-- =========================================================
+   HERO
+========================================================= -->
 <div class="section">
-    <div class="card">
-        <div class="label">INTRO</div>
-        <h1>Hi, I’m Devon Shunn</h1>
-        <p>
-            I’m a student and engineer focused on building systems that combine
-            software, hardware, and design. I enjoy taking ideas from concept to
-            working prototypes, whether that’s embedded systems, 3D printed designs,
-            or interactive software projects.
-        </p>
+<div class="card">
 
-        <div class="button-row">
-            <a href="#projects"><img src="button-projects.png" class="button-img"></a>
-            <a href="#skills"><img src="button-skills.png" class="button-img"></a>
-            <a href="#contact"><img src="button-contact.png" class="button-img"></a>
-        </div>
-    </div>
+<div class="row">
+
+<!-- PHOTO -->
+<img src="me.jpg" class="profile">
+
+<!-- TEXT -->
+<div>
+<div class="label">INTRO</div>
+<h1>Hi, I’m Devon Shunn</h1>
+
+<p>
+I’m a student engineer focused on building real systems that combine
+software, hardware, and design. I enjoy turning ideas into working
+prototypes — especially things that move, light up, or interact with the real world.
+</p>
+
+<p style="margin-top:12px;">
+Over time, my interests have evolved from simple curiosity projects into
+structured engineering work involving embedded systems, 3D printing, and software development.
+</p>
+
+<!-- NAV BUTTONS -->
+<div class="button-row">
+<a href="projects.html">
+    <img src="button-projects.png" class="button-img">
+</a>
+
+<a href="contact.html">
+    <img src="button-contact.png" class="button-img">
+</a>
 </div>
 
-<!-- ABOUT -->
+</div>
+</div>
+
+<!-- DREAM JOB IMAGE -->
+<img src="dream-jobs.png" class="full-image">
+
+</div>
+</div>
+
+<!-- =========================================================
+   ABOUT
+========================================================= -->
 <div class="section">
-    <div class="card">
-        <div class="label">ABOUT</div>
-        <h2>What I Do</h2>
-        <p>
-            I focus on hands-on engineering and technical problem solving.
-            My work ranges from Arduino-based hardware systems to software
-            development and early machine learning exploration. I enjoy designing,
-            building, and iterating quickly to create functional and impactful projects.
-        </p>
-    </div>
+<div class="card">
+
+<div class="label">ABOUT</div>
+<h2>What I Do</h2>
+
+<p>
+I work across engineering disciplines, focusing on hands-on creation.
+My projects include Arduino-based systems, 3D printed mechanical designs,
+software prototypes, and experimental builds that explore how hardware and
+software interact.
+</p>
+
+<p style="margin-top:12px;">
+I’m especially interested in rapid prototyping — building something quickly,
+testing it, and improving it through iteration rather than theory alone.
+</p>
+
+</div>
 </div>
 
-<!-- SKILLS -->
-<div class="section" id="skills">
-    <div class="card">
-        <div class="label">SKILLS</div>
-        <h2>Strengths</h2>
+<!-- =========================================================
+   SKILLS PREVIEW (optional homepage summary)
+========================================================= -->
+<div class="section">
+<div class="card">
 
-        <ul>
-            <li>Embedded systems development (Arduino, microcontrollers)</li>
-            <li>3D printing, CAD design, and physical prototyping</li>
-            <li>JavaScript, web development, and interactive design</li>
-            <li>Systems thinking and rapid iteration</li>
-            <li>Experience managing projects and coordinating logistics</li>
-        </ul>
-    </div>
+<div class="label">SKILLS</div>
+<h2>Core Strengths</h2>
+
+<p>
+• Embedded systems (Arduino, microcontrollers)<br>
+• 3D printing & CAD design<br>
+• JavaScript & web development<br>
+• Physical + digital system integration<br>
+• Rapid prototyping mindset
+</p>
+
 </div>
-
-<!-- PROJECTS -->
-<div class="section" id="projects">
-    <div class="card">
-        <div class="label">PROJECTS</div>
-        <h2>Things I’ve Built</h2>
-
-        <ul>
-            <li>Custom LED animation systems using programmable microcontrollers</li>
-            <li>3D printed mechanical designs and prop builds</li>
-            <li>Game development experiments and interactive systems</li>
-            <li>Early-stage software and app prototypes</li>
-        </ul>
-    </div>
-</div>
-
-<!-- CONTACT -->
-<div class="section" id="contact">
-    <div class="card">
-        <div class="label">CONTACT</div>
-        <h2>Let’s Connect</h2>
-        <p>
-            I’m always interested in new opportunities, collaborations, and
-            technical projects. Feel free to reach out.
-        </p>
-
-        <div class="button-row">
-            <a href="#"><img src="button-linkedin.png" class="button-img"></a>
-            <a href="#"><img src="button-email.png" class="button-img"></a>
-        </div>
-    </div>
 </div>
 
 </body>
