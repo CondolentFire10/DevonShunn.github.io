@@ -445,7 +445,11 @@ nav ul{ display:flex; gap:26px; list-style:none; align-items:center; }
 
 <script src="https://cdn.emailjs.com/dist/email.min.js"></script>
 <script>
-  emailjs.init("6ZSi1QRuS5xm8rCve");
+  (function(){
+  emailjs.init({
+    publicKey: "6ZSi1QRuS5xm8rCve",
+  });
+})();
 </script>
 
 <script>
