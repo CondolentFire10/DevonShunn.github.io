@@ -421,6 +421,7 @@ main{
   justify-content:center;
   overflow:hidden;
   background:#000;
+  z-index:999;
 }
 
 .video-inner{
@@ -1070,14 +1071,14 @@ function onScroll(){
   }
 
   /* scale: starts at 0.8, zooms to 1.35 (overflowing to full-bleed) */
-  const scale = lerp(0.82, 1.38, progress);
+  const scale = lerp(0.85, 2.2, progress);
 
   /* border-radius: melts away as it fills the screen */
   const radius = lerp(20, 0, progress);
 
   inner.style.transform      = `scale(${scale})`;
   inner.style.borderRadius   = `${radius}px`;
-  inner.style.width          = '80%';  /* kept constant; scale does the work */
+  inner.style.width = `${lerp(80, 100, progress)}%`;  /* kept constant; scale does the work */
 }
 
 window.addEventListener('scroll', onScroll, { passive: true });
