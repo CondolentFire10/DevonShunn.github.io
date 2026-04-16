@@ -420,13 +420,17 @@ main{
   display:flex;
   align-items:center;
   justify-content:center;
-  overflow:hidden;
+  overflow:visible;
   background:#000;
   z-index:999;
 }
 
+ .video-sticky{
+  overflow:visible;
+}
+
 .video-inner{
-  width:80%;
+  width:100%;
   max-width:1200px;
   border-radius:20px;
   overflow:hidden;
@@ -477,6 +481,28 @@ footer{ text-align:center; padding:60px 20px; color:rgba(255,255,255,0.5); borde
 /* =====================
    RESPONSIVE
 ===================== */
+
+.video-inner.active{
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw !important;
+  height: 100vh !important;
+  z-index: 9999;
+  border-radius: 0 !important;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  background:black;
+}
+
+.video-inner.active video{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+}  
+  
+  
 @media(max-width:900px){
   .intro-block{ grid-template-columns:1fr; gap:40px; }
   .process-steps{ grid-template-columns:1fr; }
@@ -486,6 +512,9 @@ footer{ text-align:center; padding:60px 20px; color:rgba(255,255,255,0.5); borde
   .hero-title{ font-size:42px; }
   .video-inner{ width:95%; }
 }
+
+
+  
 @media(max-width:600px){
   .render-grid{ grid-template-columns:1fr; }
   .photo-grid-main{ grid-template-columns:1fr; }
