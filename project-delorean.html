@@ -1,0 +1,1088 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>DeLorean Render Animation – Devon Shunn</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#070A12;
+  --glass:rgba(255,255,255,0.06);
+  --glass2:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.12);
+  --text:#fff;
+  --muted:rgba(255,255,255,0.7);
+  --blue:#38bdf8;
+  --blue2:#2563eb;
+  --purple:#a855f7;
+  --cyan:#06b6d4;
+  --pink:#ec4899;
+  --neon:#00ffe1;
+}
+
+*{ margin:0; padding:0; box-sizing:border-box; font-family:Poppins,sans-serif; }
+
+body{
+  background: var(--bg);
+  color:var(--text);
+  overflow-x:hidden;
+}
+
+/* SCANLINE OVERLAY */
+body::before{
+  content:'';
+  position:fixed;
+  inset:0;
+  background: repeating-linear-gradient(
+    0deg,
+    transparent,
+    transparent 2px,
+    rgba(0,0,0,0.03) 2px,
+    rgba(0,0,0,0.03) 4px
+  );
+  pointer-events:none;
+  z-index:999;
+}
+
+/* NAV */
+header{
+  position:fixed;
+  top:0;
+  width:100%;
+  backdrop-filter:blur(14px);
+  background:rgba(7,10,18,0.85);
+  border-bottom:1px solid var(--border);
+  z-index:200;
+}
+nav{
+  max-width:1100px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 24px;
+}
+nav ul{ display:flex; gap:26px; list-style:none; align-items:center; }
+.nav-link{ color:var(--muted); text-decoration:none; transition:0.2s ease; }
+.nav-link:hover{ color:var(--blue); }
+.logo img{ height:42px; cursor:pointer; transition:0.25s ease; }
+.logo img:hover{ transform:scale(1.05); filter:drop-shadow(0 0 12px rgba(56,189,248,0.6)); }
+.nav-item{ position:relative; }
+.dropdown{
+  position:absolute; top:100%; left:0; padding-top:12px;
+  min-width:200px; background:transparent; display:flex;
+  flex-direction:column; opacity:0; transform:translateY(6px);
+  pointer-events:none; transition:0.25s ease;
+}
+.dropdown-inner{
+  background:rgba(7,10,18,0.85); border:1px solid var(--border);
+  border-radius:12px; display:flex; flex-direction:column;
+  overflow:hidden; backdrop-filter:blur(14px);
+}
+.dropdown a{ padding:10px 14px; text-decoration:none; color:var(--muted); font-size:14px; transition:0.2s ease; }
+.dropdown a:hover{ background:rgba(56,189,248,0.12); color:var(--blue); }
+.nav-item:hover .dropdown{ opacity:1; transform:translateY(0); pointer-events:auto; }
+
+/* =====================
+   HERO
+===================== */
+.hero{
+  position:relative;
+  min-height:100vh;
+  display:flex;
+  align-items:flex-end;
+  overflow:hidden;
+}
+
+.hero-bg{
+  position:absolute;
+  inset:0;
+  background: linear-gradient(180deg, #0a0015 0%, #050010 40%, #000510 70%, #070A12 100%);
+}
+
+.hero-grid{
+  position:absolute;
+  inset:0;
+  background-image:
+    linear-gradient(rgba(0,255,225,0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,225,0.07) 1px, transparent 1px);
+  background-size: 60px 60px;
+  transform: perspective(600px) rotateX(55deg) translateY(30%);
+  transform-origin: bottom center;
+  animation: gridScroll 8s linear infinite;
+}
+@keyframes gridScroll{
+  from{ background-position: 0 0; }
+  to{ background-position: 0 60px; }
+}
+
+.hero-glow{
+  position:absolute;
+  bottom:20%;
+  left:50%;
+  transform:translateX(-50%);
+  width:900px;
+  height:300px;
+  background: radial-gradient(ellipse, rgba(168,85,247,0.18) 0%, rgba(6,182,212,0.1) 40%, transparent 70%);
+  filter:blur(40px);
+  pointer-events:none;
+}
+
+/* THE DELOREAN HERO IMAGE */
+.hero-img-wrap{
+  position:absolute;
+  inset:0;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+}
+.hero-img-wrap img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  opacity:0.6;
+  mix-blend-mode:lighten;
+}
+
+.hero-content{
+  position:relative;
+  z-index:2;
+  max-width:1100px;
+  margin:0 auto;
+  padding:0 24px 80px;
+  width:100%;
+}
+
+.breadcrumb{
+  display:flex;
+  align-items:center;
+  gap:8px;
+  margin-bottom:24px;
+  font-family:'Share Tech Mono', monospace;
+  font-size:12px;
+  color:rgba(255,255,255,0.4);
+  letter-spacing:1px;
+}
+.breadcrumb a{ color:var(--neon); text-decoration:none; }
+.breadcrumb a:hover{ text-decoration:underline; }
+
+.hero-tag{
+  font-family:'Share Tech Mono', monospace;
+  font-size:12px;
+  letter-spacing:3px;
+  color:var(--neon);
+  margin-bottom:16px;
+  opacity:0.9;
+}
+
+.hero-title{
+  font-size:clamp(40px, 7vw, 80px);
+  line-height:1.0;
+  font-weight:700;
+  letter-spacing:-1px;
+  margin-bottom:20px;
+}
+.hero-title .line2{
+  color:transparent;
+  -webkit-text-stroke:1px rgba(0,255,225,0.6);
+}
+
+.hero-sub{
+  color:var(--muted);
+  max-width:560px;
+  line-height:1.8;
+  font-size:16px;
+  margin-bottom:36px;
+}
+
+.hero-meta{
+  display:flex;
+  gap:32px;
+  flex-wrap:wrap;
+}
+.meta-item{ display:flex; flex-direction:column; gap:4px; }
+.meta-label{
+  font-family:'Share Tech Mono', monospace;
+  font-size:10px;
+  letter-spacing:2px;
+  color:rgba(255,255,255,0.35);
+  text-transform:uppercase;
+}
+.meta-value{ font-size:14px; color:var(--neon); font-weight:600; }
+
+.scroll-hint{
+  position:absolute;
+  bottom:30px;
+  right:40px;
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:8px;
+  opacity:0.4;
+  animation: bounce 2s ease-in-out infinite;
+}
+@keyframes bounce{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+.scroll-hint span{ font-family:'Share Tech Mono', monospace; font-size:10px; letter-spacing:2px; color:var(--neon); }
+.scroll-arrow{ width:1px; height:40px; background:linear-gradient(to bottom, var(--neon), transparent); }
+
+/* =====================
+   MAIN CONTENT
+===================== */
+main{
+  max-width:1100px;
+  margin:0 auto;
+  padding:0 24px 120px;
+}
+
+.section-label{
+  font-family:'Share Tech Mono', monospace;
+  font-size:11px;
+  letter-spacing:3px;
+  color:var(--neon);
+  opacity:0.7;
+  margin-bottom:12px;
+  display:block;
+}
+
+.fade{
+  opacity:0;
+  transform:translateY(30px);
+  transition:0.9s ease;
+}
+.fade.show{ opacity:1; transform:translateY(0); }
+
+.back-link{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  color:var(--muted);
+  text-decoration:none;
+  font-size:14px;
+  transition:0.2s ease;
+  margin-bottom:60px;
+  padding-top:40px;
+  font-family:'Share Tech Mono', monospace;
+  letter-spacing:1px;
+}
+.back-link:hover{ color:var(--neon); }
+
+/* =====================
+   INTRO BLOCK
+===================== */
+.intro-block{
+  padding:80px 0 60px;
+  display:grid;
+  grid-template-columns:1.2fr 1fr;
+  gap:80px;
+  align-items:start;
+  border-bottom:1px solid var(--border);
+}
+.intro-block h2{ font-size:38px; line-height:1.2; margin-bottom:20px; }
+.intro-block p{ color:var(--muted); line-height:1.9; font-size:15px; margin-bottom:16px; }
+
+.stat-stack{ display:flex; flex-direction:column; gap:20px; }
+.stat-card{
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px 24px;
+  backdrop-filter:blur(8px);
+  position:relative;
+  overflow:hidden;
+}
+.stat-card::before{
+  content:'';
+  position:absolute;
+  top:0; left:0;
+  width:3px; height:100%;
+  background:linear-gradient(to bottom, var(--neon), var(--purple));
+  border-radius:3px 0 0 3px;
+}
+.stat-card .num{ font-size:32px; font-weight:700; color:var(--neon); line-height:1; font-family:'Share Tech Mono', monospace; }
+.stat-card .desc{ font-size:13px; color:var(--muted); margin-top:4px; }
+
+/* =====================
+   LEARNING PATH
+===================== */
+.learning-section{ padding:80px 0; border-bottom:1px solid var(--border); }
+.learning-section h2{ font-size:34px; margin-bottom:14px; }
+.learning-section .lead{ color:var(--muted); max-width:680px; line-height:1.8; margin-bottom:56px; }
+
+.timeline{ display:flex; flex-direction:column; gap:0; position:relative; }
+.timeline::before{
+  content:''; position:absolute; left:20px; top:0; bottom:0;
+  width:1px; background:linear-gradient(to bottom, var(--neon), var(--purple), transparent); opacity:0.3;
+}
+.tl-item{
+  display:grid; grid-template-columns:60px 1fr;
+  gap:24px; padding:32px 0; border-bottom:1px solid rgba(255,255,255,0.05);
+}
+.tl-item:last-child{ border-bottom:none; }
+.tl-dot{ display:flex; flex-direction:column; align-items:center; padding-top:4px; }
+.tl-dot-inner{ width:12px; height:12px; border-radius:50%; background:var(--neon); box-shadow:0 0 10px var(--neon); flex-shrink:0; }
+.tl-content h3{ font-size:18px; margin-bottom:8px; color:var(--text); }
+.tl-content p{ color:var(--muted); font-size:14px; line-height:1.8; }
+.tl-phase{ font-family:'Share Tech Mono', monospace; font-size:11px; letter-spacing:2px; color:var(--purple); margin-bottom:6px; display:block; }
+
+/* =====================
+   PHOTO GRID
+===================== */
+.photo-section{ padding:80px 0; border-bottom:1px solid var(--border); }
+.photo-section h2{ font-size:34px; margin-bottom:12px; }
+.photo-section .lead{ color:var(--muted); max-width:600px; line-height:1.8; margin-bottom:48px; }
+
+.photo-grid-main{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:16px;
+  margin-bottom:16px;
+}
+.photo-cell{
+  border-radius:16px; overflow:hidden; border:1px solid var(--border);
+  background:var(--glass2); position:relative; cursor:pointer;
+}
+.photo-cell img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.5s ease; min-height:200px; }
+.photo-cell:hover img{ transform:scale(1.04); }
+.photo-cell.tall{ grid-row:span 2; }
+.photo-cell.wide{ grid-column:span 2; }
+.photo-caption{
+  position:absolute; bottom:0; left:0; right:0;
+  padding:20px 16px 14px;
+  background:linear-gradient(to top, rgba(0,0,0,0.8), transparent);
+  font-size:12px; color:rgba(255,255,255,0.8); opacity:0; transition:0.3s ease;
+  font-family:'Share Tech Mono', monospace; letter-spacing:1px;
+}
+.photo-cell:hover .photo-caption{ opacity:1; }
+.photo-placeholder{
+  width:100%; min-height:220px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+  background: linear-gradient(135deg, rgba(0,255,225,0.04), rgba(168,85,247,0.06));
+  color:rgba(255,255,255,0.15); font-size:13px; font-family:'Share Tech Mono', monospace;
+}
+.photo-placeholder .icon{ font-size:28px; opacity:0.3; }
+
+/* =====================
+   PROCESS CARDS
+===================== */
+.process-section{ padding:80px 0; border-bottom:1px solid var(--border); }
+.process-section h2{ font-size:34px; margin-bottom:12px; }
+.process-section .lead{ color:var(--muted); max-width:680px; line-height:1.8; margin-bottom:56px; }
+
+.process-steps{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+
+.step-card{
+  background:var(--glass); border:1px solid var(--border);
+  border-radius:20px; padding:28px; backdrop-filter:blur(8px);
+  transition:border-color 0.3s ease, background 0.3s ease;
+  position:relative; overflow:hidden;
+}
+.step-card::after{
+  content:''; position:absolute; inset:0; border-radius:20px;
+  background:linear-gradient(135deg, rgba(0,255,225,0.03), transparent 60%); pointer-events:none;
+}
+.step-card:hover{ border-color:rgba(0,255,225,0.25); background:rgba(255,255,255,0.07); }
+.step-num{ font-family:'Share Tech Mono', monospace; font-size:40px; font-weight:700; color:rgba(0,255,225,0.12); line-height:1; margin-bottom:12px; }
+.step-card h3{ font-size:18px; margin-bottom:10px; }
+.step-card p{ color:var(--muted); font-size:14px; line-height:1.8; }
+
+.tech-row{ display:flex; flex-wrap:wrap; gap:10px; margin-top:16px; }
+.tech-pill{
+  padding:5px 14px; border-radius:999px;
+  font-family:'Share Tech Mono', monospace; font-size:11px; letter-spacing:1px;
+  border:1px solid rgba(0,255,225,0.25); color:var(--neon); background:rgba(0,255,225,0.05);
+}
+
+/* =====================
+   VIDEO SECTION — fullscreen zoom on scroll
+===================== */
+.video-section{
+  padding:80px 0 0;
+  border-bottom:1px solid var(--border);
+}
+.video-section h2{ font-size:34px; margin-bottom:12px; }
+.video-section .lead{ color:var(--muted); max-width:680px; line-height:1.8; margin-bottom:48px; }
+
+/* The sticky zoom container */
+.video-zoom-wrap{
+  position:relative;
+  height:300vh; /* tall scroll zone */
+}
+
+.video-sticky{
+  position:sticky;
+  top:0;
+  height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  overflow:hidden;
+  background:#000;
+}
+
+.video-inner{
+  width:80%;
+  max-width:1200px;
+  border-radius:20px;
+  overflow:hidden;
+  border:1px solid rgba(0,255,225,0.2);
+  box-shadow:0 0 80px rgba(0,255,225,0.07), 0 0 160px rgba(168,85,247,0.05);
+  transition:none; /* JS handles transform */
+  will-change:transform;
+  transform-origin:center center;
+}
+
+.video-inner video{
+  width:100%;
+  height:auto;
+  display:block;
+}
+
+/* Still renders below video */
+.render-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr 1fr;
+  gap:16px;
+  padding:40px 0 80px;
+}
+.render-cell{
+  border-radius:16px; overflow:hidden; border:1px solid var(--border);
+  background:var(--glass2); aspect-ratio:16/10;
+}
+.render-cell img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.4s ease; }
+.render-cell:hover img{ transform:scale(1.04); }
+
+/* =====================
+   REFLECTION
+===================== */
+.reflection-section{ padding:80px 0; }
+.reflection-section h2{ font-size:34px; margin-bottom:12px; }
+.reflection-grid{ display:grid; grid-template-columns:1.2fr 1fr; gap:60px; align-items:start; margin-top:48px; }
+.reflection-grid p{ color:var(--muted); line-height:1.9; font-size:15px; margin-bottom:16px; }
+
+.skills-list{ display:flex; flex-direction:column; gap:12px; }
+.skill-row{ display:flex; flex-direction:column; gap:6px; }
+.skill-label{ display:flex; justify-content:space-between; font-size:13px; color:var(--muted); }
+.skill-label span:last-child{ color:var(--neon); font-family:'Share Tech Mono', monospace; }
+.skill-bar{ height:4px; background:rgba(255,255,255,0.08); border-radius:4px; overflow:hidden; }
+.skill-fill{ height:100%; border-radius:4px; background:linear-gradient(90deg, var(--neon), var(--purple)); width:0%; transition:width 1.2s ease; }
+
+footer{ text-align:center; padding:60px 20px; color:rgba(255,255,255,0.5); border-top:1px solid var(--border); }
+
+/* =====================
+   RESPONSIVE
+===================== */
+@media(max-width:900px){
+  .intro-block{ grid-template-columns:1fr; gap:40px; }
+  .process-steps{ grid-template-columns:1fr; }
+  .render-grid{ grid-template-columns:1fr 1fr; }
+  .photo-grid-main{ grid-template-columns:1fr 1fr; }
+  .reflection-grid{ grid-template-columns:1fr; }
+  .hero-title{ font-size:42px; }
+  .video-inner{ width:95%; }
+}
+@media(max-width:600px){
+  .render-grid{ grid-template-columns:1fr; }
+  .photo-grid-main{ grid-template-columns:1fr; }
+  .photo-cell.tall,.photo-cell.wide{ grid-column:span 1; grid-row:span 1; }
+  .hero-meta{ gap:20px; }
+}
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<header>
+<nav>
+  <a href="index.html" class="logo">
+    <img src="signature.png" alt="Devon Shunn">
+  </a>
+  <ul>
+    <li class="nav-item">
+      <a href="projects.html" class="nav-link">Projects</a>
+      <div class="dropdown">
+        <div class="dropdown-inner">
+          <a href="project-lightsaber.html">Lightsaber</a>
+          <a href="project-delorean.html">DeLorean Animation</a>
+          <a href="project-ios-widgets.html">iOS Widgets</a>
+          <a href="project-game.html">Game</a>
+          <a href="project-led.html">LED Systems</a>
+          <a href="project-horizon.html">Horizon Worlds</a>
+        </div>
+      </div>
+    </li>
+    <li><a href="contact.html" class="nav-link">Contact Me</a></li>
+  </ul>
+</nav>
+</header>
+
+<!-- ===================== HERO ===================== -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+
+  <!--
+    HERO IMAGE — place your DeLorean render here.
+    Recommended: a wide cinematic still from your animation (1920×1080 or wider).
+    Path: images/delorean/hero-render.jpg
+    The image sits full-bleed behind the text with a lighten blend mode,
+    so a dark image with bright neon elements will look best.
+  -->
+  <div class="hero-img-wrap">
+    <img
+      src="images/delorean/hero-render.jpg"
+      alt="DeLorean Cyberpunk Hero Render"
+      onerror="this.style.display='none'"
+    >
+  </div>
+
+  <div class="hero-content">
+    <div class="breadcrumb">
+      <a href="projects.html">Projects</a>
+      <span>/</span>
+      <span>DeLorean Render Animation</span>
+    </div>
+
+    <div class="hero-tag">// 3D ANIMATION · CINEMATIC RENDER · CYBERPUNK</div>
+
+    <h1 class="hero-title">
+      DeLorean<br>
+      <span class="line2">Render Animation</span>
+    </h1>
+
+    <p class="hero-sub">
+      A cinematic Blender animation of a DeLorean DMC-12 placed in a neon-drenched
+      cyberpunk world — built from scratch as both a personal creative challenge
+      and a love letter to Ready Player One.
+    </p>
+
+    <div class="hero-meta">
+      <div class="meta-item">
+        <span class="meta-label">Software</span>
+        <span class="meta-value">Blender 4.x</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Render Engine</span>
+        <span class="meta-value">Cycles</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Type</span>
+        <span class="meta-value">Cinematic Animation</span>
+      </div>
+      <div class="meta-item">
+        <span class="meta-label">Status</span>
+        <span class="meta-value" style="color:#a855f7">Complete</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="scroll-hint">
+    <span>SCROLL</span>
+    <div class="scroll-arrow"></div>
+  </div>
+</section>
+
+<!-- ===================== MAIN ===================== -->
+<main>
+
+  <a class="back-link fade" href="projects.html">← Back to Projects</a>
+
+  <!-- INTRO -->
+  <div class="intro-block fade">
+    <div>
+      <span class="section-label">// THE INSPIRATION</span>
+      <h2>Ready Player One Changed the Way I See 3D</h2>
+      <p>
+        There's a scene in Ready Player One where the DeLorean assembles itself — piece by piece,
+        panel by panel, until the entire car snaps into existence in front of you. It's one of those
+        moments that makes you stop and think: <em>how did they make that?</em> And once I started
+        thinking about it, I couldn't stop.
+      </p>
+      <p>
+        I already loved 3D modeling — I'd been using it for functional parts, prototypes, and prints.
+        But that scene made me want to push into something more artistic. More cinematic. I wanted
+        to understand how a 3D world gets lit, how materials respond to light, how a camera move
+        turns a static scene into something that feels alive.
+      </p>
+      <p>
+        The DeLorean was the obvious subject. It's the most iconic car in film history, and its
+        stainless steel body is one of the hardest materials to render convincingly — which made it
+        the perfect challenge. I set it in a cyberpunk world because that aesthetic rewards everything
+        good about the car: neon reflections across brushed metal panels, wet streets doubling the
+        light, the gull-wing doors catching a city glow. It was built to be that scene.
+      </p>
+    </div>
+    <div class="stat-stack">
+      <div class="stat-card">
+        <div class="num">~200+</div>
+        <div class="desc">Hours across learning, modeling, lighting, and rendering</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">Cycles</div>
+        <div class="desc">GPU-accelerated path tracing render engine for photorealistic output</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">4K</div>
+        <div class="desc">Final render resolution — every surface detail preserved</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">120+</div>
+        <div class="desc">Keyframes across camera moves, lighting shifts, and scene animation</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LEARNING PATH -->
+  <div class="learning-section fade">
+    <span class="section-label">// LEARNING JOURNEY</span>
+    <h2>Building the Skills to Build the Scene</h2>
+    <p class="lead">
+      This project was a self-taught sprint through every major discipline Blender has to offer.
+      Each problem the scene presented became a new skill to learn. Here's how it unfolded.
+    </p>
+
+    <div class="timeline">
+
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-content">
+          <span class="tl-phase">PHASE 01 — Foundations</span>
+          <h3>Learning the Viewport & Interface</h3>
+          <p>
+            Blender's interface is famously dense. The first weeks were spent understanding how the
+            software is structured — the viewport, edit mode vs. object mode, the outliner, and the
+            properties panel. The Blender Guru donut tutorial gave me a grounding in mesh editing,
+            modifiers, and basic shading. Slow going, but essential foundation work before touching
+            anything more complex.
+          </p>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-content">
+          <span class="tl-phase">PHASE 02 — Hard Surface Modeling</span>
+          <h3>Getting the DeLorean Right</h3>
+          <p>
+            Modeling the DMC-12's body required deep work with hard-surface techniques — loop cuts,
+            edge creasing, subdivision surface modifiers, and boolean operations for panel gaps and
+            vents. I studied reference photos of the actual car extensively to nail the proportions.
+            The gull-wing doors, louvered rear window, and brushed stainless panels all presented
+            unique modeling challenges that pushed my geometry skills forward fast.
+          </p>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-content">
+          <span class="tl-phase">PHASE 03 — Materials & Shading</span>
+          <h3>The Stainless Steel Problem</h3>
+          <p>
+            Stainless steel is one of the hardest materials to get right — it's highly reflective
+            but not perfectly so, with a directional grain that creates anisotropic highlights.
+            The shader node editor let me build it procedurally from scratch. Getting it right took
+            dozens of iterations — mixing roughness maps, adding micro-bump detail, and dialing in
+            the anisotropic workflow. The wet concrete streets and neon signs were also built
+            entirely procedurally, no external textures.
+          </p>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-content">
+          <span class="tl-phase">PHASE 04 — Lighting & Atmosphere</span>
+          <h3>Making Neon Feel Real</h3>
+          <p>
+            The entire mood lives in the lighting. Multiple area lights with pink, cyan, and deep
+            purple color temperatures simulate neon sign glow bouncing through a city block.
+            A volumetric fog scatter makes the light shafts visible and adds atmospheric depth.
+            The wet street surface reflects and pools the neon above — achieved through a
+            high-specularity material with displacement ripples that animate subtly across the scene.
+          </p>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-content">
+          <span class="tl-phase">PHASE 05 — Animation & Camera</span>
+          <h3>Bringing the Scene to Life</h3>
+          <p>
+            The camera animation was the most cinematic challenge. A slow dolly-in from a wide
+            establishing shot, a low-angle push toward the gull-wing door catching neon light,
+            and a final pull-back that reveals the full city. Each move was treated like a
+            real film shot — deliberate pacing, Bezier easing, intentional composition.
+            I wanted it to feel like the RPO DeLorean scene: reverent, dramatic, earned.
+          </p>
+        </div>
+      </div>
+
+      <div class="tl-item">
+        <div class="tl-dot"><div class="tl-dot-inner"></div></div>
+        <div class="tl-content">
+          <span class="tl-phase">PHASE 06 — Render & Composite</span>
+          <h3>Final Output and Post-Processing</h3>
+          <p>
+            Cycles on GPU at 512 samples per frame, denoised with Intel OIDN. Post-processing in
+            Blender's compositor added film grain, chromatic aberration at the frame edges, subtle
+            vignette, and a warm-to-cool color grade that pushed the pink and teal neon palette
+            to its maximum. Final export as an MKV video sequence with cinematic crop.
+          </p>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- PROCESS PHOTO GRID -->
+  <div class="photo-section fade">
+    <span class="section-label">// PROCESS SCREENSHOTS</span>
+    <h2>Inside the Build</h2>
+    <p class="lead">
+      A look inside the Blender viewport at various stages — from raw wireframe geometry
+      to lit scene composition. Swap these with your actual screenshots from the project folder.
+    </p>
+
+    <div class="photo-grid-main">
+
+      <div class="photo-cell tall">
+        <img src="images/delorean/wireframe-body.jpg" alt="DeLorean wireframe body"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Wireframe — Body Mesh</div>'">
+        <div class="photo-caption">WIREFRAME // Body Mesh</div>
+      </div>
+
+      <div class="photo-cell">
+        <img src="images/delorean/shader-nodes.jpg" alt="Shader node editor"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Shader Node Editor</div>'">
+        <div class="photo-caption">SHADER NODES // Steel Material</div>
+      </div>
+
+      <div class="photo-cell">
+        <img src="images/delorean/door-detail.jpg" alt="Gull wing door detail"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Door Geometry Detail</div>'">
+        <div class="photo-caption">DETAIL // Gull-Wing Door</div>
+      </div>
+
+      <div class="photo-cell wide">
+        <img src="images/delorean/city-scene.jpg" alt="Cyberpunk city scene layout"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>City Scene Layout</div>'">
+        <div class="photo-caption">SCENE // Cyberpunk City Layout</div>
+      </div>
+
+      <div class="photo-cell">
+        <img src="images/delorean/lighting-setup.jpg" alt="Lighting rig"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Neon Lighting Rig</div>'">
+        <div class="photo-caption">LIGHTING // Neon Rig</div>
+      </div>
+
+      <div class="photo-cell">
+        <img src="images/delorean/wet-street.jpg" alt="Wet street material"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Wet Street Material</div>'">
+        <div class="photo-caption">MATERIAL // Wet Street Reflections</div>
+      </div>
+
+      <div class="photo-cell">
+        <img src="images/delorean/camera-anim.jpg" alt="Camera animation timeline"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Camera Animation Timeline</div>'">
+        <div class="photo-caption">TIMELINE // Camera Animation</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- TECHNICAL BREAKDOWN -->
+  <div class="process-section fade">
+    <span class="section-label">// TECHNICAL BREAKDOWN</span>
+    <h2>How It Was Built</h2>
+    <p class="lead">
+      Each element of the scene demanded a different set of tools. Here's the technical
+      breakdown of the major systems that make the scene work.
+    </p>
+
+    <div class="process-steps">
+
+      <div class="step-card">
+        <div class="step-num">01</div>
+        <h3>Hard-Surface Body Modeling</h3>
+        <p>
+          The DeLorean body was modeled from a cube using subdivision surface workflow — blocking
+          out major panel shapes, adding edge loops for creases, and using the Shrinkwrap modifier
+          to conform geometry to reference. The brushed stainless texture direction was baked into
+          a normal map using Blender's built-in baker.
+        </p>
+        <div class="tech-row">
+          <span class="tech-pill">SubD Modeling</span>
+          <span class="tech-pill">Edge Creasing</span>
+          <span class="tech-pill">Normal Baking</span>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">02</div>
+        <h3>Procedural Steel Shader</h3>
+        <p>
+          The stainless steel material is 100% procedural — no texture images. A Wave texture node
+          drives anisotropic direction to simulate brushed grain. Roughness is varied with a Noise
+          texture at micro scale to break up perfect reflection. A clearcoat layer adds gloss over the top.
+        </p>
+        <div class="tech-row">
+          <span class="tech-pill">Principled BSDF</span>
+          <span class="tech-pill">Anisotropy</span>
+          <span class="tech-pill">Wave Texture</span>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">03</div>
+        <h3>Volumetric Fog & Neon Glow</h3>
+        <p>
+          Atmospheric depth comes from a Volume Scatter shader applied to a cube that fills the
+          scene — dense enough to catch light shafts but thin enough to stay atmospheric. Each
+          neon sign uses a high-strength Emission shader. Bloom in the compositor adds lens-flare
+          glow on bright surfaces.
+        </p>
+        <div class="tech-row">
+          <span class="tech-pill">Volume Scatter</span>
+          <span class="tech-pill">Emission Shader</span>
+          <span class="tech-pill">Compositor Bloom</span>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">04</div>
+        <h3>Wet Street Reflections</h3>
+        <p>
+          The cyberpunk wet-street look comes from a high-specularity ground material with
+          subtle displacement ripples animated across the surface. Neon light colors are multiplied
+          into the specular channel so each sign bleeds its hue into the pavement below,
+          creating the layered neon-on-wet-concrete depth the scene needed.
+        </p>
+        <div class="tech-row">
+          <span class="tech-pill">Displacement</span>
+          <span class="tech-pill">Specular Channel</span>
+          <span class="tech-pill">Animated Ripples</span>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">05</div>
+        <h3>Cinematic Camera Animation</h3>
+        <p>
+          The camera rig uses a Track-To constraint locked to the DeLorean's origin so it always
+          stays framed. Three distinct camera moves were keyframed with Bezier easing —
+          a wide dolly-in, a low-angle push to the door, and a final city-reveal pull-back.
+          FOV was animated on cut points to create lens compression effects.
+        </p>
+        <div class="tech-row">
+          <span class="tech-pill">Track-To Constraint</span>
+          <span class="tech-pill">Bezier Easing</span>
+          <span class="tech-pill">FOV Animation</span>
+        </div>
+      </div>
+
+      <div class="step-card">
+        <div class="step-num">06</div>
+        <h3>Cycles GPU Rendering & Compositing</h3>
+        <p>
+          Final render used Cycles at 512 samples per frame on GPU. Adaptive sampling reduced
+          render time in flat areas. OIDN denoising cleaned up fireflies. The compositor added
+          film grain, chromatic aberration at the edges, and a warm-to-cool color grade
+          that pushed the pink and teal neon palette hard.
+        </p>
+        <div class="tech-row">
+          <span class="tech-pill">Cycles GPU</span>
+          <span class="tech-pill">OIDN Denoise</span>
+          <span class="tech-pill">Compositor</span>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- ===================== VIDEO ===================== -->
+  <div class="video-section fade">
+    <span class="section-label">// FINAL OUTPUT</span>
+    <h2>The Finished Animation</h2>
+    <p class="lead">
+      The complete rendered animation — place your MKV file at
+      <code style="color:var(--neon);font-size:13px;">videos/delorean-animation.mkv</code>
+      and it will autoplay as you scroll into this section.
+    </p>
+
+    <div class="video-zoom-wrap" id="videoZoomWrap">
+      <div class="video-sticky" id="videoSticky">
+        <div class="video-inner" id="videoInner">
+          <!--
+            YOUR ANIMATION VIDEO
+            Place your rendered MKV at: videos/delorean-animation.mkv
+            The video will autoplay (muted) as you scroll into view,
+            and zoom to fill the screen as you continue scrolling.
+          -->
+          <video
+            id="deloreanVideo"
+            src="videos/delorean-animation.mkv"
+            muted
+            playsinline
+            loop
+            preload="metadata"
+          ></video>
+        </div>
+      </div>
+    </div>
+
+    <!-- Still renders below video -->
+    <div class="render-grid fade">
+      <div class="render-cell">
+        <img src="images/delorean/render-front.jpg" alt="Front angle render"
+          onerror="this.parentElement.style.background='rgba(255,255,255,0.03)'; this.style.display='none'">
+      </div>
+      <div class="render-cell">
+        <img src="images/delorean/render-low.jpg" alt="Low angle render"
+          onerror="this.parentElement.style.background='rgba(255,255,255,0.03)'; this.style.display='none'">
+      </div>
+      <div class="render-cell">
+        <img src="images/delorean/render-detail.jpg" alt="Door detail render"
+          onerror="this.parentElement.style.background='rgba(255,255,255,0.03)'; this.style.display='none'">
+      </div>
+    </div>
+  </div>
+
+  <!-- REFLECTION -->
+  <div class="reflection-section fade">
+    <span class="section-label">// TAKEAWAYS</span>
+    <h2>What I Learned</h2>
+
+    <div class="reflection-grid">
+      <div>
+        <p>
+          This project started with a movie moment and ended with one of the most technically
+          demanding builds I've done. 3D animation sits at the intersection of engineering precision —
+          getting geometry, physics, and light to behave correctly — and artistic judgment:
+          knowing when a material is right, when a composition works, when a camera move
+          feels cinematic versus mechanical.
+        </p>
+        <p>
+          The biggest lesson was iterative refinement. Every element went through ten or twenty
+          versions before it looked right. The steel material alone was rebuilt three times as my
+          understanding of anisotropy deepened. That cycle — build, evaluate, tear down, rebuild —
+          is the same discipline that shows up in every engineering project. It just looks different
+          in a 3D scene.
+        </p>
+        <p>
+          The Ready Player One DeLorean moment that started all of this is still the benchmark I
+          held the work against. I don't think I matched it. But I understand now exactly how it
+          was made, which feels like the real goal all along.
+        </p>
+      </div>
+
+      <div>
+        <div class="skills-list" id="skillBars">
+          <div class="skill-row">
+            <div class="skill-label"><span>Hard-Surface Modeling</span><span>90%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="90"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-label"><span>Shader / Node Editor</span><span>80%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="80"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-label"><span>Lighting & Atmosphere</span><span>85%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="85"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-label"><span>Wet Surface Materials</span><span>75%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="75"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-label"><span>Camera Animation</span><span>75%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="75"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-label"><span>Compositing</span><span>65%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="65"></div></div>
+          </div>
+          <div class="skill-row">
+            <div class="skill-label"><span>Rendering (Cycles)</span><span>80%</span></div>
+            <div class="skill-bar"><div class="skill-fill" data-width="80"></div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  © 2026 Devon Shunn &nbsp;·&nbsp;
+  <a href="projects.html" style="color:var(--neon);text-decoration:none;">← All Projects</a>
+</footer>
+
+<script>
+/* ---- FADE IN ---- */
+const fades = document.querySelectorAll('.fade');
+const fadeObs = new IntersectionObserver(entries => {
+  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('show'); });
+}, { threshold: 0.1 });
+fades.forEach(el => fadeObs.observe(el));
+
+/* ---- SKILL BARS ---- */
+const skillObs = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.skill-fill').forEach(bar => {
+        bar.style.width = bar.dataset.width + '%';
+      });
+      skillObs.unobserve(e.target);
+    }
+  });
+}, { threshold: 0.3 });
+const skillSection = document.getElementById('skillBars');
+if(skillSection) skillObs.observe(skillSection);
+
+/* ---- VIDEO SCROLL ZOOM ---- */
+const wrap   = document.getElementById('videoZoomWrap');
+const inner  = document.getElementById('videoInner');
+const video  = document.getElementById('deloreanVideo');
+let videoPlayed = false;
+
+function lerp(a, b, t){ return a + (b - a) * t; }
+
+function onScroll(){
+  if(!wrap) return;
+
+  const rect    = wrap.getBoundingClientRect();
+  const total   = wrap.offsetHeight - window.innerHeight;
+  const scrolled = -rect.top;
+
+  /* progress 0 → 1 over the tall scroll zone */
+  const progress = Math.max(0, Math.min(1, scrolled / total));
+
+  /* start playing once the section is in view */
+  if(progress > 0 && !videoPlayed && video){
+    video.play().catch(()=>{});
+    videoPlayed = true;
+  }
+
+  /* scale: starts at 0.8, zooms to 1.35 (overflowing to full-bleed) */
+  const scale = lerp(0.82, 1.38, progress);
+
+  /* border-radius: melts away as it fills the screen */
+  const radius = lerp(20, 0, progress);
+
+  inner.style.transform      = `scale(${scale})`;
+  inner.style.borderRadius   = `${radius}px`;
+  inner.style.width          = '80%';  /* kept constant; scale does the work */
+}
+
+window.addEventListener('scroll', onScroll, { passive: true });
+onScroll(); /* run once on load */
+</script>
+
+</body>
+</html>
