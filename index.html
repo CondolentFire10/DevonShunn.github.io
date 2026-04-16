@@ -3,212 +3,475 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Devon Shunn - Engineering Portfolio</title>
 
-<title>Devon Shunn Portfolio</title>
-
-<link rel="icon" type="image/png" href="favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 
 <style>
-/* =========================================================
-   BASE
-========================================================= */
-* {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-    font-family: Arial, Helvetica, sans-serif;
+:root{
+  --bg:#070A12;
+  --glass:rgba(255,255,255,0.06);
+  --border:rgba(255,255,255,0.12);
+  --text:#fff;
+  --muted:rgba(255,255,255,0.7);
+  --blue:#38bdf8;
+  --blue2:#2563eb;
 }
 
-body {
-    /* 🌌 DARK NAVY BACKGROUND */
-    background: #070b18;
-    color: white;
-    overflow-x: hidden;
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Poppins,sans-serif;
 }
 
-/* =========================================================
-   LAYOUT
-========================================================= */
-.section {
-    min-height: 100vh;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 60px 20px;
+body{
+  background: radial-gradient(circle at top, #0b1224, var(--bg));
+  color:var(--text);
+  overflow-x:hidden;
 }
 
-/* =========================================================
-   🧊 GLASS CARD (REFINED)
-========================================================= */
-.card {
-    max-width: 1200px;
-    width: 100%;
-
-    background: rgba(255,255,255,0.05);
-    border: 1px solid rgba(255,255,255,0.08);
-
-    border-radius: 18px;
-    padding: 50px;
-
-    backdrop-filter: blur(14px);
-    box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+/* NAV */
+header{
+  position:fixed;
+  top:0;
+  width:100%;
+  backdrop-filter:blur(14px);
+  background:rgba(7,10,18,0.75);
+  border-bottom:1px solid var(--border);
+  z-index:100;
 }
 
-/* TEXT */
-h1 { font-size: 3rem; margin-bottom: 15px; }
-h2 { font-size: 2rem; margin-bottom: 15px; }
-
-p {
-    font-size: 1.15rem;
-    line-height: 1.7;
-    opacity: 0.9;
+nav{
+  max-width:1100px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:16px 24px;
 }
 
-/* GOLD ACCENT TEXT (use sparingly) */
-.gold {
-    color: #d4af37;
+nav ul{
+  display:flex;
+  gap:22px;
+  list-style:none;
+  align-items:center;
 }
 
-/* LABEL */
-.label {
-    font-size: 0.85rem;
-    letter-spacing: 2px;
-    text-transform: uppercase;
-    opacity: 0.5;
-    margin-bottom: 10px;
+nav a:hover{color:var(--blue)}
+
+/* LOGO */
+.logo img{
+  height:42px;
+  cursor:pointer;
+  transition:0.25s ease;
 }
 
-/* =========================================================
-   LAYOUT ROW
-========================================================= */
-.row {
-    display: flex;
-    gap: 40px;
-    flex-wrap: wrap;
-    align-items: center;
+.logo img:hover{
+  transform:scale(1.05);
+  filter:drop-shadow(0 0 12px rgba(56,189,248,0.6));
 }
 
-.profile {
-    width: 240px;
-    border-radius: 14px;
+/* DROPDOWN */
+.nav-item{
+  position:relative;
 }
 
-/* =========================================================
-   🔘 BUTTON SYSTEM (UPDATED HOVER EFFECT)
-========================================================= */
-.button-row {
-    margin-top: 25px;
-    display: flex;
-    gap: 15px;
-    flex-wrap: wrap;
+.nav-link{
+  color:var(--muted);
+  text-decoration:none;
+  transition:0.2s ease;
 }
 
-.button-img {
-    height: 70px;
-    transition: all 0.25s ease;
-    border-radius: 10px;
+.nav-link:hover{
+  color:var(--blue);
 }
 
-/* 🔵 HOVER GLOW + SCALE */
-.button-img:hover {
-    transform: scale(1.08);
-
-    /* blue glow */
-    filter: drop-shadow(0 0 10px rgba(80,180,255,0.8))
-            drop-shadow(0 0 20px rgba(80,180,255,0.4));
+.dropdown{
+  position:absolute;
+  top:100%;
+  left:0;
+  padding-top:12px;
+  min-width:200px;
+  background:transparent;
+  display:flex;
+  flex-direction:column;
+  opacity:0;
+  transform:translateY(6px);
+  pointer-events:none;
+  transition:0.25s ease;
 }
 
-/* IMAGE BLOCK */
-.full-image {
-    width: 100%;
-    margin-top: 30px;
-    border-radius: 14px;
-    border: 1px solid rgba(255,255,255,0.08);
+.dropdown-inner{
+  background:rgba(7,10,18,0.85);
+  border:1px solid var(--border);
+  border-radius:12px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  backdrop-filter:blur(14px);
+}
+
+.dropdown a{
+  padding:10px 14px;
+  text-decoration:none;
+  color:var(--muted);
+  font-size:14px;
+  transition:0.2s ease;
+}
+
+.dropdown a:hover{
+  background:rgba(56,189,248,0.12);
+  color:var(--blue);
+}
+
+.nav-item:hover .dropdown{
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:auto;
+}
+
+/* HERO */
+.hero{
+  min-height:100vh;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:120px 24px 60px;
+}
+
+.hero-inner{
+  max-width:1100px;
+  display:grid;
+  grid-template-columns:1.2fr 1fr;
+  gap:60px;
+  align-items:center;
+}
+
+.tag{
+  color:var(--blue);
+  font-size:13px;
+  letter-spacing:2px;
+}
+
+h1{
+  font-size:54px;
+  line-height:1.1;
+}
+
+.sub{
+  margin-top:18px;
+  color:var(--muted);
+  max-width:520px;
+}
+
+.btn{
+  display:inline-block;
+  margin-top:24px;
+  padding:12px 18px;
+  border-radius:12px;
+  background:linear-gradient(135deg,var(--blue),var(--blue2));
+  transition:0.3s;
+  color:white;
+  text-decoration:none;
+}
+
+.btn:hover{
+  transform:translateY(-3px);
+  box-shadow:0 20px 40px rgba(56,189,248,0.25);
+}
+
+/* SECTIONS */
+section{
+  padding:100px 24px;
+}
+
+.container{
+  max-width:1100px;
+  margin:auto;
+}
+
+h2{
+  font-size:34px;
+  margin-bottom:40px;
+}
+
+/* FADE */
+.fade{
+  opacity:0;
+  transform:translateY(25px);
+  transition:1s;
+}
+
+.fade.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* PROJECT CARDS */
+.grid{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+  gap:22px;
+}
+
+.project-card{
+  position:relative;
+  height:180px;
+  border-radius:18px;
+  overflow:hidden;
+  border:1px solid var(--border);
+  background:var(--glass);
+  cursor:pointer;
+  transition:transform 0.25s ease, box-shadow 0.25s ease;
+  text-decoration:none;
+  display:block;
+}
+
+.project-card:hover{
+  transform:scale(1.04);
+  box-shadow:0 10px 30px rgba(56,189,248,0.25);
+}
+
+.project-card img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  filter:brightness(0.9);
+  transition:0.3s ease;
+}
+
+.overlay{
+  position:absolute;
+  inset:0;
+  background:rgba(10,15,30,0.25);
+  backdrop-filter:blur(0px);
+  transition:0.3s ease;
+}
+
+.text{
+  position:absolute;
+  bottom:14px;
+  left:14px;
+  right:14px;
+  opacity:0;
+  transform:translateY(10px);
+  transition:0.3s ease;
+}
+
+.text h3{
+  font-size:1.1rem;
+  color:var(--text);
+}
+
+.text p{
+  font-size:0.85rem;
+  color:var(--muted);
+  margin-top:4px;
+}
+
+.project-card:hover .overlay{
+  background:rgba(10,15,30,0.55);
+  backdrop-filter:blur(6px);
+}
+
+.project-card:hover .text{
+  opacity:1;
+  transform:translateY(0);
+}
+
+/* ABOUT */
+.about{
+  text-align:center;
+  max-width:800px;
+  margin:auto;
+  color:var(--muted);
+}
+
+@media(max-width:900px){
+  .hero-inner{
+    grid-template-columns:1fr;
+    text-align:center;
+  }
+  h1{font-size:40px}
 }
 </style>
 </head>
 
 <body>
 
+<header>
+<nav>
+
+  <!-- SIGNATURE HOME BUTTON -->
+  <a href="index.html" class="logo">
+    <img src="signature.png" alt="Devon Shunn">
+  </a>
+
+  <ul>
+
+    <!-- PROJECTS DROPDOWN -->
+    <li class="nav-item">
+      <a href="projects.html" class="nav-link">Projects</a>
+
+      <div class="dropdown">
+        <div class="dropdown-inner">
+          <a href="project-lightsaber.html">Lightsaber</a>
+          <a href="project-f1-rig.html">F1 Rig</a>
+          <a href="project-ios-widgets.html">iOS Widgets</a>
+          <a href="project-game.html">Game</a>
+          <a href="project-led.html">LED Systems</a>
+          <a href="project-horizon.html">Horizon Worlds</a>
+        </div>
+      </div>
+    </li>
+
+    <li>
+      <a href="contact.html" class="nav-link">Contact Me</a>
+    </li>
+
+  </ul>
+
+</nav>
+</header>
+
 <!-- HERO -->
-<div class="section">
-<div class="card">
+<section class="hero" id="home">
+  <div class="hero-inner fade">
+    <div>
+      <div class="tag">ENGINEERING • SYSTEMS • BUILDING</div>
 
-<div class="row">
+      <h1>Engineering ideas into real-world systems.</h1>
 
-<img src="me.jpg" class="profile">
+      <p class="sub">
+        I design and build hardware + software projects ranging from simulation systems and 3D printed builds
+        to interactive experiences and engineering prototypes.
+      </p>
 
-<div>
-
-<div class="label">INTRO</div>
-
-<h1>
-Hi, I’m <span class="gold">Devon Shunn</span>
-</h1>
-
-<p>
-I’m a student engineer focused on building real systems that combine
-software, hardware, and design.
-</p>
-
-<p style="margin-top:12px;">
-I enjoy turning ideas into working prototypes — especially physical systems,
-interactive designs, and engineering projects that bridge software and hardware.
-</p>
-
-<div class="button-row">
-<a href="projects.html">
-    <img src="button-projects.png" class="button-img">
-</a>
-
-<a href="contact.html">
-    <img src="button-contact.png" class="button-img">
-</a>
-</div>
-
-</div>
-</div>
-
-<img src="dream-jobs.png" class="full-image">
-
-</div>
-</div>
+      <a class="btn" href="#projects">Explore Projects</a>
+    </div>
+  </div>
+</section>
 
 <!-- ABOUT -->
-<div class="section">
-<div class="card">
+<section id="about">
+<div class="container fade about">
 
-<div class="label">ABOUT</div>
-
-<h2>What I Do</h2>
+<h2>About Me</h2>
 
 <p>
-I focus on hands-on engineering: embedded systems, 3D printing, CAD design,
-and software development. I enjoy working across disciplines to build
-systems that actually function in the real world.
+I'm an engineering-focused builder who works across hardware, software, and interactive systems.
 </p>
 
 </div>
+</section>
+
+<!-- PROJECTS -->
+<section id="projects">
+<div class="container">
+<h2 class="fade">Projects</h2>
+
+<div class="grid">
+
+  <a class="project-card fade" href="project-lightsaber.html">
+    <img src="images/lightsaber.jpg" />
+    <div class="overlay"></div>
+    <div class="text">
+      <h3>Proffie Lightsaber</h3>
+      <p>Custom cross-guard saber with embedded control system</p>
+    </div>
+  </a>
+
+  <a class="project-card fade" href="project-f1-rig.html">
+    <img src="images/f1rig.jpg" />
+    <div class="overlay"></div>
+    <div class="text">
+      <h3>F1 Simulator Rig</h3>
+      <p>3D printed steering wheel with Pico W integration</p>
+    </div>
+  </a>
+
+  <a class="project-card fade" href="project-ios-widgets.html">
+    <img src="images/widgets.jpg" />
+    <div class="overlay"></div>
+    <div class="text">
+      <h3>iOS Widget Builder</h3>
+      <p>Custom home screen widget system with dynamic links</p>
+    </div>
+  </a>
+
+  <a class="project-card fade" href="project-game.html">
+    <img src="images/game.jpg" />
+    <div class="overlay"></div>
+    <div class="text">
+      <h3>Turn-Based Game</h3>
+      <p>Exploration RPG with modular crafting system</p>
+    </div>
+  </a>
+
+  <a class="project-card fade" href="project-led.html">
+    <img src="images/led.jpg" />
+    <div class="overlay"></div>
+    <div class="text">
+      <h3>Neopixel Systems</h3>
+      <p>Arduino-based dynamic LED lighting effects</p>
+    </div>
+  </a>
+
 </div>
+</div>
+</section>
 
-<!-- SKILLS -->
-<div class="section">
-<div class="card">
+<!-- LEADERSHIP -->
+<section id="leadership">
+<div class="container">
+<h2 class="fade">Leadership</h2>
 
-<div class="label">SKILLS</div>
+<div class="grid">
 
-<h2>Core Strengths</h2>
+  <div class="card fade">
+    <h3>CPB Director – Experiential Programming</h3>
+    <p class="muted">
+      Planned and led campus events focused on engagement and systems design.
+    </p>
+  </div>
 
-<p>
-• Embedded systems (Arduino, microcontrollers)<br>
-• 3D printing & CAD<br>
-• JavaScript & web development<br>
-• Rapid prototyping<br>
-• Systems thinking & problem solving
-</p>
+  <div class="card fade">
+    <h3>Salutatorian</h3>
+    <p class="muted">
+      Academic excellence recognition in a disciplined academic environment.
+    </p>
+  </div>
 
 </div>
 </div>
+</section>
+
+<!-- CONTACT -->
+<section id="contact">
+<div class="container fade" style="text-align:center;">
+<h2>Contact</h2>
+<p class="muted">Open to engineering, product, and build-focused opportunities.</p>
+<br/>
+<a class="btn" href="mailto:devon@example.com">Get In Touch</a>
+</div>
+</section>
+
+<footer style="text-align:center;padding:60px 20px;color:rgba(255,255,255,0.5)">
+© 2026 Devon Shunn
+</footer>
+
+<script>
+const els = document.querySelectorAll('.fade');
+
+const obs = new IntersectionObserver(e=>{
+  e.forEach(i=>{
+    if(i.isIntersecting) i.target.classList.add('show');
+  });
+},{threshold:0.15});
+
+els.forEach(el=>obs.observe(el));
+</script>
 
 </body>
 </html>
