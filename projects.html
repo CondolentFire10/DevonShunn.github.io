@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Projects – Devon Shunn</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#070A12;
+  --glass:rgba(255,255,255,0.06);
+  --glass2:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.12);
+  --text:#fff;
+  --muted:rgba(255,255,255,0.7);
+  --blue:#38bdf8;
+  --blue2:#2563eb;
+  --purple:#a855f7;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Poppins,sans-serif;
+}
+
+body{
+  background: radial-gradient(circle at top, #0b1224, var(--bg));
+  color:var(--text);
+  overflow-x:hidden;
+}
+
+/* NAV */
+header{
+  position:fixed;
+  top:0;
+  width:100%;
+  backdrop-filter:blur(14px);
+  background:rgba(7,10,18,0.75);
+  border-bottom:1px solid var(--border);
+  z-index:100;
+}
+
+nav{
+  max-width:1100px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 24px;
+}
+
+nav ul{
+  display:flex;
+  gap:26px;
+  list-style:none;
+  align-items:center;
+}
+
+.nav-link{
+  color:var(--muted);
+  text-decoration:none;
+  transition:0.2s ease;
+}
+
+.nav-link:hover{ color:var(--blue); }
+
+.logo img{
+  height:42px;
+  cursor:pointer;
+  transition:0.25s ease;
+}
+
+.logo img:hover{
+  transform:scale(1.05);
+  filter:drop-shadow(0 0 12px rgba(56,189,248,0.6));
+}
+
+.nav-item{ position:relative; }
+
+.dropdown{
+  position:absolute;
+  top:100%;
+  left:0;
+  padding-top:12px;
+  min-width:200px;
+  background:transparent;
+  display:flex;
+  flex-direction:column;
+  opacity:0;
+  transform:translateY(6px);
+  pointer-events:none;
+  transition:0.25s ease;
+}
+
+.dropdown-inner{
+  background:rgba(7,10,18,0.85);
+  border:1px solid var(--border);
+  border-radius:12px;
+  display:flex;
+  flex-direction:column;
+  overflow:hidden;
+  backdrop-filter:blur(14px);
+}
+
+.dropdown a{
+  padding:10px 14px;
+  text-decoration:none;
+  color:var(--muted);
+  font-size:14px;
+  transition:0.2s ease;
+}
+
+.dropdown a:hover{
+  background:rgba(56,189,248,0.12);
+  color:var(--blue);
+}
+
+.nav-item:hover .dropdown{
+  opacity:1;
+  transform:translateY(0);
+  pointer-events:auto;
+}
+
+/* PAGE HEADER */
+.page-header{
+  padding:160px 24px 80px;
+  text-align:center;
+}
+
+.page-header .tag{
+  color:var(--blue);
+  font-size:13px;
+  letter-spacing:2px;
+  display:block;
+  margin-bottom:16px;
+}
+
+.page-header h1{
+  font-size:52px;
+  line-height:1.1;
+}
+
+.page-header p{
+  margin-top:16px;
+  color:var(--muted);
+  max-width:540px;
+  margin-inline:auto;
+}
+
+/* PROJECTS LIST */
+.projects-list{
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 24px 120px;
+  display:flex;
+  flex-direction:column;
+  gap:0;
+}
+
+/* FEATURED ROW */
+.featured-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:60px;
+  align-items:center;
+  padding:80px 40px;
+  border-bottom:1px solid var(--border);
+  border-radius:20px;
+  opacity:0;
+  transform:translateY(30px);
+  transition:opacity 0.9s ease, transform 0.9s ease, background 0.3s ease, box-shadow 0.3s ease;
+  cursor:pointer;
+}
+
+.featured-row.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.featured-row:hover{
+  background: rgba(56,189,248,0.04);
+  box-shadow: inset 0 0 0 1px rgba(56,189,248,0.12);
+}
+
+/* odd rows: text left, image right (default) */
+/* even rows: image left, text right */
+.featured-row.reverse{
+  direction:rtl;
+}
+
+.featured-row.reverse > *{
+  direction:ltr;
+}
+
+/* TEXT SIDE */
+.proj-text{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+.proj-label{
+  color:var(--purple);
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:1px;
+}
+
+.proj-title-link{
+  text-decoration:none;
+  color:var(--text);
+  transition:color 0.2s ease;
+}
+
+.proj-title-link:hover{
+  color:var(--blue);
+}
+
+.proj-text h2{
+  font-size:36px;
+  line-height:1.15;
+  margin:0;
+}
+
+.proj-desc{
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:22px 24px;
+  color:var(--muted);
+  font-size:15px;
+  line-height:1.7;
+  backdrop-filter:blur(8px);
+}
+
+/* TAGS */
+.proj-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.tag-pill{
+  padding:5px 12px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  font-size:12px;
+  color:var(--muted);
+  background:var(--glass);
+}
+
+/* IMAGE SIDE */
+.proj-image{
+  border-radius:20px;
+  overflow:hidden;
+  border:1px solid var(--border);
+  background:var(--glass2);
+  aspect-ratio:16/10;
+  position:relative;
+}
+
+.proj-image img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  transition:0.4s ease;
+}
+
+.proj-image:hover img{
+  transform:scale(1.03);
+}
+
+/* placeholder when no image */
+.proj-image-placeholder{
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:48px;
+  color:var(--border);
+  background: linear-gradient(135deg, rgba(56,189,248,0.05), rgba(37,99,235,0.05));
+  min-height:260px;
+}
+
+/* RESPONSIVE */
+@media(max-width:800px){
+  .featured-row{
+    grid-template-columns:1fr;
+    gap:32px;
+    padding:60px 20px;
+  }
+
+  .featured-row.reverse{
+    direction:ltr;
+  }
+
+  .page-header h1{ font-size:36px; }
+  .proj-text h2{ font-size:26px; }
+}
+</style>
+</head>
+
+<body>
+
+<header>
+<nav>
+  <a href="index.html" class="logo">
+    <img src="signature.png" alt="Devon Shunn">
+  </a>
+
+  <ul>
+    <li class="nav-item">
+      <a href="projects.html" class="nav-link">Projects</a>
+      <div class="dropdown">
+        <div class="dropdown-inner">
+          <a href="project-lightsaber.html">Lightsaber</a>
+          <a href="project-blender.html">Blender & 3D</a>
+          <a href="project-ios-widgets.html">iOS Widgets</a>
+          <a href="project-game.html">Game</a>
+          <a href="project-led.html">LED Systems</a>
+          <a href="project-horizon.html">Horizon Worlds</a>
+        </div>
+      </div>
+    </li>
+    <li><a href="contact.html" class="nav-link">Contact Me</a></li>
+  </ul>
+</nav>
+</header>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <span class="tag">ENGINEERING • SYSTEMS • BUILDING</span>
+  <h1>Projects</h1>
+  <p>A collection of hardware, software, and interactive systems I've designed and built.</p>
+</div>
+
+<!-- PROJECTS -->
+<div class="projects-list">
+
+  <!-- 1 — LIGHTSABER -->
+  <div class="featured-row" onclick="window.location='project-lightsaber.html'">
+    <div class="proj-text">
+      <div class="proj-label">Featured Project</div>
+      <h2><a class="proj-title-link" href="project-lightsaber.html">Proffie Lightsaber</a></h2>
+      <div class="proj-desc">
+        A fully custom cross-guard lightsaber built around the Proffie soundboard. Features hand-wired Neopixel blades,
+        custom CFX sound fonts, and a 3D printed hilt designed to match screen-accurate proportions.
+        The embedded control system handles motion-reactive lighting, clash detection, and audio playback in real time.
+      </div>
+      <div class="proj-tags">
+        <span class="tag-pill">Proffie</span>
+        <span class="tag-pill">Neopixel</span>
+        <span class="tag-pill">3D Printing</span>
+        <span class="tag-pill">Electronics</span>
+      </div>
+    </div>
+    <div class="proj-image">
+      <img src="images/lightsaber.jpg" alt="Proffie Lightsaber" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>⚔️</div>'"/>
+    </div>
+  </div>
+
+  <!-- 2 — BLENDER & 3D -->
+  <div class="featured-row reverse" onclick="window.location='project-blender.html'">
+    <div class="proj-text">
+      <div class="proj-label">Featured Project</div>
+      <h2><a class="proj-title-link" href="project-blender.html">Blender & 3D Modeling</a></h2>
+      <div class="proj-desc">
+        A deep dive into 3D modeling, sculpting, and animation using Blender. Projects span hard-surface modeling
+        for printable parts, character sculpts, environment scenes, and rendered animations — exploring
+        materials, lighting rigs, and procedural geometry to produce polished final renders.
+      </div>
+      <div class="proj-tags">
+        <span class="tag-pill">Blender</span>
+        <span class="tag-pill">3D Modeling</span>
+        <span class="tag-pill">Animation</span>
+        <span class="tag-pill">Rendering</span>
+        <span class="tag-pill">Sculpting</span>
+      </div>
+    </div>
+    <div class="proj-image">
+      <img src="images/blender.jpg" alt="Blender & 3D Modeling" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>🧊</div>'"/>
+    </div>
+  </div>
+
+  <!-- 3 — iOS WIDGETS -->
+  <div class="featured-row" onclick="window.location='project-ios-widgets.html'">
+    <div class="proj-text">
+      <div class="proj-label">Featured Project</div>
+      <h2><a class="proj-title-link" href="project-ios-widgets.html">iOS Widget Builder</a></h2>
+      <div class="proj-desc">
+        A custom iOS home screen widget system built with Scriptable. Supports dynamic data sources,
+        live link routing, and fully themeable layouts — letting users design widgets that pull real-time info
+        and respond to taps with deep links into apps and URLs.
+      </div>
+      <div class="proj-tags">
+        <span class="tag-pill">Scriptable</span>
+        <span class="tag-pill">JavaScript</span>
+        <span class="tag-pill">iOS</span>
+        <span class="tag-pill">UI Design</span>
+      </div>
+    </div>
+    <div class="proj-image">
+      <img src="images/widgets.jpg" alt="iOS Widget Builder" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>📱</div>'"/>
+    </div>
+  </div>
+
+  <!-- 4 — GAME -->
+  <div class="featured-row reverse" onclick="window.location='project-game.html'">
+    <div class="proj-text">
+      <div class="proj-label">Featured Project</div>
+      <h2><a class="proj-title-link" href="project-game.html">Turn-Based RPG</a></h2>
+      <div class="proj-desc">
+        An exploration RPG built from scratch featuring a modular crafting system, turn-based combat,
+        and procedurally designed encounters. The game engine handles inventory, stat tracking, and
+        world state — all built without a commercial game engine, using custom rendering logic.
+      </div>
+      <div class="proj-tags">
+        <span class="tag-pill">Game Design</span>
+        <span class="tag-pill">Python</span>
+        <span class="tag-pill">Procedural</span>
+        <span class="tag-pill">RPG Systems</span>
+      </div>
+    </div>
+    <div class="proj-image">
+      <img src="images/game.jpg" alt="Turn-Based RPG" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>🎮</div>'"/>
+    </div>
+  </div>
+
+  <!-- 5 — LED -->
+  <div class="featured-row" onclick="window.location='project-led.html'">
+    <div class="proj-text">
+      <div class="proj-label">Featured Project</div>
+      <h2><a class="proj-title-link" href="project-led.html">Neopixel LED Systems</a></h2>
+      <div class="proj-desc">
+        Arduino-powered dynamic LED systems using Neopixel strips. Features include music-reactive
+        animations, custom effect sequences, and programmable color palettes — all driven by real-time
+        sensor input and configurable presets stored on the microcontroller.
+      </div>
+      <div class="proj-tags">
+        <span class="tag-pill">Arduino</span>
+        <span class="tag-pill">Neopixel</span>
+        <span class="tag-pill">C++</span>
+        <span class="tag-pill">Embedded</span>
+      </div>
+    </div>
+    <div class="proj-image">
+      <img src="images/led.jpg" alt="Neopixel LED Systems" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>💡</div>'"/>
+    </div>
+  </div>
+
+</div>
+
+<footer style="text-align:center;padding:60px 20px;color:rgba(255,255,255,0.5);border-top:1px solid rgba(255,255,255,0.08)">
+  © 2026 Devon Shunn
+</footer>
+
+<script>
+const rows = document.querySelectorAll('.featured-row');
+const obs = new IntersectionObserver(e=>{
+  e.forEach(i=>{ if(i.isIntersecting) i.target.classList.add('show'); });
+},{threshold:0.1});
+rows.forEach(r=>obs.observe(r));
+</script>
+
+</body>
+</html>
