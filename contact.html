@@ -443,11 +443,19 @@ nav ul{ display:flex; gap:26px; list-style:none; align-items:center; }
   © 2026 Devon Shunn · Built from scratch
 </footer>
 
+<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+<script>
+  emailjs.init("6ZSi1QRuS5xm8rCve");
+</script>
+
 <script>
 const els = document.querySelectorAll('.fade');
 const obs = new IntersectionObserver(e=>{
-  e.forEach(i=>{ if(i.isIntersecting) i.target.classList.add('show'); });
+  e.forEach(i=>{
+    if(i.isIntersecting) i.target.classList.add('show');
+  });
 },{threshold:0.1});
+
 els.forEach(el=>obs.observe(el));
 
 function handleSubmit(btn){
@@ -496,11 +504,6 @@ function handleSubmit(btn){
     }, 2500);
   });
 }
-</script>
-
-<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
-<script>
-  emailjs.init("6ZSi1QRuS5xm8rCve");
 </script>
   
 </body>
