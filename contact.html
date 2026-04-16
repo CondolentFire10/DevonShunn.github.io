@@ -443,9 +443,10 @@ nav ul{ display:flex; gap:26px; list-style:none; align-items:center; }
   © 2026 Devon Shunn · Built from scratch
 </footer>
 
-<script src="https://cdn.emailjs.com/dist/email.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+
 <script>
-  (function(){
+(function(){
   emailjs.init({
     publicKey: "6ZSi1QRuS5xm8rCve",
   });
@@ -496,9 +497,9 @@ function handleSubmit(btn){
     }, 2500);
   })
   .catch((err) => {
-    console.error(err);
-    btn.textContent = 'Failed to send';
+    console.error("EMAILJS ERROR:", err);
 
+    btn.textContent = 'Failed to send';
     btn.style.background = 'rgba(255,100,100,0.2)';
     btn.disabled = false;
 
