@@ -17,538 +17,243 @@
   --text:#fff;
   --muted:rgba(255,255,255,0.7);
   --blue:#38bdf8;
-  --blue2:#2563eb;
   --purple:#a855f7;
-  --gold:#f5c842;
-  --gold2:#e8a020;
-  --cream:#fff8e8;
-  --rust:#c0391b;
+  --accent:#60a5fa;
+  --accent2:#1d4ed8;
+  --accentglow:rgba(96,165,250,0.45);
   --neon:#00ffe1;
-  --accent:#f5c842;
 }
 
 *{ margin:0; padding:0; box-sizing:border-box; font-family:Poppins,sans-serif; }
 
-body{
-  background:var(--bg);
-  color:var(--text);
-  overflow-x:hidden;
-}
+body{ background:var(--bg); color:var(--text); overflow-x:hidden; }
 
 body::before{
-  content:'';
-  position:fixed; inset:0;
-  background:repeating-linear-gradient(
-    0deg, transparent, transparent 2px,
-    rgba(0,0,0,0.025) 2px, rgba(0,0,0,0.025) 4px
-  );
+  content:''; position:fixed; inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.025) 2px,rgba(0,0,0,0.025) 4px);
   pointer-events:none; z-index:999;
 }
 
-/* ---- NAV ---- */
-header{
-  position:fixed; top:0; width:100%;
-  backdrop-filter:blur(14px);
-  background:rgba(7,10,18,0.85);
-  border-bottom:1px solid var(--border);
-  z-index:200;
-}
-nav{
-  max-width:1100px; margin:auto;
-  display:flex; justify-content:space-between; align-items:center;
-  padding:14px 24px;
-}
+/* NAV */
+header{ position:fixed; top:0; width:100%; backdrop-filter:blur(14px); background:rgba(7,10,18,0.85); border-bottom:1px solid var(--border); z-index:200; }
+nav{ max-width:1100px; margin:auto; display:flex; justify-content:space-between; align-items:center; padding:14px 24px; }
 nav ul{ display:flex; gap:26px; list-style:none; align-items:center; }
 .nav-link{ color:var(--muted); text-decoration:none; transition:0.2s ease; }
 .nav-link:hover{ color:var(--blue); }
 .logo img{ height:42px; cursor:pointer; transition:0.25s ease; }
 .logo img:hover{ transform:scale(1.05); filter:drop-shadow(0 0 12px rgba(56,189,248,0.6)); }
 .nav-item{ position:relative; }
-.dropdown{
-  position:absolute; top:100%; left:0; padding-top:12px;
-  min-width:200px; background:transparent; display:flex;
-  flex-direction:column; opacity:0; transform:translateY(6px);
-  pointer-events:none; transition:0.25s ease;
-}
-.dropdown-inner{
-  background:rgba(7,10,18,0.85); border:1px solid var(--border);
-  border-radius:12px; display:flex; flex-direction:column;
-  overflow:hidden; backdrop-filter:blur(14px);
-}
+.dropdown{ position:absolute; top:100%; left:0; padding-top:12px; min-width:200px; background:transparent; display:flex; flex-direction:column; opacity:0; transform:translateY(6px); pointer-events:none; transition:0.25s ease; }
+.dropdown-inner{ background:rgba(7,10,18,0.85); border:1px solid var(--border); border-radius:12px; display:flex; flex-direction:column; overflow:hidden; backdrop-filter:blur(14px); }
 .dropdown a{ padding:10px 14px; text-decoration:none; color:var(--muted); font-size:14px; transition:0.2s ease; }
 .dropdown a:hover{ background:rgba(56,189,248,0.12); color:var(--blue); }
 .nav-item:hover .dropdown{ opacity:1; transform:translateY(0); pointer-events:auto; }
 
-/* ---- HERO ---- */
-.hero{
-  position:relative;
-  min-height:100vh;
-  display:flex; align-items:flex-end;
-  overflow:hidden;
-}
+/* HERO */
+.hero{ position:relative; min-height:100vh; display:flex; align-items:flex-end; overflow:hidden; }
+.hero-bg{ position:absolute; inset:0; background:linear-gradient(180deg,#00060f 0%,#000a18 35%,#030810 65%,#070A12 100%); }
 
-.hero-bg{
-  position:absolute; inset:0;
-  background:linear-gradient(180deg, #0e0900 0%, #080600 35%, #060410 65%, #070A12 100%);
-}
-
-/* Holographic scan-line shimmer */
-.hero-shimmer{
-  position:absolute; inset:0; overflow:hidden;
-}
+.hero-shimmer{ position:absolute; inset:0; overflow:hidden; }
 .hero-shimmer::before{
-  content:'';
-  position:absolute; left:-50%; top:0;
-  width:30%; height:100%;
-  background:linear-gradient(90deg,
-    transparent 0%,
-    rgba(245,200,66,0.04) 40%,
-    rgba(245,200,66,0.09) 50%,
-    rgba(245,200,66,0.04) 60%,
-    transparent 100%
-  );
-  animation:shimmerMove 6s ease-in-out infinite;
+  content:''; position:absolute; left:-50%; top:0; width:25%; height:100%;
+  background:linear-gradient(90deg,transparent 0%,rgba(96,165,250,0.04) 40%,rgba(96,165,250,0.09) 50%,rgba(96,165,250,0.04) 60%,transparent 100%);
+  animation:shimmerMove 8s ease-in-out infinite;
 }
-@keyframes shimmerMove{
-  0%{ left:-50%; }
-  100%{ left:120%; }
-}
+@keyframes shimmerMove{ 0%{left:-50%} 100%{left:120%} }
 
-/* Star Wars style perspective corridor grid */
 .hero-grid{
   position:absolute; inset:0;
-  background-image:
-    linear-gradient(rgba(245,200,66,0.06) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(245,200,66,0.04) 1px, transparent 1px);
+  background-image:linear-gradient(rgba(96,165,250,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(96,165,250,0.05) 1px,transparent 1px);
   background-size:55px 55px;
   transform:perspective(700px) rotateX(54deg) translateY(28%);
   transform-origin:bottom center;
   animation:gridDrift 10s linear infinite;
 }
-@keyframes gridDrift{
-  from{ background-position:0 0; }
-  to{ background-position:0 55px; }
-}
+@keyframes gridDrift{ from{background-position:0 0} to{background-position:0 55px} }
 
-/* warm ambient glow */
-.hero-glow{
-  position:absolute; bottom:10%; left:50%;
-  transform:translateX(-50%);
-  width:700px; height:320px;
-  background:radial-gradient(ellipse,
-    rgba(245,200,66,0.14) 0%,
-    rgba(192,57,27,0.08) 45%,
-    transparent 70%
-  );
-  filter:blur(55px); pointer-events:none;
-}
+.hero-glow{ position:absolute; bottom:10%; left:50%; transform:translateX(-50%); width:800px; height:320px; background:radial-gradient(ellipse,rgba(29,78,216,0.22) 0%,rgba(96,165,250,0.09) 45%,transparent 70%); filter:blur(55px); pointer-events:none; }
 
-/* floating particle dots (droid scan effect) */
-.hero-particles{
-  position:absolute; inset:0; pointer-events:none;
-}
-.hero-particles span{
-  position:absolute;
-  width:2px; height:2px; border-radius:50%;
-  background:var(--gold);
-  animation:floatDot linear infinite;
-  opacity:0;
-}
-@keyframes floatDot{
-  0%{ opacity:0; transform:translateY(0) scale(1); }
-  20%{ opacity:0.7; }
-  80%{ opacity:0.3; }
-  100%{ opacity:0; transform:translateY(-80px) scale(0.5); }
-}
+.hero-particles{ position:absolute; inset:0; pointer-events:none; }
+.hero-particles span{ position:absolute; width:2px; height:2px; border-radius:50%; background:var(--accent); animation:floatDot linear infinite; opacity:0; }
+@keyframes floatDot{ 0%{opacity:0;transform:translateY(0) scale(1)} 20%{opacity:0.6} 80%{opacity:0.25} 100%{opacity:0;transform:translateY(-80px) scale(0.5)} }
 
-.hero-img-wrap{
-  position:absolute; inset:0;
-  display:flex; align-items:center; justify-content:center;
-}
-.hero-img-wrap img{
-  width:100%; height:100%; object-fit:cover;
-  opacity:0.5; mix-blend-mode:lighten;
-}
+.hero-img-wrap{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+.hero-img-wrap img{ width:100%; height:100%; object-fit:cover; opacity:0.45; mix-blend-mode:lighten; }
 
-.hero-content{
-  position:relative; z-index:2;
-  max-width:1100px; margin:0 auto;
-  padding:0 24px 80px; width:100%;
-}
+.hero-content{ position:relative; z-index:2; max-width:1100px; margin:0 auto; padding:0 24px 80px; width:100%; }
 
-.breadcrumb{
-  display:flex; align-items:center; gap:8px; margin-bottom:24px;
-  font-family:'Share Tech Mono', monospace; font-size:12px;
-  color:rgba(255,255,255,0.4); letter-spacing:1px;
-}
-.breadcrumb a{ color:var(--gold); text-decoration:none; }
+.breadcrumb{ display:flex; align-items:center; gap:8px; margin-bottom:24px; font-family:'Share Tech Mono',monospace; font-size:12px; color:rgba(255,255,255,0.4); letter-spacing:1px; }
+.breadcrumb a{ color:var(--accent); text-decoration:none; }
 .breadcrumb a:hover{ text-decoration:underline; }
 
-.hero-tag{
-  font-family:'Share Tech Mono', monospace; font-size:12px;
-  letter-spacing:3px; color:var(--gold); margin-bottom:16px; opacity:0.9;
-}
+.hero-tag{ font-family:'Share Tech Mono',monospace; font-size:12px; letter-spacing:3px; color:var(--accent); margin-bottom:16px; opacity:0.9; }
 
-.hero-title{
-  font-size:clamp(42px, 7.5vw, 88px);
-  line-height:0.95; font-weight:700; letter-spacing:-2px; margin-bottom:22px;
-}
-.hero-title .line2{
-  color:transparent;
-  -webkit-text-stroke:1px rgba(245,200,66,0.5);
-}
+.hero-title{ font-size:clamp(42px,7.5vw,88px); line-height:0.95; font-weight:700; letter-spacing:-2px; margin-bottom:22px; }
+.hero-title .line2{ color:transparent; -webkit-text-stroke:1px rgba(96,165,250,0.5); }
 
-.hero-sub{
-  color:var(--muted); max-width:580px;
-  line-height:1.8; font-size:16px; margin-bottom:36px;
-}
-
+.hero-sub{ color:var(--muted); max-width:580px; line-height:1.8; font-size:16px; margin-bottom:36px; }
 .hero-meta{ display:flex; gap:32px; flex-wrap:wrap; }
 .meta-item{ display:flex; flex-direction:column; gap:4px; }
-.meta-label{
-  font-family:'Share Tech Mono', monospace; font-size:10px;
-  letter-spacing:2px; color:rgba(255,255,255,0.35); text-transform:uppercase;
-}
-.meta-value{ font-size:14px; color:var(--gold); font-weight:600; }
+.meta-label{ font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:2px; color:rgba(255,255,255,0.35); text-transform:uppercase; }
+.meta-value{ font-size:14px; color:var(--accent); font-weight:600; }
 
-.scroll-hint{
-  position:absolute; bottom:30px; right:40px;
-  display:flex; flex-direction:column; align-items:center; gap:8px;
-  opacity:0.4; animation:bounce 2s ease-in-out infinite;
-}
+.scroll-hint{ position:absolute; bottom:30px; right:40px; display:flex; flex-direction:column; align-items:center; gap:8px; opacity:0.4; animation:bounce 2s ease-in-out infinite; }
 @keyframes bounce{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
-.scroll-hint span{ font-family:'Share Tech Mono', monospace; font-size:10px; letter-spacing:2px; color:var(--gold); }
-.scroll-arrow{ width:1px; height:40px; background:linear-gradient(to bottom, var(--gold), transparent); }
+.scroll-hint span{ font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--accent); }
+.scroll-arrow{ width:1px; height:40px; background:linear-gradient(to bottom,var(--accent),transparent); }
 
-/* ---- MAIN ---- */
+/* MAIN */
 main{ max-width:1100px; margin:0 auto; padding:0 24px 120px; }
 
-.section-label{
-  font-family:'Share Tech Mono', monospace; font-size:11px;
-  letter-spacing:3px; color:var(--gold); opacity:0.7;
-  margin-bottom:12px; display:block;
-}
-
+.section-label{ font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:3px; color:var(--accent); opacity:0.7; margin-bottom:12px; display:block; }
 .fade{ opacity:0; transform:translateY(30px); transition:0.9s ease; }
 .fade.show{ opacity:1; transform:translateY(0); }
+.back-link{ display:inline-flex; align-items:center; gap:8px; color:var(--muted); text-decoration:none; font-size:14px; transition:0.2s ease; margin-bottom:60px; padding-top:40px; font-family:'Share Tech Mono',monospace; letter-spacing:1px; }
+.back-link:hover{ color:var(--accent); }
 
-.back-link{
-  display:inline-flex; align-items:center; gap:8px;
-  color:var(--muted); text-decoration:none; font-size:14px;
-  transition:0.2s ease; margin-bottom:60px; padding-top:40px;
-  font-family:'Share Tech Mono', monospace; letter-spacing:1px;
-}
-.back-link:hover{ color:var(--gold); }
-
-/* ---- INTRO ---- */
-.intro-block{
-  padding:80px 0 60px;
-  display:grid; grid-template-columns:1.2fr 1fr;
-  gap:80px; align-items:start;
-  border-bottom:1px solid var(--border);
-}
+/* INTRO */
+.intro-block{ padding:80px 0 60px; display:grid; grid-template-columns:1.2fr 1fr; gap:80px; align-items:start; border-bottom:1px solid var(--border); }
 .intro-block h2{ font-size:38px; line-height:1.2; margin-bottom:20px; }
 .intro-block p{ color:var(--muted); line-height:1.9; font-size:15px; margin-bottom:16px; }
 .intro-block em{ color:rgba(255,255,255,0.92); font-style:normal; }
 
 .stat-stack{ display:flex; flex-direction:column; gap:20px; }
-.stat-card{
-  background:var(--glass); border:1px solid var(--border);
-  border-radius:16px; padding:20px 24px;
-  backdrop-filter:blur(8px); position:relative; overflow:hidden;
-}
-.stat-card::before{
-  content:''; position:absolute; top:0; left:0;
-  width:3px; height:100%;
-  background:linear-gradient(to bottom, var(--gold), var(--rust));
-  border-radius:3px 0 0 3px;
-}
-.stat-card .num{
-  font-size:28px; font-weight:700; color:var(--gold);
-  line-height:1; font-family:'Share Tech Mono', monospace;
-}
+.stat-card{ background:var(--glass); border:1px solid var(--border); border-radius:16px; padding:20px 24px; backdrop-filter:blur(8px); position:relative; overflow:hidden; }
+.stat-card::before{ content:''; position:absolute; top:0; left:0; width:3px; height:100%; background:linear-gradient(to bottom,var(--accent),var(--purple)); border-radius:3px 0 0 3px; }
+.stat-card .num{ font-size:28px; font-weight:700; color:var(--accent); line-height:1; font-family:'Share Tech Mono',monospace; }
 .stat-card .desc{ font-size:13px; color:var(--muted); margin-top:5px; }
 
-/* ---- BUILD PHASE TIMELINE ---- */
+/* FILE SOURCING CALLOUT */
+.sourcing-callout{ margin:0 0 60px; background:rgba(96,165,250,0.05); border:1px solid rgba(96,165,250,0.18); border-radius:18px; padding:28px 32px; position:relative; overflow:hidden; }
+.sourcing-callout::before{ content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--accent),rgba(168,85,247,0.6),transparent); }
+.sourcing-callout h3{ font-size:18px; margin-bottom:10px; color:var(--accent); }
+.sourcing-callout p{ color:var(--muted); font-size:14px; line-height:1.8; margin:0; }
+
+/* PHASE TIMELINE */
 .phases-section{ padding:80px 0; border-bottom:1px solid var(--border); }
 .phases-section > h2{ font-size:34px; margin-bottom:12px; }
 .phases-section > .lead{ color:var(--muted); max-width:680px; line-height:1.8; margin-bottom:64px; }
 
-.phase-track{
-  display:flex; flex-direction:column; gap:0; position:relative;
-}
+.phase-track{ display:flex; flex-direction:column; gap:0; position:relative; }
 .phase-track::before{
   content:''; position:absolute; left:28px; top:0; bottom:0; width:2px;
-  background:linear-gradient(to bottom, var(--gold), var(--rust), var(--purple), transparent);
-  opacity:0.25;
+  background:linear-gradient(to bottom, var(--accent) 0%, var(--accent) 16%, rgba(255,255,255,0.09) 16%, rgba(255,255,255,0.06) 100%);
+  opacity:0.45;
 }
 
-/* phase block: 2-col grid — dot col + content */
-.phase-block{
-  display:grid; grid-template-columns:72px 1fr;
-  padding:0 0 70px;
-}
+.phase-block{ display:grid; grid-template-columns:72px 1fr; padding:0 0 70px; }
 .phase-block:last-child{ padding-bottom:0; }
+.phase-dot-col{ display:flex; flex-direction:column; align-items:center; padding-top:5px; }
 
-.phase-dot-col{
-  display:flex; flex-direction:column; align-items:center; padding-top:5px;
-}
-.phase-dot{
-  width:18px; height:18px; border-radius:50%;
-  border:2px solid var(--gold);
-  background:var(--bg);
-  box-shadow:0 0 14px rgba(245,200,66,0.45);
-  flex-shrink:0; position:relative; z-index:1;
-}
-/* different color per phase */
-.phase-dot.d2{ border-color:#60a5fa; box-shadow:0 0 14px rgba(96,165,250,0.4); }
-.phase-dot.d3{ border-color:var(--rust); box-shadow:0 0 14px rgba(192,57,27,0.45); }
-.phase-dot.d4{ border-color:#a78bfa; box-shadow:0 0 14px rgba(167,139,250,0.45); }
-.phase-dot.d5{ border-color:var(--neon); box-shadow:0 0 16px rgba(0,255,225,0.55); }
+.phase-dot{ width:18px; height:18px; border-radius:50%; background:var(--bg); flex-shrink:0; position:relative; z-index:1; border:2px solid rgba(255,255,255,0.14); }
+.phase-dot.done{ border-color:var(--accent); background:rgba(96,165,250,0.12); box-shadow:0 0 12px var(--accentglow); }
+.phase-dot.active{ border-color:var(--accent); background:rgba(96,165,250,0.08); animation:activePulse 1.8s ease-in-out infinite; }
+@keyframes activePulse{ 0%,100%{box-shadow:0 0 14px var(--accentglow)} 50%{box-shadow:0 0 28px rgba(96,165,250,0.7)} }
+.phase-dot.upcoming{ border-color:rgba(255,255,255,0.13); }
 
 .phase-body{ padding-left:24px; }
+.phase-kicker{ font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:2px; margin-bottom:6px; display:block; color:var(--accent); }
+.phase-kicker.dim{ color:rgba(255,255,255,0.28); }
 
-.phase-kicker{
-  font-family:'Share Tech Mono', monospace; font-size:11px;
-  letter-spacing:2px; margin-bottom:6px; display:block;
-  color:var(--gold);
-}
-.phase-kicker.k2{ color:#60a5fa; }
-.phase-kicker.k3{ color:var(--rust); }
-.phase-kicker.k4{ color:#a78bfa; }
-.phase-kicker.k5{ color:var(--neon); }
+.phase-block.upcoming-block .phase-body h3{ color:rgba(255,255,255,0.38); }
+.phase-block.upcoming-block .phase-body > p{ color:rgba(255,255,255,0.24); }
+.phase-block.upcoming-block .detail-cards{ opacity:0.28; pointer-events:none; }
 
 .phase-body h3{ font-size:26px; margin-bottom:14px; line-height:1.2; }
-.phase-body > p{
-  color:var(--muted); line-height:1.9; font-size:15px;
-  max-width:720px; margin-bottom:28px;
-}
+.phase-body > p{ color:var(--muted); line-height:1.9; font-size:15px; max-width:720px; margin-bottom:28px; }
 
-/* ---- DETAIL CARDS inside a phase ---- */
-.detail-cards{
-  display:grid; grid-template-columns:1fr 1fr; gap:16px; margin-bottom:0;
-}
+.active-banner{ display:inline-flex; align-items:center; gap:8px; padding:7px 16px; border-radius:999px; border:1px solid rgba(96,165,250,0.3); background:rgba(96,165,250,0.07); font-family:'Share Tech Mono',monospace; font-size:12px; color:var(--accent); margin-bottom:20px; }
+.active-dot{ width:7px; height:7px; border-radius:50%; background:var(--accent); box-shadow:0 0 6px var(--accentglow); animation:activePulse 1.8s ease-in-out infinite; }
 
-.detail-card{
-  background:var(--glass2); border:1px solid var(--border);
-  border-radius:16px; overflow:hidden;
-  transition:border-color 0.3s ease, background 0.3s ease;
-}
-.detail-card:hover{
-  border-color:rgba(245,200,66,0.22);
-  background:rgba(255,255,255,0.05);
-}
-.detail-card.c2:hover{ border-color:rgba(96,165,250,0.22); }
-.detail-card.c3:hover{ border-color:rgba(192,57,27,0.22); }
-.detail-card.c4:hover{ border-color:rgba(167,139,250,0.22); }
-.detail-card.c5:hover{ border-color:rgba(0,255,225,0.2); }
-
-.dc-img{
-  background:rgba(255,255,255,0.03);
-  overflow:hidden; position:relative; height:170px;
-}
-.dc-img img{
-  width:100%; height:100%; object-fit:cover; display:block;
-  transition:transform 0.45s ease;
-}
+/* DETAIL CARDS */
+.detail-cards{ display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+.detail-card{ background:var(--glass2); border:1px solid var(--border); border-radius:16px; overflow:hidden; transition:border-color 0.3s ease,background 0.3s ease; }
+.detail-card:hover{ border-color:rgba(96,165,250,0.22); background:rgba(255,255,255,0.05); }
+.detail-card.full{ grid-column:span 2; }
+.dc-img{ background:rgba(255,255,255,0.03); overflow:hidden; position:relative; height:170px; }
+.dc-img img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.45s ease; }
 .detail-card:hover .dc-img img{ transform:scale(1.06); }
-.dc-placeholder{
-  width:100%; height:100%; display:flex; align-items:center; justify-content:center;
-  font-size:36px; opacity:0.18;
-  background:linear-gradient(135deg, rgba(245,200,66,0.05), rgba(192,57,27,0.05));
-}
-
+.dc-placeholder{ width:100%; height:100%; display:flex; align-items:center; justify-content:center; font-size:36px; opacity:0.14; background:linear-gradient(135deg,rgba(96,165,250,0.06),rgba(29,78,216,0.06)); }
+.detail-card.full .dc-img{ height:210px; }
 .dc-text{ padding:18px 20px; }
-.dc-label{
-  font-family:'Share Tech Mono', monospace; font-size:10px;
-  letter-spacing:2px; color:var(--gold); opacity:0.7; margin-bottom:6px; display:block;
-}
-.dc-label.l2{ color:#60a5fa; }
-.dc-label.l3{ color:var(--rust); }
-.dc-label.l4{ color:#a78bfa; }
-.dc-label.l5{ color:var(--neon); }
-
+.dc-label{ font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--accent); opacity:0.7; margin-bottom:6px; display:block; }
 .dc-text h4{ font-size:16px; margin-bottom:8px; }
 .dc-text p{ color:var(--muted); font-size:13px; line-height:1.7; }
-
 .dc-pills{ display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
-.dc-pill{
-  padding:3px 10px; border-radius:999px;
-  font-family:'Share Tech Mono', monospace; font-size:10px; letter-spacing:0.5px;
-  border:1px solid rgba(245,200,66,0.2); color:rgba(245,200,66,0.8);
-  background:rgba(245,200,66,0.05);
-}
-.dc-pill.p2{ border-color:rgba(96,165,250,0.2); color:rgba(96,165,250,0.8); background:rgba(96,165,250,0.04); }
-.dc-pill.p3{ border-color:rgba(192,57,27,0.25); color:rgba(255,120,80,0.85); background:rgba(192,57,27,0.05); }
-.dc-pill.p4{ border-color:rgba(167,139,250,0.2); color:rgba(167,139,250,0.8); background:rgba(167,139,250,0.04); }
-.dc-pill.p5{ border-color:rgba(0,255,225,0.18); color:rgba(0,255,225,0.8); background:rgba(0,255,225,0.04); }
+.dc-pill{ padding:3px 10px; border-radius:999px; font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:0.5px; border:1px solid rgba(96,165,250,0.2); color:rgba(96,165,250,0.8); background:rgba(96,165,250,0.05); }
 
-/* single wide card (full row) */
-.detail-card.full{ grid-column:span 2; }
-.detail-card.full .dc-img{ height:220px; }
-
-/* ---- ELECTRONICS DIAGRAM ---- */
+/* ELECTRONICS BOARD */
 .electronics-section{ padding:80px 0; border-bottom:1px solid var(--border); }
 .electronics-section h2{ font-size:34px; margin-bottom:12px; }
-.electronics-section .lead{ color:var(--muted); max-width:680px; line-height:1.8; margin-bottom:48px; }
-
-.eboard{
-  display:grid; grid-template-columns:repeat(3, 1fr);
-  gap:16px;
-}
-
-.ecard{
-  background:var(--glass); border:1px solid var(--border);
-  border-radius:18px; padding:24px;
-  backdrop-filter:blur(8px);
-  transition:border-color 0.3s ease, background 0.3s ease;
-  position:relative; overflow:hidden;
-}
-.ecard::after{
-  content:''; position:absolute; inset:0; border-radius:18px;
-  background:linear-gradient(135deg, rgba(245,200,66,0.03), transparent 60%);
-  pointer-events:none;
-}
-.ecard:hover{ border-color:rgba(245,200,66,0.22); background:rgba(255,255,255,0.07); }
-
-.ecard-icon{
-  font-size:28px; margin-bottom:12px; opacity:0.8; display:block;
-}
-.ecard h4{ font-size:16px; margin-bottom:8px; }
+.electronics-section .lead{ color:var(--muted); max-width:680px; line-height:1.8; margin-bottom:32px; }
+.planned-note{ display:inline-flex; align-items:center; gap:8px; padding:7px 16px; border-radius:999px; border:1px solid rgba(168,85,247,0.3); background:rgba(168,85,247,0.06); font-family:'Share Tech Mono',monospace; font-size:11px; color:rgba(168,85,247,0.85); margin-bottom:36px; }
+.eboard{ display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
+.ecard{ background:var(--glass); border:1px solid var(--border); border-radius:18px; padding:24px; backdrop-filter:blur(8px); transition:border-color 0.3s ease,background 0.3s ease; position:relative; overflow:hidden; }
+.ecard::after{ content:''; position:absolute; inset:0; border-radius:18px; background:linear-gradient(135deg,rgba(96,165,250,0.03),transparent 60%); pointer-events:none; }
+.ecard:hover{ border-color:rgba(96,165,250,0.22); background:rgba(255,255,255,0.07); }
+.ecard-icon{ font-size:26px; margin-bottom:12px; opacity:0.8; display:block; }
+.ecard h4{ font-size:15px; margin-bottom:8px; }
 .ecard p{ color:var(--muted); font-size:13px; line-height:1.7; }
-.ecard-chip{
-  display:inline-block; margin-top:10px;
-  padding:3px 10px; border-radius:999px;
-  font-family:'Share Tech Mono', monospace; font-size:10px; letter-spacing:0.5px;
-  border:1px solid rgba(245,200,66,0.2); color:rgba(245,200,66,0.8);
-  background:rgba(245,200,66,0.05);
-}
+.ecard-chip{ display:inline-block; margin-top:10px; padding:3px 10px; border-radius:999px; font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:0.5px; border:1px solid rgba(96,165,250,0.2); color:rgba(96,165,250,0.8); background:rgba(96,165,250,0.05); }
 
-/* ---- PHOTO GALLERY ---- */
-.gallery-section{ padding:80px 0; border-bottom:1px solid var(--border); }
-.gallery-section h2{ font-size:34px; margin-bottom:12px; }
-.gallery-section .lead{ color:var(--muted); max-width:600px; line-height:1.8; margin-bottom:48px; }
-
-.photo-grid{
-  display:grid;
-  grid-template-columns:1fr 1fr 1fr;
-  gap:16px;
-}
-.photo-cell{
-  border-radius:16px; overflow:hidden;
-  border:1px solid var(--border); background:var(--glass2);
-  position:relative; cursor:pointer;
-}
-.photo-cell img{
-  width:100%; height:100%; min-height:190px;
-  object-fit:cover; display:block; transition:transform 0.5s ease;
-}
-.photo-cell:hover img{ transform:scale(1.05); }
-.photo-cell.tall{ grid-row:span 2; }
-.photo-cell.wide{ grid-column:span 2; }
-.photo-caption{
-  position:absolute; bottom:0; left:0; right:0;
-  padding:20px 14px 12px;
-  background:linear-gradient(to top, rgba(0,0,0,0.85), transparent);
-  font-size:11px; color:rgba(255,255,255,0.8); opacity:0;
-  transition:0.3s ease; font-family:'Share Tech Mono', monospace; letter-spacing:1px;
-}
-.photo-cell:hover .photo-caption{ opacity:1; }
-.photo-placeholder{
-  width:100%; min-height:190px; display:flex; flex-direction:column;
-  align-items:center; justify-content:center; gap:10px;
-  background:linear-gradient(135deg, rgba(245,200,66,0.04), rgba(192,57,27,0.04));
-  color:rgba(255,255,255,0.14); font-size:12px;
-  font-family:'Share Tech Mono', monospace;
-}
-.photo-placeholder .icon{ font-size:26px; opacity:0.25; }
-
-/* ---- CODE SNIPPET ---- */
+/* CODE BLOCK */
 .code-section{ padding:80px 0; border-bottom:1px solid var(--border); }
 .code-section h2{ font-size:34px; margin-bottom:12px; }
 .code-section .lead{ color:var(--muted); max-width:680px; line-height:1.8; margin-bottom:40px; }
-
-.code-block{
-  background:rgba(0,0,0,0.5);
-  border:1px solid rgba(245,200,66,0.15);
-  border-radius:16px; overflow:hidden;
-  margin-bottom:20px;
-}
-.code-header{
-  display:flex; align-items:center; justify-content:space-between;
-  padding:12px 20px;
-  background:rgba(245,200,66,0.04);
-  border-bottom:1px solid rgba(245,200,66,0.1);
-}
-.code-header span{
-  font-family:'Share Tech Mono', monospace; font-size:12px;
-  color:rgba(245,200,66,0.6); letter-spacing:1px;
-}
+.code-block{ background:rgba(0,0,0,0.55); border:1px solid rgba(96,165,250,0.14); border-radius:16px; overflow:hidden; margin-bottom:20px; }
+.code-header{ display:flex; align-items:center; justify-content:space-between; padding:12px 20px; background:rgba(96,165,250,0.04); border-bottom:1px solid rgba(96,165,250,0.1); }
+.code-header span{ font-family:'Share Tech Mono',monospace; font-size:12px; color:rgba(96,165,250,0.6); letter-spacing:1px; }
 .code-dots{ display:flex; gap:6px; }
 .code-dots i{ width:10px; height:10px; border-radius:50%; }
 .code-dots i:nth-child(1){ background:rgba(255,90,90,0.5); }
 .code-dots i:nth-child(2){ background:rgba(255,200,50,0.5); }
 .code-dots i:nth-child(3){ background:rgba(50,200,100,0.5); }
-
-.code-body{
-  padding:24px 24px;
-  overflow-x:auto;
-}
-.code-body pre{
-  font-family:'Share Tech Mono', monospace; font-size:13px;
-  line-height:1.75; color:rgba(255,255,255,0.82); white-space:pre; margin:0;
-}
-.c-comment{ color:rgba(255,255,255,0.3); }
+.code-body{ padding:24px; overflow-x:auto; }
+.code-body pre{ font-family:'Share Tech Mono',monospace; font-size:13px; line-height:1.75; color:rgba(255,255,255,0.8); white-space:pre; margin:0; }
+.c-comment{ color:rgba(255,255,255,0.28); }
 .c-keyword{ color:#c792ea; }
 .c-fn{ color:#82aaff; }
 .c-str{ color:#c3e88d; }
-.c-num{ color:var(--gold); }
+.c-num{ color:#60a5fa; }
 .c-var{ color:#f07178; }
 
-/* ---- PROGRESS BARS ---- */
-.progress-section{
-  padding:80px 0; border-bottom:1px solid var(--border);
-  display:grid; grid-template-columns:1.1fr 1fr;
-  gap:80px; align-items:start;
-}
+/* GALLERY */
+.gallery-section{ padding:80px 0; border-bottom:1px solid var(--border); }
+.gallery-section h2{ font-size:34px; margin-bottom:12px; }
+.gallery-section .lead{ color:var(--muted); max-width:600px; line-height:1.8; margin-bottom:48px; }
+.photo-grid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+.photo-cell{ border-radius:16px; overflow:hidden; border:1px solid var(--border); background:var(--glass2); position:relative; cursor:pointer; }
+.photo-cell img{ width:100%; height:100%; min-height:190px; object-fit:cover; display:block; transition:transform 0.5s ease; }
+.photo-cell:hover img{ transform:scale(1.05); }
+.photo-cell.tall{ grid-row:span 2; }
+.photo-cell.wide{ grid-column:span 2; }
+.photo-caption{ position:absolute; bottom:0; left:0; right:0; padding:20px 14px 12px; background:linear-gradient(to top,rgba(0,0,0,0.85),transparent); font-size:11px; color:rgba(255,255,255,0.8); opacity:0; transition:0.3s ease; font-family:'Share Tech Mono',monospace; letter-spacing:1px; }
+.photo-cell:hover .photo-caption{ opacity:1; }
+.photo-placeholder{ width:100%; min-height:190px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; background:linear-gradient(135deg,rgba(96,165,250,0.04),rgba(29,78,216,0.04)); color:rgba(255,255,255,0.13); font-size:12px; font-family:'Share Tech Mono',monospace; }
+.photo-placeholder .icon{ font-size:26px; opacity:0.22; }
+
+/* PROGRESS */
+.progress-section{ padding:80px 0; display:grid; grid-template-columns:1.1fr 1fr; gap:80px; align-items:start; }
 .progress-section h2{ font-size:34px; margin-bottom:20px; }
 .progress-section p{ color:var(--muted); line-height:1.9; font-size:15px; margin-bottom:16px; }
-
 .bars-list{ display:flex; flex-direction:column; gap:16px; }
 .bar-row{ display:flex; flex-direction:column; gap:6px; }
 .bar-label{ display:flex; justify-content:space-between; font-size:13px; color:var(--muted); }
-.bar-label span:last-child{ color:var(--gold); font-family:'Share Tech Mono', monospace; }
+.bar-label span:last-child{ color:var(--accent); font-family:'Share Tech Mono',monospace; }
 .bar-track{ height:5px; background:rgba(255,255,255,0.08); border-radius:5px; overflow:hidden; }
-.bar-fill{
-  height:100%; border-radius:5px;
-  background:linear-gradient(90deg, var(--gold), var(--rust));
-  width:0%; transition:width 1.3s ease;
-}
+.bar-fill{ height:100%; border-radius:5px; background:linear-gradient(90deg,var(--accent),var(--purple)); width:0%; transition:width 1.3s ease; }
 
-/* ---- STATUS BADGE ---- */
-.status-row{
-  display:flex; gap:12px; flex-wrap:wrap; margin-top:32px;
-}
-.status-badge{
-  display:flex; align-items:center; gap:8px;
-  padding:8px 16px; border-radius:999px;
-  border:1px solid var(--border);
-  font-family:'Share Tech Mono', monospace; font-size:12px;
-  color:var(--muted); background:var(--glass);
-}
-.status-dot{
-  width:8px; height:8px; border-radius:50%; flex-shrink:0;
-}
+.status-row{ display:flex; gap:10px; flex-wrap:wrap; margin-top:32px; }
+.status-badge{ display:flex; align-items:center; gap:8px; padding:7px 14px; border-radius:999px; border:1px solid var(--border); font-family:'Share Tech Mono',monospace; font-size:11px; color:var(--muted); background:var(--glass); }
+.status-dot{ width:7px; height:7px; border-radius:50%; flex-shrink:0; }
 .status-dot.done{ background:#4ade80; box-shadow:0 0 6px rgba(74,222,128,0.6); }
-.status-dot.wip{ background:var(--gold); box-shadow:0 0 6px rgba(245,200,66,0.6); animation:pulse 1.5s ease-in-out infinite; }
-.status-dot.next{ background:rgba(255,255,255,0.2); }
-@keyframes pulse{ 0%,100%{opacity:1} 50%{opacity:0.4} }
+.status-dot.active{ background:var(--accent); box-shadow:0 0 8px var(--accentglow); animation:activePulse 1.8s ease-in-out infinite; }
+.status-dot.next{ background:rgba(255,255,255,0.18); }
 
 footer{ text-align:center; padding:60px 20px; color:rgba(255,255,255,0.5); border-top:1px solid var(--border); }
 
-/* ---- RESPONSIVE ---- */
 @media(max-width:900px){
-  .intro-block, .progress-section{ grid-template-columns:1fr; gap:40px; }
+  .intro-block,.progress-section{ grid-template-columns:1fr; gap:40px; }
   .eboard{ grid-template-columns:1fr 1fr; }
   .detail-cards{ grid-template-columns:1fr; }
   .detail-card.full{ grid-column:span 1; }
@@ -567,12 +272,9 @@ footer{ text-align:center; padding:60px 20px; color:rgba(255,255,255,0.5); borde
 </head>
 <body>
 
-<!-- NAV -->
 <header>
 <nav>
-  <a href="index.html" class="logo">
-    <img src="signature.png" alt="Devon Shunn">
-  </a>
+  <a href="index.html" class="logo"><img src="signature.png" alt="Devon Shunn"></a>
   <ul>
     <li class="nav-item">
       <a href="projects.html" class="nav-link">Projects</a>
@@ -601,65 +303,37 @@ footer{ text-align:center; padding:60px 20px; color:rgba(255,255,255,0.5); borde
   <div class="hero-grid"></div>
   <div class="hero-glow"></div>
   <div class="hero-particles" id="particles"></div>
-
   <!--
-    HERO IMAGE
-    Best: a dramatic photo of the finished BD-1, ideally with the LEDs lit,
-    shot against a dark background so the lighten blend mode pops.
+    HERO IMAGE — place your best BD-1 photo or reference art here.
+    Dark background with blue-lit subject works best with the lighten blend.
     Path: images/bd1/hero.jpg
   -->
   <div class="hero-img-wrap">
-    <img src="images/bd1/hero.jpg" alt="BD-1 Droid Hero Shot" onerror="this.style.display='none'">
+    <img src="images/bd1/hero.jpg" alt="BD-1 Droid" onerror="this.style.display='none'">
   </div>
 
   <div class="hero-content">
     <div class="breadcrumb">
-      <a href="projects.html">Projects</a>
-      <span>/</span>
-      <span>BD-1 Droid</span>
+      <a href="projects.html">Projects</a><span>/</span><span>BD-1 Droid</span>
     </div>
-
-    <div class="hero-tag">// 3D PRINT · ELECTRONICS · PAINT · CODE</div>
-
-    <h1 class="hero-title">
-      BD-1<br>
-      <span class="line2">Full Build</span>
-    </h1>
-
+    <div class="hero-tag">// 3D PRINT · PAINT · ELECTRONICS · CODE</div>
+    <h1 class="hero-title">BD-1<br><span class="line2">Full Build</span></h1>
     <p class="hero-sub">
-      Designing, printing, assembling, wiring, coding, and painting a fully functional
-      BD-1 droid from Jedi: Fallen Order — the most complete build I've done.
+      Building a fully functional BD-1 droid from Jedi: Fallen Order — sourcing and modifying
+      files, printing, finishing, wiring, and coding. Currently deep in the printing phase
+      with a long way still to go.
     </p>
-
     <div class="hero-meta">
-      <div class="meta-item">
-        <span class="meta-label">Source</span>
-        <span class="meta-value">Jedi: Fallen Order</span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-label">Scale</span>
-        <span class="meta-value">1:1 Screen Size</span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-label">Electronics</span>
-        <span class="meta-value">LED + Sound + Servo</span>
-      </div>
-      <div class="meta-item">
-        <span class="meta-label">Status</span>
-        <span class="meta-value" style="color:var(--gold)">In Progress</span>
-      </div>
+      <div class="meta-item"><span class="meta-label">Source</span><span class="meta-value">Jedi: Fallen Order</span></div>
+      <div class="meta-item"><span class="meta-label">Scale</span><span class="meta-value">1:1 Screen Size</span></div>
+      <div class="meta-item"><span class="meta-label">Current Phase</span><span class="meta-value">Printing</span></div>
+      <div class="meta-item"><span class="meta-label">Status</span><span class="meta-value" style="color:#a78bfa">In Progress</span></div>
     </div>
   </div>
-
-  <div class="scroll-hint">
-    <span>SCROLL</span>
-    <div class="scroll-arrow"></div>
-  </div>
+  <div class="scroll-hint"><span>SCROLL</span><div class="scroll-arrow"></div></div>
 </section>
 
-<!-- MAIN -->
 <main>
-
   <a class="back-link fade" href="projects.html">← Back to Projects</a>
 
   <!-- INTRO -->
@@ -668,131 +342,146 @@ footer{ text-align:center; padding:60px 20px; color:rgba(255,255,255,0.5); borde
       <span class="section-label">// WHY BD-1</span>
       <h2>The Most Expressive Droid in Star Wars</h2>
       <p>
-        Jedi: Fallen Order is my favorite Star Wars game, and BD-1 is a big part of why.
-        There's no dialogue — every bit of character comes from the way the droid moves,
-        chirps, tilts its head, and looks at you with those big lens eyes. Respawn built
-        something genuinely special: a companion that communicates entirely through motion
-        and sound, and somehow makes you care about it more than characters with full scripts.
+        Jedi: Fallen Order is my favorite Star Wars game, and BD-1 is a massive part of why.
+        There's no spoken dialogue — every bit of his character comes through the way he moves,
+        chirps, tilts his head, and looks at you with those big lens eyes. Respawn built something
+        genuinely special: a companion that communicates entirely through motion and sound, and
+        somehow makes you care about him more than most characters with full scripts.
       </p>
       <p>
-        The moment I finished the game I wanted one on my desk. Not a statue, not a model kit —
-        a BD-1 that <em>behaves</em> like BD-1. Eyes that glow. Sounds that actually come from
-        the game. A head that tilts when you walk past. That meant this couldn't just be a
-        printing project. It had to be the full stack: design, print, assemble, wire, code, paint.
-        Every discipline I'd been building across four years, all in one build.
+        The moment I finished the game I wanted one on my desk. Not a statue — a BD-1 that
+        <em>behaves</em> like BD-1. Eyes that glow. Sounds from the actual game. A head that
+        tilts when you walk past. That meant this couldn't just be a printing project. It had to
+        be everything: design work, printing, sanding, painting, assembly, wiring, and code.
+        Every skill I've built across four years of printing, all converging on one build.
       </p>
       <p>
-        It's the most ambitious prop I've ever attempted, and it's not done yet. But it's further
-        along than anything else I've built — and the process of getting here has pushed every
-        skill I have to its current limit.
+        It's going to take a long time. There are a lot of parts still in the print queue, and
+        everything after printing is its own mountain. But this is the project I've been building
+        toward, and I'm not in a hurry to rush any phase of it.
       </p>
     </div>
     <div class="stat-stack">
       <div class="stat-card">
         <div class="num">80+</div>
-        <div class="desc">Individual printed parts across body, legs, head, and detail panels</div>
+        <div class="desc">Individual parts across body, legs, head, and all detail panels</div>
       </div>
       <div class="stat-card">
-        <div class="num">5 phases</div>
-        <div class="desc">Design → Print → Assembly → Electronics → Paint & Finish</div>
+        <div class="num">7 phases</div>
+        <div class="desc">Design → Print → Paint → Assembly → Electronics → Code → Done</div>
       </div>
       <div class="stat-card">
         <div class="num">Arduino</div>
-        <div class="desc">Nano at the core — driving servos, LEDs, and sound from a single board</div>
+        <div class="desc">Nano planned at the core — servos, LEDs, and sound from one board</div>
       </div>
       <div class="stat-card">
         <div class="num">1:1</div>
-        <div class="desc">Screen-accurate scale based on in-game reference measurements</div>
+        <div class="desc">Screen-accurate scale matched to in-game reference measurements</div>
       </div>
     </div>
   </div>
 
-  <!-- BUILD PHASE TIMELINE -->
+  <!-- FILE SOURCING CALLOUT -->
+  <div class="sourcing-callout fade">
+    <h3>// On the Files</h3>
+    <p>
+      The models for this build weren't designed from scratch. The BD-1 prop community has
+      produced remarkably detailed files over the years, and I sourced the best available versions
+      as a starting point. What took real time and skill was modifying them to accommodate the
+      electronics I planned to include — something the originals had no provision for at all.
+      That meant hollowing body cavities to fit the Arduino tray and battery pack, routing wire
+      channels through the internal frame, opening a channel through the neck joint for a slip
+      ring, rebuilding the eye sockets to accept LED housings at the correct depth, and adding
+      heat-insert bosses throughout where the originals had none. The files being printed are
+      meaningfully different from anything that was downloaded — but the underlying mesh work
+      belongs to the community that built them, and that's worth being upfront about.
+    </p>
+  </div>
+
+  <!-- PHASE TIMELINE -->
   <div class="phases-section fade">
-    <span class="section-label">// THE BUILD BREAKDOWN</span>
-    <h2>Five Phases, One Droid</h2>
+    <span class="section-label">// THE BUILD PLAN</span>
+    <h2>Seven Phases — One at a Time</h2>
     <p class="lead">
-      BD-1 isn't one project — it's five overlapping ones. Each phase built on the last,
-      and each one exposed problems in a previous one that had to be revisited.
-      Here's how it actually went.
+      Phase 1 is done. Phase 2 is active — and there's still a long way to go on it.
+      Everything from Phase 3 onward is fully planned but hasn't started yet.
     </p>
 
     <div class="phase-track">
 
-      <!-- PHASE 1: DESIGN -->
+      <!-- PHASE 1: DESIGN — DONE -->
       <div class="phase-block">
-        <div class="phase-dot-col"><div class="phase-dot"></div></div>
+        <div class="phase-dot-col"><div class="phase-dot done"></div></div>
         <div class="phase-body">
-          <span class="phase-kicker">PHASE 01 — DESIGN</span>
-          <h3>Modeling a Droid That Actually Works</h3>
+          <span class="phase-kicker">PHASE 01 — FILE PREP &amp; DESIGN // COMPLETE</span>
+          <h3>Modifying the Files to Fit the Plan</h3>
           <p>
-            The design phase was the longest and least glamorous part of the entire build.
-            BD-1's proportions in the game are slightly exaggerated — legs that are too long,
-            a head that's too large for a real structural joint to support. Getting from
-            "looks like BD-1" to "can be assembled as a physical object with real hardware
-            inside it" required rebuilding parts multiple times as the electronics plan evolved.
+            The design phase wasn't about modeling BD-1 from nothing — it was about understanding
+            the sourced files thoroughly enough to rebuild the parts that needed to change. Each
+            component had to be evaluated for printability on the X1C, then modified to house the
+            planned electronics hardware, then checked against every adjacent part it would touch
+            in the final assembly.
           </p>
           <p>
-            I started in Fusion 360 for all the structural and mechanical parts — legs, hip joints,
-            the body chassis — where tolerances and hardware fitment matter. The head and
-            detail shell panels were sculpted in Blender to capture the organic curves that
-            parametric CAD struggles with. The two workflows had to hand off cleanly, which meant
-            exporting meshes back and forth and keeping track of which file was authoritative
-            for each part.
+            The most involved work was the internal architecture. The original files were largely
+            solid — no provision for any of the electronics I had in mind. Converting them to
+            functional shells with routed wire channels, a servo mount, an Arduino tray, and an
+            accessible battery compartment required rebuilding significant interior geometry
+            while keeping every exterior surface exactly as it was.
           </p>
           <div class="detail-cards">
             <div class="detail-card">
               <div class="dc-img">
-                <img src="images/bd1/design-fusion.jpg" alt="Fusion 360 body chassis"
+                <img src="images/bd1/design-internals.jpg" alt="Internal cavity mods"
                   onerror="this.parentElement.innerHTML='<div class=dc-placeholder>🔩</div>'">
               </div>
               <div class="dc-text">
-                <span class="dc-label">STRUCTURAL CAD</span>
-                <h4>Body & Leg Chassis</h4>
-                <p>All structural parts modeled in Fusion 360 with explicit tolerances — servo
-                  mounting bores, M3 insert sockets, leg pivot hardware, and the internal
-                  electronics tray that the Arduino and battery sit on.</p>
+                <span class="dc-label">INTERNAL ARCHITECTURE</span>
+                <h4>Cavities, Channels &amp; Trays</h4>
+                <p>Hollowed body shell, wire channels routed through the internal frame,
+                  Arduino Nano tray sized to footprint, battery recess with TP4056 board
+                  slot and a flush USB-C cutout on the lower body panel.</p>
                 <div class="dc-pills">
                   <span class="dc-pill">Fusion 360</span>
-                  <span class="dc-pill">Hardware Tolerances</span>
-                  <span class="dc-pill">M3 Heat Inserts</span>
+                  <span class="dc-pill">Wire Routing</span>
+                  <span class="dc-pill">Board Tray</span>
                 </div>
               </div>
             </div>
             <div class="detail-card">
               <div class="dc-img">
-                <img src="images/bd1/design-blender.jpg" alt="Blender head sculpt"
-                  onerror="this.parentElement.innerHTML='<div class=dc-placeholder>🎭</div>'">
+                <img src="images/bd1/design-eye-sockets.jpg" alt="Eye socket LED housing mods"
+                  onerror="this.parentElement.innerHTML='<div class=dc-placeholder>👁️</div>'">
               </div>
               <div class="dc-text">
-                <span class="dc-label">ORGANIC SCULPT</span>
-                <h4>Head & Shell Panels</h4>
-                <p>The head dome and decorative body panels sculpted in Blender from game
-                  screenshots and fan orthographics. The eye socket cutouts were then taken
-                  back into Fusion to add the precise LED housing tolerances.</p>
+                <span class="dc-label">EYE SOCKET REBUILD</span>
+                <h4>LED Housing &amp; Slip Ring Channel</h4>
+                <p>Original sockets had no depth tolerance for LED modules. Rebuilt interior
+                  geometry to seat WS2812B units at correct depth behind the lens face, with
+                  a wire passage routing through the neck channel to the slip ring.</p>
                 <div class="dc-pills">
-                  <span class="dc-pill">Blender Sculpt</span>
-                  <span class="dc-pill">Reference Matching</span>
-                  <span class="dc-pill">Mesh Export</span>
+                  <span class="dc-pill">LED Depth Tolerance</span>
+                  <span class="dc-pill">Slip Ring Channel</span>
+                  <span class="dc-pill">Heat Insert Bosses</span>
                 </div>
               </div>
             </div>
             <div class="detail-card full">
               <div class="dc-img">
-                <img src="images/bd1/design-full-assembly.jpg" alt="Full assembly CAD view"
+                <img src="images/bd1/design-assembly-check.jpg" alt="Virtual assembly check"
                   onerror="this.parentElement.innerHTML='<div class=dc-placeholder>🤖</div>'">
               </div>
               <div class="dc-text">
-                <span class="dc-label">FULL ASSEMBLY VIEW</span>
-                <h4>Complete Virtual Assembly</h4>
-                <p>Before a single part was printed, the full droid was assembled virtually in Fusion 360 to check joint clearances,
-                  wire routing paths, and overall proportions against game reference. Three full redesigns of the hip joint
-                  and two rebuilds of the head tilt mechanism happened in this phase before committing to print.</p>
+                <span class="dc-label">VIRTUAL ASSEMBLY CHECK</span>
+                <h4>Clearances, Conflicts &amp; Hardware Fitment</h4>
+                <p>Full modified assembly checked in Fusion 360 before any printing started — joint clearances,
+                  hardware fitment, internal wire routing paths. Found and resolved three conflicts between the
+                  servo linkage geometry and the internal body frame, and two places where heat insert bosses
+                  would have punched through exterior surfaces at thin wall sections.</p>
                 <div class="dc-pills">
-                  <span class="dc-pill">Assembly Model</span>
-                  <span class="dc-pill">Joint Simulation</span>
-                  <span class="dc-pill">Wire Routing</span>
                   <span class="dc-pill">Clearance Check</span>
+                  <span class="dc-pill">Conflict Resolution</span>
+                  <span class="dc-pill">Hardware Fitment</span>
                 </div>
               </div>
             </div>
@@ -800,59 +489,60 @@ footer{ text-align:center; padding:60px 20px; color:rgba(255,255,255,0.5); borde
         </div>
       </div>
 
-      <!-- PHASE 2: PRINTING -->
+      <!-- PHASE 2: PRINTING — ACTIVE -->
       <div class="phase-block">
-        <div class="phase-dot-col"><div class="phase-dot d2"></div></div>
+        <div class="phase-dot-col"><div class="phase-dot active"></div></div>
         <div class="phase-body">
-          <span class="phase-kicker k2">PHASE 02 — PRINTING</span>
-          <h3>80+ Parts, Dozens of Iterations</h3>
+          <div class="active-banner"><div class="active-dot"></div>Currently Here — Long Way to Go</div>
+          <span class="phase-kicker">PHASE 02 — PRINTING // IN PROGRESS</span>
+          <h3>80+ Parts. A Long Print Queue.</h3>
           <p>
-            BD-1 is a big droid. Getting the part count down to something manageable while keeping
-            seam lines in places they can be hidden during finishing took a lot of planning.
-            The Bambu X1C's build volume handled most parts in one piece, but the legs still had
-            to be split at the knee — a joint line I turned into a design feature rather than
-            trying to hide it.
+            Printing is the phase that can't be rushed. BD-1 has a lot of parts — body panels,
+            leg segments, the head dome, detail shells, mechanical joint pieces, internal frame
+            sections — and each one has its own profile, orientation, and support strategy. Some
+            have come out cleanly on the first attempt. Some have needed revisions. A few are still
+            waiting in the queue.
           </p>
           <p>
-            White PLA for the main shell, matte black for the mechanical joints and internals,
-            clear PETG for the eye lenses. The AMS handled the color regions that would be
-            impossible to mask and paint neatly. Every structural part that takes load
-            printed at 40% gyroid infill for rigidity without excess weight.
+            The Bambu X1C handles the reliability side so the only variable left is the files
+            themselves. White PLA for exterior shell panels, black PETG for structural and
+            load-bearing parts, clear PETG for the eye lenses. The AMS handles color transitions
+            on parts where painting a boundary cleanly would be extremely difficult.
           </p>
           <div class="detail-cards">
-            <div class="detail-card c2">
+            <div class="detail-card">
               <div class="dc-img">
-                <img src="images/bd1/print-shell.jpg" alt="Shell parts on print bed"
+                <img src="images/bd1/print-shell-parts.jpg" alt="Shell parts printed"
                   onerror="this.parentElement.innerHTML='<div class=dc-placeholder>🖨️</div>'">
               </div>
               <div class="dc-text">
-                <span class="dc-label l2">SHELL PARTS</span>
-                <h4>Body & Head Panels</h4>
-                <p>White PLA shell parts printed with 0.15mm layer height for fine surface
-                  detail. Variable layer height used on the curved dome to maintain quality
-                  on angled surfaces without destroying print time.</p>
+                <span class="dc-label">EXTERIOR SHELL PANELS</span>
+                <h4>Body, Head &amp; Detail Panels</h4>
+                <p>White PLA at 0.15mm layer height. Variable layer height on curved dome
+                  sections to maintain surface quality without inflating print time. Ironing
+                  enabled on all flat top faces for a smooth pre-paint surface.</p>
                 <div class="dc-pills">
-                  <span class="dc-pill p2">0.15mm Layers</span>
-                  <span class="dc-pill p2">Variable Height</span>
-                  <span class="dc-pill p2">White PLA</span>
+                  <span class="dc-pill">0.15mm PLA</span>
+                  <span class="dc-pill">Variable Layer Height</span>
+                  <span class="dc-pill">Ironing</span>
                 </div>
               </div>
             </div>
-            <div class="detail-card c2">
+            <div class="detail-card">
               <div class="dc-img">
-                <img src="images/bd1/print-mechanical.jpg" alt="Mechanical joint parts"
+                <img src="images/bd1/print-structural.jpg" alt="Structural PETG parts"
                   onerror="this.parentElement.innerHTML='<div class=dc-placeholder>⚙️</div>'">
               </div>
               <div class="dc-text">
-                <span class="dc-label l2">MECHANICAL PARTS</span>
-                <h4>Joints & Structural Frame</h4>
-                <p>Black PETG for all load-bearing structural parts — higher layer adhesion
-                  than PLA and far more impact resistant. The hip pivot and ankle joints
-                  printed at 0.2mm for speed with 40% gyroid infill.</p>
+                <span class="dc-label">STRUCTURAL PARTS</span>
+                <h4>Joints, Frame &amp; Chassis</h4>
+                <p>Black PETG for everything load-bearing — better layer adhesion and impact
+                  resistance than PLA for parts that take stress. 40% gyroid infill on the
+                  chassis and hip joint. M3 heat insert bores throughout.</p>
                 <div class="dc-pills">
-                  <span class="dc-pill p2">PETG Structural</span>
-                  <span class="dc-pill p2">Gyroid Infill</span>
-                  <span class="dc-pill p2">Bearing Seats</span>
+                  <span class="dc-pill">PETG Structural</span>
+                  <span class="dc-pill">Gyroid 40%</span>
+                  <span class="dc-pill">Heat Insert Bores</span>
                 </div>
               </div>
             </div>
@@ -860,250 +550,181 @@ footer{ text-align:center; padding:60px 20px; color:rgba(255,255,255,0.5); borde
         </div>
       </div>
 
-      <!-- PHASE 3: ASSEMBLY -->
-      <div class="phase-block">
-        <div class="phase-dot-col"><div class="phase-dot d3"></div></div>
+      <!-- PHASE 3: SAND / PAINT — UPCOMING -->
+      <div class="phase-block upcoming-block">
+        <div class="phase-dot-col"><div class="phase-dot upcoming"></div></div>
         <div class="phase-body">
-          <span class="phase-kicker k3">PHASE 03 — ASSEMBLY</span>
-          <h3>Making It Stand Up and Stay Together</h3>
+          <span class="phase-kicker dim">PHASE 03 — SAND, PRIME &amp; PAINT // UPCOMING</span>
+          <h3>The Finish That Makes It Real</h3>
           <p>
-            Physical assembly revealed every design assumption that didn't hold up. Parts that fit
-            perfectly in Fusion 360 had real-world tolerances stacked against them. The head tilt
-            servo mechanism needed three printed revisions before the motion felt smooth rather
-            than clunky. The leg joints needed M3 heat inserts and brass threaded rods to handle
-            the weight of the upper body without flexing.
+            BD-1's paint job in the game has a very specific character: bright white base,
+            yellow-gold accent panels, field-wear weathering, and panel-line shading that gives
+            the curved surfaces real depth. Matching it on a physical build means precise masking
+            stages and not rushing any of them.
           </p>
           <p>
-            The most satisfying moment in the entire build was when all four leg segments went
-            together, the body clicked into the hip joint, and the droid stood on its own for
-            the first time. It's lighter than it looks — hollow shell panels and an internal
-            frame keep the total weight manageable — but it has real structural rigidity.
-            Nothing flexes that shouldn't.
-          </p>
-          <div class="detail-cards">
-            <div class="detail-card c3">
-              <div class="dc-img">
-                <img src="images/bd1/assembly-legs.jpg" alt="Leg assembly"
-                  onerror="this.parentElement.innerHTML='<div class=dc-placeholder>🦿</div>'">
-              </div>
-              <div class="dc-text">
-                <span class="dc-label l3">LEG ASSEMBLY</span>
-                <h4>Four-Segment Leg Structure</h4>
-                <p>Each leg: four printed segments, two pivot joints, brass rod axles,
-                  and M3 hardware throughout. The ankle has a subtle flex designed in to
-                  give the droid the slight "alive" lean that BD-1 has in the game.</p>
-                <div class="dc-pills">
-                  <span class="dc-pill p3">Brass Rod Axles</span>
-                  <span class="dc-pill p3">Heat Inserts</span>
-                  <span class="dc-pill p3">Pivot Joints</span>
-                </div>
-              </div>
-            </div>
-            <div class="detail-card c3">
-              <div class="dc-img">
-                <img src="images/bd1/assembly-head.jpg" alt="Head servo mechanism"
-                  onerror="this.parentElement.innerHTML='<div class=dc-placeholder>🔄</div>'">
-              </div>
-              <div class="dc-text">
-                <span class="dc-label l3">HEAD MECHANISM</span>
-                <h4>Tilt Servo & Neck Joint</h4>
-                <p>A single MG90S servo drives a 30° head tilt through a printed
-                  linkage. The neck joint uses a 608 bearing for smooth rotation,
-                  with a slip ring feeding power and signal to the head LEDs through the
-                  rotating axis so wires don't bind.</p>
-                <div class="dc-pills">
-                  <span class="dc-pill p3">MG90S Servo</span>
-                  <span class="dc-pill p3">608 Bearing</span>
-                  <span class="dc-pill p3">Slip Ring</span>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- PHASE 4: ELECTRONICS -->
-      <div class="phase-block">
-        <div class="phase-dot-col"><div class="phase-dot d4"></div></div>
-        <div class="phase-body">
-          <span class="phase-kicker k4">PHASE 04 — ELECTRONICS & CODE</span>
-          <h3>Bringing It to Life</h3>
-          <p>
-            The electronics are what make BD-1 feel real rather than look real. Two Neopixel
-            LEDs behind the clear PETG eye lenses cycle through BD-1's signature blue-white
-            eye glow. A DFPlayer Mini module drives a small 2W speaker loaded with audio
-            extracted directly from the game — the chirps, the boot sound, the beeps when
-            he finds a stim canister. A PIR motion sensor triggers reactions when someone
-            walks past. And the head tilt servo runs an idle animation loop that keeps
-            the droid looking subtly alive when nothing else is happening.
-          </p>
-          <p>
-            Everything runs from an Arduino Nano on a custom perfboard that fits the internal
-            electronics tray. A 2S LiPo with a TP4056 charge board powers the whole system
-            through a hidden panel-mounted USB-C port. Total current draw at full activity
-            sits comfortably under 800mA.
+            Planned pipeline: 220 grit sand → filler primer → 400 sand → primer again → 800 wet
+            sand until smooth. Matte white base. Tamiya yellow for masked accent panels. Oil wash
+            into panel lines. Dry-brushed silver on edge wear. Matte clear coat overall, then
+            spot gloss on the eye lenses only to make them look wet and alive.
           </p>
         </div>
       </div>
 
-      <!-- PHASE 5: PAINT -->
-      <div class="phase-block">
-        <div class="phase-dot-col"><div class="phase-dot d5"></div></div>
+      <!-- PHASE 4: ASSEMBLY — UPCOMING -->
+      <div class="phase-block upcoming-block">
+        <div class="phase-dot-col"><div class="phase-dot upcoming"></div></div>
         <div class="phase-body">
-          <span class="phase-kicker k5">PHASE 05 — PAINT & FINISH</span>
-          <h3>The Part That Takes the Longest</h3>
+          <span class="phase-kicker dim">PHASE 04 — MECHANICAL ASSEMBLY // UPCOMING</span>
+          <h3>Putting the Structure Together</h3>
           <p>
-            BD-1's paint job in the game has a specific character: bright white as the base,
-            with yellow-gold accent panels, weathering that reads as field wear rather than
-            neglect, and subtle panel shading that makes the curved surfaces look three-dimensional.
-            Matching it on a physical build meant breaking down the paint into precise mask stages
-            and not rushing any of them.
+            Physical assembly is where CAD assumptions meet reality. Planned hardware: M3 heat
+            inserts throughout all structural joints, brass rod axles in the leg pivots, a 608
+            bearing in the neck for smooth head rotation, and an MG90S servo driving the tilt
+            through a cam linkage. A slip ring through the neck axis feeds power and signal to
+            the head LEDs without binding the wires on rotation.
           </p>
+        </div>
+      </div>
+
+      <!-- PHASE 5: ELECTRONICS — UPCOMING -->
+      <div class="phase-block upcoming-block">
+        <div class="phase-dot-col"><div class="phase-dot upcoming"></div></div>
+        <div class="phase-body">
+          <span class="phase-kicker dim">PHASE 05 — ELECTRONICS // UPCOMING</span>
+          <h3>The Systems That Make It Behave</h3>
           <p>
-            The finishing pipeline: 220 grit sand, filler primer, 400 sand, primer again, 800 wet
-            sand until smooth. Matte white base. Tamiya yellow for the accent panels, masked off.
-            Oil paint wash into the panel lines. Dry brushed silver along edges and high-wear
-            areas. Matte clear coat over everything, then a spot gloss clear on the eye lenses only
-            to make them look wet and alive. This phase is still ongoing — the body and head are
-            painted, the legs are primed and waiting.
+            Every component is chosen and every cavity is sized for it — nothing is wired yet.
+            Arduino Nano on a custom perfboard, WS2812B Neopixels for the eyes, DFPlayer Mini
+            into a 2W speaker loaded with audio from the game, HC-SR501 PIR for motion detection,
+            MG90S head servo, and a 2S LiPo with a 5V buck converter charged through the
+            flush USB-C panel.
           </p>
-          <div class="detail-cards">
-            <div class="detail-card c5">
-              <div class="dc-img">
-                <img src="images/bd1/paint-head.jpg" alt="Painted head"
-                  onerror="this.parentElement.innerHTML='<div class=dc-placeholder>🎨</div>'">
-              </div>
-              <div class="dc-text">
-                <span class="dc-label l5">HEAD — COMPLETE</span>
-                <h4>White Shell + Gold Accents</h4>
-                <p>Matte white base with Tamiya yellow masked panels, oil wash in the recesses,
-                  and dry-brushed silver on the edge wear. Gloss clear on the eye lenses
-                  over the lit Neopixels beneath.</p>
-                <div class="dc-pills">
-                  <span class="dc-pill p5">Tamiya Yellow</span>
-                  <span class="dc-pill p5">Oil Wash</span>
-                  <span class="dc-pill p5">Dry Brush Silver</span>
-                </div>
-              </div>
-            </div>
-            <div class="detail-card c5">
-              <div class="dc-img">
-                <img src="images/bd1/paint-wip.jpg" alt="Legs in primer"
-                  onerror="this.parentElement.innerHTML='<div class=dc-placeholder>🖌️</div>'">
-              </div>
-              <div class="dc-text">
-                <span class="dc-label l5">LEGS — IN PROGRESS</span>
-                <h4>Primed, Awaiting Paint</h4>
-                <p>Legs are sanded to 800 grit and hit with a final primer coat. The masking
-                  stage for the yellow panel accents on the thigh segments is next — the most
-                  technically demanding part of the whole paint job due to the compound curves.</p>
-                <div class="dc-pills">
-                  <span class="dc-pill p5">800 Grit Wet Sand</span>
-                  <span class="dc-pill p5">Compound Curve Mask</span>
-                  <span class="dc-pill p5">In Progress</span>
-                </div>
-              </div>
-            </div>
-          </div>
+        </div>
+      </div>
+
+      <!-- PHASE 6: CODE — UPCOMING -->
+      <div class="phase-block upcoming-block">
+        <div class="phase-dot-col"><div class="phase-dot upcoming"></div></div>
+        <div class="phase-body">
+          <span class="phase-kicker dim">PHASE 06 — CODE // UPCOMING</span>
+          <h3>The Brain That Runs the Droid</h3>
+          <p>
+            The Arduino sketch is already drafted and ready to deploy. A non-blocking state machine
+            manages the idle animation loop, PIR-triggered reactions, sound playback, LED states,
+            and servo movement simultaneously — nothing blocks anything else. Head tilt timing is
+            randomized so no two idle loops look the same.
+          </p>
+        </div>
+      </div>
+
+      <!-- PHASE 7: FINAL ASSEMBLY — UPCOMING -->
+      <div class="phase-block upcoming-block">
+        <div class="phase-dot-col"><div class="phase-dot upcoming"></div></div>
+        <div class="phase-body">
+          <span class="phase-kicker dim">PHASE 07 — FINAL ASSEMBLY // UPCOMING</span>
+          <h3>The Finish Line</h3>
+          <p>
+            Everything closes up. Panels clip on. The droid powers up under its own battery for the
+            first time with every system running together. The goal is a video of BD-1 standing on
+            a desk, eyes glowing, head tilting, chirping from the actual game when someone walks
+            past. That's what all of this is for.
+          </p>
         </div>
       </div>
 
     </div>
   </div>
 
-  <!-- ELECTRONICS BOARD -->
+  <!-- ELECTRONICS PLAN -->
   <div class="electronics-section fade">
-    <span class="section-label">// ELECTRONICS SYSTEM</span>
-    <h2>What's Inside</h2>
+    <span class="section-label">// ELECTRONICS PLAN</span>
+    <h2>What's Going Inside</h2>
     <p class="lead">
-      Six discrete electronic systems work together to make BD-1 behave like the game character —
-      each one designed to fit inside the physical constraints of the printed shell.
+      The full electronics system is planned and every cavity in the modified files is already
+      sized for these specific components. Nothing is wired yet — but nothing will need
+      redesigning when the time comes.
     </p>
-
+    <div class="planned-note">// All systems planned — wiring begins after mechanical assembly</div>
     <div class="eboard">
       <div class="ecard">
         <span class="ecard-icon">💡</span>
         <h4>Eye LEDs</h4>
-        <p>Two Neopixel WS2812B LEDs behind clear PETG lenses. Soft blue-white idle glow,
-          reactive color shifts on sound triggers, and a startup sequence that matches
-          the in-game boot animation.</p>
+        <p>Two WS2812B Neopixels seated behind clear PETG lenses. Soft blue-white idle glow,
+          reactive color shifts on trigger events, startup animation to match the in-game
+          boot sequence.</p>
         <span class="ecard-chip">WS2812B Neopixel</span>
       </div>
       <div class="ecard">
         <span class="ecard-icon">🔊</span>
         <h4>Sound System</h4>
-        <p>DFPlayer Mini SD card audio module driving a 2W 4Ω speaker hidden inside the
-          body cavity. Audio files are original game rips — chirps, scanning sounds, stim
-          canister beeps, and the BD-1 startup chime.</p>
+        <p>DFPlayer Mini SD module into a 2W 4Ω speaker in the body cavity. Audio from the
+          game — BD-1's chirps, scan sounds, stim canister beeps, and the boot chime.</p>
         <span class="ecard-chip">DFPlayer Mini</span>
       </div>
       <div class="ecard">
         <span class="ecard-icon">⚡</span>
         <h4>Motion Sensor</h4>
-        <p>HC-SR501 PIR sensor mounted in the chest panel detects movement in a 5-meter cone.
-          Triggers a random selection of chirps and a head-tilt reaction sequence — the
-          closest thing to BD-1 noticing you that I could build with passive sensing.</p>
+        <p>HC-SR501 PIR in the chest — 5-meter cone. Triggers a random chirp and head-tilt
+          reaction sequence when someone walks into range.</p>
         <span class="ecard-chip">HC-SR501 PIR</span>
       </div>
       <div class="ecard">
         <span class="ecard-icon">🔄</span>
         <h4>Head Servo</h4>
-        <p>MG90S metal-gear servo driving a 30° tilt range through a printed cam linkage.
-          Runs an idle animation with randomized timing between tilts — no two idle loops
-          look exactly the same. Reactions override the idle on trigger events.</p>
+        <p>MG90S metal-gear servo driving 30° of head tilt through a printed cam linkage.
+          Runs a randomized idle animation. Motion reactions override the idle on PIR
+          trigger events.</p>
         <span class="ecard-chip">MG90S Servo</span>
       </div>
       <div class="ecard">
         <span class="ecard-icon">🧠</span>
         <h4>Arduino Nano</h4>
-        <p>The central controller. Manages all sensor inputs, sound triggers, LED states,
-          and servo commands. Custom state machine handles the idle loop, reaction sequences,
-          and startup procedure — all without blocking execution.</p>
+        <p>Central controller on a custom perfboard fitted to the internal tray. Non-blocking
+          state machine manages all inputs, outputs, and timed animations without any
+          system stalling another.</p>
         <span class="ecard-chip">Arduino Nano</span>
       </div>
       <div class="ecard">
         <span class="ecard-icon">🔋</span>
         <h4>Power System</h4>
-        <p>2S 1000mAh LiPo with a TP4056 charge board and a 5V buck converter for stable
-          logic voltage. USB-C charge port hidden under a removable panel on the lower body.
-          Full activity runtime is approximately 4 hours per charge.</p>
+        <p>2S 1000mAh LiPo, TP4056 charge board, 5V buck converter for stable logic voltage.
+          USB-C charge port recessed in a flush removable panel on the lower body.
+          Estimated ~4 hours runtime at full activity.</p>
         <span class="ecard-chip">2S LiPo + Buck 5V</span>
       </div>
     </div>
   </div>
 
-  <!-- CODE SNIPPET -->
+  <!-- CODE PREVIEW -->
   <div class="code-section fade">
-    <span class="section-label">// THE CODE</span>
-    <h2>State Machine in C++</h2>
+    <span class="section-label">// CODE — DRAFTED &amp; READY</span>
+    <h2>State Machine, Already Written</h2>
     <p class="lead">
-      The Arduino sketch runs a non-blocking state machine so the head servo, LEDs, and sound
-      can all update simultaneously without any one system stalling another. Here's the
-      core idle loop logic.
+      The Arduino sketch is drafted and ready to deploy — it just hasn't run on real hardware
+      yet. Here's the core state machine that will drive everything once wiring begins.
     </p>
-
     <div class="code-block">
       <div class="code-header">
         <div class="code-dots"><i></i><i></i><i></i></div>
-        <span>bd1_main.ino</span>
+        <span>bd1_main.ino  //  drafted — not yet deployed</span>
       </div>
       <div class="code-body">
-<pre><span class="c-comment">// BD-1 Droid — Core State Machine</span>
+<pre><span class="c-comment">// BD-1 Droid — Core State Machine (draft)</span>
 <span class="c-comment">// Arduino Nano · Non-blocking idle + reaction loop</span>
 
 <span class="c-keyword">enum</span> <span class="c-fn">DroidState</span> {
-  STATE_BOOT, STATE_IDLE, STATE_REACT, STATE_SCAN
+  STATE_BOOT, STATE_IDLE, STATE_REACT
 };
 
-<span class="c-var">DroidState</span> currentState  = STATE_BOOT;
-<span class="c-keyword">unsigned long</span> stateTimer  = <span class="c-num">0</span>;
+<span class="c-var">DroidState</span>    currentState = STATE_BOOT;
 <span class="c-keyword">unsigned long</span> nextTilt     = <span class="c-num">0</span>;
 <span class="c-keyword">bool</span>          pirTriggered = <span class="c-keyword">false</span>;
 
 <span class="c-keyword">void</span> <span class="c-fn">loop</span>() {
-  <span class="c-fn">checkPIR</span>();         <span class="c-comment">// non-blocking sensor read</span>
-  <span class="c-fn">updateLEDs</span>();       <span class="c-comment">// eye glow tick</span>
-  <span class="c-fn">updateServo</span>();      <span class="c-comment">// smooth servo step</span>
+  <span class="c-fn">checkPIR</span>();      <span class="c-comment">// non-blocking sensor read</span>
+  <span class="c-fn">updateLEDs</span>();    <span class="c-comment">// eye glow tick</span>
+  <span class="c-fn">updateServo</span>();   <span class="c-comment">// smooth step toward target angle</span>
 
   <span class="c-keyword">switch</span> (currentState) {
 
@@ -1114,7 +735,7 @@ footer{ text-align:center; padding:60px 20px; color:rgba(255,255,255,0.5); borde
       <span class="c-keyword">break</span>;
 
     <span class="c-keyword">case</span> STATE_IDLE:
-      <span class="c-comment">// randomised head tilt on a timer</span>
+      <span class="c-comment">// randomised head tilt — no two loops identical</span>
       <span class="c-keyword">if</span> (millis() > nextTilt) {
         <span class="c-fn">tiltHead</span>(random(<span class="c-num">-20</span>, <span class="c-num">20</span>));
         nextTilt = millis() + random(<span class="c-num">2000</span>, <span class="c-num">6000</span>);
@@ -1125,7 +746,7 @@ footer{ text-align:center; padding:60px 20px; color:rgba(255,255,255,0.5); borde
     <span class="c-keyword">case</span> STATE_REACT:
       <span class="c-fn">playSound</span>(<span class="c-fn">randomChirp</span>());
       <span class="c-fn">eyePulse</span>(COLOR_REACT);
-      <span class="c-fn">tiltHead</span>(<span class="c-num">25</span>);             <span class="c-comment">// look up at person</span>
+      <span class="c-fn">tiltHead</span>(<span class="c-num">25</span>);          <span class="c-comment">// look up toward person</span>
       pirTriggered = <span class="c-keyword">false</span>;
       <span class="c-fn">setState</span>(STATE_IDLE, <span class="c-num">3000</span>);
       <span class="c-keyword">break</span>;
@@ -1134,131 +755,123 @@ footer{ text-align:center; padding:60px 20px; color:rgba(255,255,255,0.5); borde
       </div>
     </div>
     <p style="color:var(--muted);font-size:14px;line-height:1.8;">
-      The full sketch is about 400 lines — the above is the state machine core.
-      All servo movement uses a non-blocking step function with acceleration curves so the head
-      never jerks between positions. Sound, LED, and servo updates each run off their own
-      <code style="color:var(--gold);font-size:13px;">millis()</code> timers so nothing blocks anything else.
+      The full sketch is around 400 lines. All servo motion uses a non-blocking step function
+      with acceleration curves so the head never jerks between positions. Sound, LED, and
+      servo updates each run off their own
+      <code style="color:var(--accent);font-size:13px;">millis()</code> timers
+      so nothing ever blocks anything else.
     </p>
   </div>
 
-  <!-- PHOTO GALLERY -->
+  <!-- GALLERY -->
   <div class="gallery-section fade">
     <span class="section-label">// BUILD PHOTOS</span>
-    <h2>The Build in Progress</h2>
+    <h2>The Build So Far</h2>
     <p class="lead">
-      A cross-section of the build from first parts to current state. Swap in your actual
-      build photos — the image paths are all under <code style="color:var(--gold);font-size:13px;">images/bd1/</code>.
+      What exists right now — reference material, modified files, and what's come off the
+      printer. Swap in your actual photos under
+      <code style="color:var(--accent);font-size:13px;">images/bd1/</code>.
     </p>
-
     <div class="photo-grid">
-
       <div class="photo-cell tall">
-        <img src="images/bd1/gallery-hero-lit.jpg" alt="BD-1 with lit eyes"
-          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>BD-1 Eyes Lit</div>'">
-        <div class="photo-caption">HERO // Eyes Lit</div>
+        <img src="images/bd1/gallery-reference.jpg" alt="BD-1 game reference"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Game Reference</div>'">
+        <div class="photo-caption">REFERENCE // In-Game BD-1</div>
       </div>
-
       <div class="photo-cell">
-        <img src="images/bd1/gallery-print-bed.jpg" alt="Parts on print bed"
-          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Print Bed Parts</div>'">
-        <div class="photo-caption">PRINT // Parts on Bed</div>
+        <img src="images/bd1/gallery-cad-mod.jpg" alt="CAD modifications in Fusion 360"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>CAD Modifications</div>'">
+        <div class="photo-caption">CAD // Internal Mods</div>
       </div>
-
       <div class="photo-cell">
-        <img src="images/bd1/gallery-assembly-bare.jpg" alt="Bare assembly"
-          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Bare Assembly</div>'">
-        <div class="photo-caption">ASSEMBLY // Bare Frame</div>
+        <img src="images/bd1/gallery-first-parts.jpg" alt="First printed parts"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>First Printed Parts</div>'">
+        <div class="photo-caption">PRINT // First Parts Off Bed</div>
       </div>
-
       <div class="photo-cell wide">
-        <img src="images/bd1/gallery-electronics.jpg" alt="Electronics wired up"
-          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Electronics Wired</div>'">
-        <div class="photo-caption">ELECTRONICS // Fully Wired</div>
+        <img src="images/bd1/gallery-parts-spread.jpg" alt="Parts spread out so far"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Parts Spread</div>'">
+        <div class="photo-caption">INVENTORY // Parts So Far</div>
       </div>
-
       <div class="photo-cell">
-        <img src="images/bd1/gallery-paint-detail.jpg" alt="Paint detail close"
-          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Paint Detail</div>'">
-        <div class="photo-caption">PAINT // Detail Close-Up</div>
+        <img src="images/bd1/gallery-bambu.jpg" alt="Bambu X1C printing"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>X1C Printing</div>'">
+        <div class="photo-caption">MACHINE // X1C Mid-Print</div>
       </div>
-
       <div class="photo-cell">
-        <img src="images/bd1/gallery-head-close.jpg" alt="Head close-up"
-          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Head Close-Up</div>'">
-        <div class="photo-caption">HEAD // Close-Up</div>
+        <img src="images/bd1/gallery-detail.jpg" alt="Part surface detail close-up"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Surface Detail</div>'">
+        <div class="photo-caption">DETAIL // Surface Quality</div>
       </div>
-
       <div class="photo-cell">
-        <img src="images/bd1/gallery-full-stand.jpg" alt="Full droid standing"
-          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Full Droid Standing</div>'">
-        <div class="photo-caption">COMPLETE // Full Standing</div>
+        <img src="images/bd1/gallery-electronics-plan.jpg" alt="Electronics components laid out"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Electronics Laid Out</div>'">
+        <div class="photo-caption">PLAN // Electronics Components</div>
       </div>
-
     </div>
   </div>
 
-  <!-- PROGRESS + REFLECTION -->
+  <!-- PROGRESS + STATUS -->
   <div class="progress-section fade">
     <div>
       <span class="section-label">// WHERE IT STANDS</span>
-      <h2>Current Status</h2>
+      <h2>Phase 2 of 7</h2>
       <p>
-        BD-1 is the first build I've done that genuinely required everything at once.
-        Every previous project pushed one or two disciplines — modeling, printing, finishing,
-        electronics. This one needed all of them to be good simultaneously, because
-        the whole thing falls apart if any single phase is weak.
+        The design work is locked. The modifications are done. The printer is running.
+        That's the honest current state — it's early, and there's a lot of road ahead.
       </p>
       <p>
-        The electronics work. The head tilts, the eyes glow, the sounds play, the PIR
-        sensor triggers reactions. The body and head are painted to a level I'm satisfied
-        with. The legs are the remaining bottleneck — primed and waiting for the masking
-        stage that will take the longest and is the hardest to undo if it goes wrong.
+        Every phase after printing requires patience that rushing will only waste. Sanding
+        and priming alone will take longer than the printing did. Paint masking on compound
+        curves is its own discipline that can't be undone if it goes wrong. Assembly is
+        going to find the things the CAD didn't catch. And the electronics and code,
+        as prepared as they are on paper, won't feel real until they're running inside the
+        actual droid.
       </p>
       <p>
-        When the legs are done, the only thing left is the final assembly and a video of
-        BD-1 reacting to someone walking past. That's the finish line.
+        The finish line is BD-1 standing on the desk, eyes glowing, reacting when someone
+        walks past, chirping from the game. Everything between here and there is just
+        the work.
       </p>
-
       <div class="status-row">
         <div class="status-badge"><div class="status-dot done"></div>Design</div>
-        <div class="status-badge"><div class="status-dot done"></div>Printing</div>
-        <div class="status-badge"><div class="status-dot done"></div>Assembly</div>
-        <div class="status-badge"><div class="status-dot done"></div>Electronics</div>
-        <div class="status-badge"><div class="status-dot done"></div>Code</div>
-        <div class="status-badge"><div class="status-dot wip"></div>Paint (legs)</div>
-        <div class="status-badge"><div class="status-dot next"></div>Final Assembly</div>
+        <div class="status-badge"><div class="status-dot active"></div>Printing</div>
+        <div class="status-badge"><div class="status-dot next"></div>Sand &amp; Paint</div>
+        <div class="status-badge"><div class="status-dot next"></div>Assembly</div>
+        <div class="status-badge"><div class="status-dot next"></div>Electronics</div>
+        <div class="status-badge"><div class="status-dot next"></div>Code</div>
+        <div class="status-badge"><div class="status-dot next"></div>Final</div>
       </div>
     </div>
-
     <div>
       <div class="bars-list" id="skillBars">
         <div class="bar-row">
-          <div class="bar-label"><span>3D Modeling (CAD)</span><span>92%</span></div>
-          <div class="bar-track"><div class="bar-fill" data-width="92"></div></div>
+          <div class="bar-label"><span>File Modification / CAD</span><span>100%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="100"></div></div>
         </div>
         <div class="bar-row">
-          <div class="bar-label"><span>3D Printing & Slicing</span><span>90%</span></div>
-          <div class="bar-track"><div class="bar-fill" data-width="90"></div></div>
+          <div class="bar-label"><span>Printing Progress</span><span>35%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="35"></div></div>
         </div>
         <div class="bar-row">
-          <div class="bar-label"><span>Mechanical Assembly</span><span>80%</span></div>
-          <div class="bar-track"><div class="bar-fill" data-width="80"></div></div>
+          <div class="bar-label"><span>Sand &amp; Paint</span><span>0%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="0"></div></div>
         </div>
         <div class="bar-row">
-          <div class="bar-label"><span>Electronics Wiring</span><span>78%</span></div>
-          <div class="bar-track"><div class="bar-fill" data-width="78"></div></div>
+          <div class="bar-label"><span>Mechanical Assembly</span><span>0%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="0"></div></div>
         </div>
         <div class="bar-row">
-          <div class="bar-label"><span>Arduino Programming</span><span>75%</span></div>
-          <div class="bar-track"><div class="bar-fill" data-width="75"></div></div>
+          <div class="bar-label"><span>Electronics</span><span>0%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="0"></div></div>
         </div>
         <div class="bar-row">
-          <div class="bar-label"><span>Paint & Finishing</span><span>82%</span></div>
-          <div class="bar-track"><div class="bar-fill" data-width="82"></div></div>
+          <div class="bar-label"><span>Code (drafted)</span><span>40%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="40"></div></div>
         </div>
         <div class="bar-row">
-          <div class="bar-label"><span>Overall Build Completion</span><span>85%</span></div>
-          <div class="bar-track"><div class="bar-fill" data-width="85"></div></div>
+          <div class="bar-label"><span>Overall Completion</span><span>20%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="20"></div></div>
         </div>
       </div>
     </div>
@@ -1268,42 +881,34 @@ footer{ text-align:center; padding:60px 20px; color:rgba(255,255,255,0.5); borde
 
 <footer>
   © 2026 Devon Shunn &nbsp;·&nbsp;
-  <a href="projects.html" style="color:var(--gold);text-decoration:none;">← All Projects</a>
+  <a href="projects.html" style="color:var(--accent);text-decoration:none;">← All Projects</a>
 </footer>
 
 <script>
-/* FLOATING PARTICLES */
 const pc = document.getElementById('particles');
-for(let i = 0; i < 40; i++){
-  const s = document.createElement('span');
-  const x = Math.random() * 100;
-  const dur = 3 + Math.random() * 5;
-  const delay = Math.random() * 6;
-  const size = 1 + Math.random() * 2;
-  s.style.cssText = `left:${x}%;bottom:${10 + Math.random()*50}%;width:${size}px;height:${size}px;animation-duration:${dur}s;animation-delay:${delay}s;`;
+for(let i=0;i<40;i++){
+  const s=document.createElement('span');
+  const x=Math.random()*100, dur=3+Math.random()*5, delay=Math.random()*7, size=1+Math.random()*2;
+  s.style.cssText=`left:${x}%;bottom:${10+Math.random()*50}%;width:${size}px;height:${size}px;animation-duration:${dur}s;animation-delay:${delay}s;`;
   pc.appendChild(s);
 }
 
-/* FADE IN */
-const fades = document.querySelectorAll('.fade');
-const fadeObs = new IntersectionObserver(entries => {
-  entries.forEach(e => { if(e.isIntersecting) e.target.classList.add('show'); });
-}, { threshold: 0.08 });
-fades.forEach(el => fadeObs.observe(el));
+const fades=document.querySelectorAll('.fade');
+const fadeObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{if(e.isIntersecting)e.target.classList.add('show');});
+},{threshold:0.08});
+fades.forEach(el=>fadeObs.observe(el));
 
-/* SKILL BARS */
-const barObs = new IntersectionObserver(entries => {
-  entries.forEach(e => {
+const barObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
     if(e.isIntersecting){
-      e.target.querySelectorAll('.bar-fill').forEach(bar => {
-        bar.style.width = bar.dataset.width + '%';
-      });
+      e.target.querySelectorAll('.bar-fill').forEach(bar=>{bar.style.width=bar.dataset.width+'%';});
       barObs.unobserve(e.target);
     }
   });
-}, { threshold: 0.3 });
-const skillSection = document.getElementById('skillBars');
-if(skillSection) barObs.observe(skillSection);
+},{threshold:0.3});
+const ss=document.getElementById('skillBars');
+if(ss)barObs.observe(ss);
 </script>
 
 </body>
