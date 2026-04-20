@@ -1,0 +1,702 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Model Railroading – Devon Shunn</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#070A12;
+  --glass:rgba(255,255,255,0.06);
+  --glass2:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.12);
+  --text:#fff;
+  --muted:rgba(255,255,255,0.7);
+  --blue:#38bdf8;
+  --purple:#a855f7;
+  --accent:#4ade80;
+  --accent2:#16a34a;
+  --accentglow:rgba(74,222,128,0.4);
+  --rail:#b45309;
+  --earth:#78350f;
+}
+
+*{ margin:0; padding:0; box-sizing:border-box; font-family:Poppins,sans-serif; }
+body{ background:var(--bg); color:var(--text); overflow-x:hidden; }
+body::before{
+  content:''; position:fixed; inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.025) 2px,rgba(0,0,0,0.025) 4px);
+  pointer-events:none; z-index:999;
+}
+
+/* NAV */
+header{ position:fixed; top:0; width:100%; backdrop-filter:blur(14px); background:rgba(7,10,18,0.85); border-bottom:1px solid var(--border); z-index:200; }
+nav{ max-width:1100px; margin:auto; display:flex; justify-content:space-between; align-items:center; padding:14px 24px; }
+nav ul{ display:flex; gap:26px; list-style:none; align-items:center; }
+.nav-link{ color:var(--muted); text-decoration:none; transition:0.2s ease; }
+.nav-link:hover{ color:var(--blue); }
+.logo img{ height:42px; cursor:pointer; transition:0.25s ease; }
+.logo img:hover{ transform:scale(1.05); filter:drop-shadow(0 0 12px rgba(56,189,248,0.6)); }
+.nav-item{ position:relative; }
+.dropdown{ position:absolute; top:100%; left:0; padding-top:12px; min-width:200px; background:transparent; display:flex; flex-direction:column; opacity:0; transform:translateY(6px); pointer-events:none; transition:0.25s ease; }
+.dropdown-inner{ background:rgba(7,10,18,0.85); border:1px solid var(--border); border-radius:12px; display:flex; flex-direction:column; overflow:hidden; backdrop-filter:blur(14px); }
+.dropdown a{ padding:10px 14px; text-decoration:none; color:var(--muted); font-size:14px; transition:0.2s ease; }
+.dropdown a:hover{ background:rgba(56,189,248,0.12); color:var(--blue); }
+.nav-item:hover .dropdown{ opacity:1; transform:translateY(0); pointer-events:auto; }
+
+/* HERO */
+.hero{ position:relative; min-height:100vh; display:flex; align-items:flex-end; overflow:hidden; }
+.hero-bg{ position:absolute; inset:0; background:linear-gradient(180deg,#010a03 0%,#020d04 35%,#050a08 65%,#070A12 100%); }
+
+/* Rail track lines effect */
+.hero-tracks{
+  position:absolute; inset:0; overflow:hidden;
+}
+.hero-tracks::before,
+.hero-tracks::after{
+  content:'';
+  position:absolute;
+  bottom:0; width:3px;
+  background:linear-gradient(to top, rgba(180,83,9,0.5), transparent);
+  transform-origin:bottom center;
+}
+.hero-tracks::before{
+  left:42%; height:70%;
+  transform:perspective(400px) rotateY(8deg);
+  animation:trackPulse 3s ease-in-out infinite;
+}
+.hero-tracks::after{
+  left:56%; height:70%;
+  transform:perspective(400px) rotateY(-8deg);
+  animation:trackPulse 3s ease-in-out infinite 0.3s;
+}
+@keyframes trackPulse{ 0%,100%{opacity:0.4} 50%{opacity:0.8} }
+
+/* perspective grid — looks like track ballast */
+.hero-grid{
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(74,222,128,0.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(74,222,128,0.04) 1px,transparent 1px);
+  background-size:60px 60px;
+  transform:perspective(700px) rotateX(54deg) translateY(28%);
+  transform-origin:bottom center;
+  animation:gridDrift 12s linear infinite;
+}
+@keyframes gridDrift{ from{background-position:0 0} to{background-position:0 60px} }
+
+.hero-glow{ position:absolute; bottom:8%; left:50%; transform:translateX(-50%); width:800px; height:300px; background:radial-gradient(ellipse,rgba(22,163,74,0.18) 0%,rgba(74,222,128,0.07) 45%,transparent 70%); filter:blur(55px); pointer-events:none; }
+
+.hero-particles{ position:absolute; inset:0; pointer-events:none; }
+.hero-particles span{ position:absolute; border-radius:50%; background:var(--accent); animation:floatDot linear infinite; opacity:0; }
+@keyframes floatDot{ 0%{opacity:0;transform:translateY(0)} 20%{opacity:0.5} 80%{opacity:0.2} 100%{opacity:0;transform:translateY(-60px)} }
+
+.hero-img-wrap{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+.hero-img-wrap img{ width:100%; height:100%; object-fit:cover; opacity:0.45; mix-blend-mode:lighten; }
+
+.hero-content{ position:relative; z-index:2; max-width:1100px; margin:0 auto; padding:0 24px 80px; width:100%; }
+.breadcrumb{ display:flex; align-items:center; gap:8px; margin-bottom:24px; font-family:'Share Tech Mono',monospace; font-size:12px; color:rgba(255,255,255,0.4); letter-spacing:1px; }
+.breadcrumb a{ color:var(--accent); text-decoration:none; }
+.breadcrumb a:hover{ text-decoration:underline; }
+.hero-tag{ font-family:'Share Tech Mono',monospace; font-size:12px; letter-spacing:3px; color:var(--accent); margin-bottom:16px; opacity:0.9; }
+.hero-title{ font-size:clamp(40px,7vw,82px); line-height:0.95; font-weight:700; letter-spacing:-2px; margin-bottom:22px; }
+.hero-title .line2{ color:transparent; -webkit-text-stroke:1px rgba(74,222,128,0.5); }
+.hero-sub{ color:var(--muted); max-width:580px; line-height:1.8; font-size:16px; margin-bottom:36px; }
+.hero-meta{ display:flex; gap:32px; flex-wrap:wrap; }
+.meta-item{ display:flex; flex-direction:column; gap:4px; }
+.meta-label{ font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:2px; color:rgba(255,255,255,0.35); text-transform:uppercase; }
+.meta-value{ font-size:14px; color:var(--accent); font-weight:600; }
+.scroll-hint{ position:absolute; bottom:30px; right:40px; display:flex; flex-direction:column; align-items:center; gap:8px; opacity:0.4; animation:bounce 2s ease-in-out infinite; }
+@keyframes bounce{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+.scroll-hint span{ font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--accent); }
+.scroll-arrow{ width:1px; height:40px; background:linear-gradient(to bottom,var(--accent),transparent); }
+
+/* MAIN */
+main{ max-width:1100px; margin:0 auto; padding:0 24px 120px; }
+.section-label{ font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:3px; color:var(--accent); opacity:0.7; margin-bottom:12px; display:block; }
+.fade{ opacity:0; transform:translateY(30px); transition:0.9s ease; }
+.fade.show{ opacity:1; transform:translateY(0); }
+.back-link{ display:inline-flex; align-items:center; gap:8px; color:var(--muted); text-decoration:none; font-size:14px; transition:0.2s ease; margin-bottom:60px; padding-top:40px; font-family:'Share Tech Mono',monospace; letter-spacing:1px; }
+.back-link:hover{ color:var(--accent); }
+
+/* INTRO */
+.intro-block{ padding:80px 0 60px; display:grid; grid-template-columns:1.2fr 1fr; gap:80px; align-items:start; border-bottom:1px solid var(--border); }
+.intro-block h2{ font-size:38px; line-height:1.2; margin-bottom:20px; }
+.intro-block p{ color:var(--muted); line-height:1.9; font-size:15px; margin-bottom:16px; }
+.intro-block em{ color:rgba(255,255,255,0.92); font-style:normal; }
+
+.stat-stack{ display:flex; flex-direction:column; gap:20px; }
+.stat-card{ background:var(--glass); border:1px solid var(--border); border-radius:16px; padding:20px 24px; backdrop-filter:blur(8px); position:relative; overflow:hidden; }
+.stat-card::before{ content:''; position:absolute; top:0; left:0; width:3px; height:100%; background:linear-gradient(to bottom,var(--accent),var(--purple)); border-radius:3px 0 0 3px; }
+.stat-card .num{ font-size:28px; font-weight:700; color:var(--accent); line-height:1; font-family:'Share Tech Mono',monospace; }
+.stat-card .desc{ font-size:13px; color:var(--muted); margin-top:5px; }
+
+/* LAYOUT OVERVIEW CARD */
+.layout-overview{
+  margin:0 0 0;
+  padding:80px 0;
+  border-bottom:1px solid var(--border);
+}
+.layout-overview h2{ font-size:34px; margin-bottom:12px; }
+.layout-overview .lead{ color:var(--muted); max-width:680px; line-height:1.8; margin-bottom:48px; }
+
+.layout-card{
+  background:linear-gradient(135deg,rgba(74,222,128,0.05),rgba(22,163,74,0.04));
+  border:1px solid rgba(74,222,128,0.18);
+  border-radius:22px; padding:40px;
+  position:relative; overflow:hidden;
+  display:grid; grid-template-columns:1fr 1fr; gap:48px; align-items:start;
+}
+.layout-card::before{
+  content:''; position:absolute; top:0; left:0; right:0; height:2px;
+  background:linear-gradient(90deg,transparent,var(--accent),rgba(74,222,128,0.3),transparent);
+}
+.layout-card h3{ font-size:26px; margin-bottom:14px; }
+.layout-card p{ color:var(--muted); font-size:15px; line-height:1.9; margin-bottom:16px; }
+
+.layout-specs{ display:flex; flex-direction:column; gap:14px; }
+.spec-row{ display:flex; flex-direction:column; gap:4px; padding:14px 0; border-bottom:1px solid rgba(255,255,255,0.06); }
+.spec-row:last-child{ border-bottom:none; }
+.spec-key{ font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:2px; color:rgba(74,222,128,0.6); }
+.spec-val{ font-size:15px; color:var(--text); font-weight:500; }
+
+/* SCENERY / TECHNIQUES SECTION */
+.techniques-section{ padding:80px 0; border-bottom:1px solid var(--border); }
+.techniques-section h2{ font-size:34px; margin-bottom:12px; }
+.techniques-section .lead{ color:var(--muted); max-width:680px; line-height:1.8; margin-bottom:52px; }
+
+.tech-grid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:18px; }
+.tech-card{
+  background:var(--glass); border:1px solid var(--border);
+  border-radius:18px; padding:26px;
+  backdrop-filter:blur(8px);
+  transition:border-color 0.3s ease,background 0.3s ease;
+  position:relative; overflow:hidden;
+}
+.tech-card::after{ content:''; position:absolute; inset:0; border-radius:18px; background:linear-gradient(135deg,rgba(74,222,128,0.03),transparent 60%); pointer-events:none; }
+.tech-card:hover{ border-color:rgba(74,222,128,0.22); background:rgba(255,255,255,0.07); }
+.tech-icon{ font-size:26px; margin-bottom:12px; display:block; opacity:0.75; }
+.tech-card h4{ font-size:16px; margin-bottom:9px; }
+.tech-card p{ color:var(--muted); font-size:13px; line-height:1.75; }
+.tech-pill{ display:inline-block; margin-top:12px; padding:3px 10px; border-radius:999px; font-family:'Share Tech Mono',monospace; font-size:10px; border:1px solid rgba(74,222,128,0.2); color:rgba(74,222,128,0.8); background:rgba(74,222,128,0.05); }
+
+/* ROLLING STOCK SLIVERS */
+.rolling-section{ padding:80px 0; border-bottom:1px solid var(--border); }
+.rolling-section h2{ font-size:34px; margin-bottom:12px; }
+.rolling-section .lead{ color:var(--muted); max-width:680px; line-height:1.8; margin-bottom:48px; }
+
+.rolling-slivers{ display:flex; flex-direction:column; gap:14px; }
+.rsliver{
+  display:grid; grid-template-columns:200px 1fr;
+  background:var(--glass2); border:1px solid var(--border);
+  border-radius:14px; overflow:hidden;
+  transition:border-color 0.3s ease,background 0.3s ease;
+}
+.rsliver:hover{ border-color:rgba(74,222,128,0.22); background:rgba(255,255,255,0.05); }
+.rs-img{ overflow:hidden; position:relative; min-height:120px; background:rgba(255,255,255,0.03); }
+.rs-img img{ width:100%; height:100%; object-fit:cover; display:block; transition:transform 0.4s ease; }
+.rsliver:hover .rs-img img{ transform:scale(1.06); }
+.rs-placeholder{ width:100%; min-height:120px; display:flex; align-items:center; justify-content:center; font-size:28px; opacity:0.15; background:linear-gradient(135deg,rgba(74,222,128,0.05),rgba(22,163,74,0.04)); }
+.rs-text{ padding:18px 22px; display:flex; flex-direction:column; justify-content:center; gap:7px; }
+.rs-label{ font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:2px; color:rgba(74,222,128,0.7); }
+.rs-text h4{ font-size:17px; margin:0; }
+.rs-text p{ color:var(--muted); font-size:13px; line-height:1.7; margin:0; }
+.rs-pills{ display:flex; flex-wrap:wrap; gap:6px; }
+.rs-pill{ padding:3px 10px; border-radius:999px; font-family:'Share Tech Mono',monospace; font-size:10px; border:1px solid rgba(74,222,128,0.18); color:rgba(74,222,128,0.75); background:rgba(74,222,128,0.04); }
+
+/* PHOTO GRID */
+.gallery-section{ padding:80px 0; border-bottom:1px solid var(--border); }
+.gallery-section h2{ font-size:34px; margin-bottom:12px; }
+.gallery-section .lead{ color:var(--muted); max-width:600px; line-height:1.8; margin-bottom:48px; }
+.photo-grid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+.photo-cell{ border-radius:16px; overflow:hidden; border:1px solid var(--border); background:var(--glass2); position:relative; cursor:pointer; }
+.photo-cell img{ width:100%; height:100%; min-height:190px; object-fit:cover; display:block; transition:transform 0.5s ease; }
+.photo-cell:hover img{ transform:scale(1.05); }
+.photo-cell.tall{ grid-row:span 2; }
+.photo-cell.wide{ grid-column:span 2; }
+.photo-caption{ position:absolute; bottom:0; left:0; right:0; padding:20px 14px 12px; background:linear-gradient(to top,rgba(0,0,0,0.85),transparent); font-size:11px; color:rgba(255,255,255,0.8); opacity:0; transition:0.3s ease; font-family:'Share Tech Mono',monospace; letter-spacing:1px; }
+.photo-cell:hover .photo-caption{ opacity:1; }
+.photo-placeholder{ width:100%; min-height:190px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; background:linear-gradient(135deg,rgba(74,222,128,0.04),rgba(22,163,74,0.04)); color:rgba(255,255,255,0.13); font-size:12px; font-family:'Share Tech Mono',monospace; }
+.photo-placeholder .icon{ font-size:26px; opacity:0.22; }
+
+/* PROGRESS */
+.progress-section{ padding:80px 0; display:grid; grid-template-columns:1.1fr 1fr; gap:80px; align-items:start; }
+.progress-section h2{ font-size:34px; margin-bottom:20px; }
+.progress-section p{ color:var(--muted); line-height:1.9; font-size:15px; margin-bottom:16px; }
+.bars-list{ display:flex; flex-direction:column; gap:16px; }
+.bar-row{ display:flex; flex-direction:column; gap:6px; }
+.bar-label{ display:flex; justify-content:space-between; font-size:13px; color:var(--muted); }
+.bar-label span:last-child{ color:var(--accent); font-family:'Share Tech Mono',monospace; }
+.bar-track{ height:5px; background:rgba(255,255,255,0.08); border-radius:5px; overflow:hidden; }
+.bar-fill{ height:100%; border-radius:5px; background:linear-gradient(90deg,var(--accent),var(--purple)); width:0%; transition:width 1.3s ease; }
+
+footer{ text-align:center; padding:60px 20px; color:rgba(255,255,255,0.5); border-top:1px solid var(--border); }
+
+@media(max-width:900px){
+  .intro-block,.layout-card,.progress-section{ grid-template-columns:1fr; gap:40px; }
+  .tech-grid{ grid-template-columns:1fr 1fr; }
+  .photo-grid{ grid-template-columns:1fr 1fr; }
+  .hero-title{ font-size:44px; }
+  .rsliver{ grid-template-columns:1fr; }
+}
+@media(max-width:600px){
+  .tech-grid{ grid-template-columns:1fr; }
+  .photo-grid{ grid-template-columns:1fr; }
+  .photo-cell.tall,.photo-cell.wide{ grid-column:span 1; grid-row:span 1; }
+  .hero-meta{ gap:20px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+<nav>
+  <a href="index.html" class="logo"><img src="signature.png" alt="Devon Shunn"></a>
+  <ul>
+    <li class="nav-item">
+      <a href="projects.html" class="nav-link">Projects</a>
+      <div class="dropdown">
+        <div class="dropdown-inner">
+          <a href="project-lightsaber.html">Lightsaber</a>
+          <a href="project-delorean.html">DeLorean Animation</a>
+          <a href="project-3dprinting.html">3D Printing</a>
+          <a href="project-bd1.html">BD-1 Droid</a>
+          <a href="project-railroading.html">Model Railroading</a>
+          <a href="project-ios-widgets.html">iOS Widgets</a>
+          <a href="project-game.html">Game</a>
+          <a href="project-led.html">LED Systems</a>
+          <a href="project-horizon.html">Horizon Worlds</a>
+        </div>
+      </div>
+    </li>
+    <li><a href="contact.html" class="nav-link">Contact Me</a></li>
+  </ul>
+</nav>
+</header>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-tracks"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-particles" id="particles"></div>
+  <!--
+    HERO IMAGE — a wide shot of your layout, a locomotive, or a scenic section.
+    Dark background with green/warm lighting works best.
+    Path: images/railroading/hero.jpg
+  -->
+  <div class="hero-img-wrap">
+    <img src="images/railroading/hero.jpg" alt="Model Railroad Layout" onerror="this.style.display='none'">
+  </div>
+  <div class="hero-content">
+    <div class="breadcrumb">
+      <a href="projects.html">Projects</a><span>/</span><span>Model Railroading</span>
+    </div>
+    <div class="hero-tag">// HO SCALE · LAYOUT DESIGN · SCENERY</div>
+    <h1 class="hero-title">Model<br><span class="line2">Railroading</span></h1>
+    <p class="hero-sub">
+      Building a world in miniature — track planning, scenery construction, weathering,
+      and the slow craft of making something small feel completely real.
+    </p>
+    <div class="hero-meta">
+      <div class="meta-item"><span class="meta-label">Scale</span><span class="meta-value">HO (1:87)</span></div>
+      <div class="meta-item"><span class="meta-label">Era</span><span class="meta-value">Diesel / Modern</span></div>
+      <div class="meta-item"><span class="meta-label">Layout</span><span class="meta-value">In Progress</span></div>
+      <div class="meta-item"><span class="meta-label">Control</span><span class="meta-value" style="color:#a78bfa">DCC</span></div>
+    </div>
+  </div>
+  <div class="scroll-hint"><span>SCROLL</span><div class="scroll-arrow"></div></div>
+</section>
+
+<main>
+  <a class="back-link fade" href="projects.html">← Back to Projects</a>
+
+  <!-- INTRO -->
+  <div class="intro-block fade">
+    <div>
+      <span class="section-label">// THE HOBBY</span>
+      <h2>Miniature Worlds, Real Craft</h2>
+      <p>
+        Model railroading sits at an interesting intersection of disciplines that most people
+        don't expect — it's part engineering, part fine art, part carpentry, part electronics,
+        and part obsessive attention to historical detail. Getting a layout to look convincingly
+        real at eye level is a genuine craft challenge, and one that rewards patience over speed
+        more than almost anything else I work on.
+      </p>
+      <p>
+        The hobby pulled me in for the same reason a lot of things do: the building matters
+        as much as the result. A locomotive running smooth laps on finished track is satisfying,
+        but it's the hours of laying ballast, painting rail, sculpting ground foam, and adding
+        the details that make you stop and look twice that make the hobby what it is.
+      </p>
+      <p>
+        The skills cross over more than you'd think. Weathering techniques feed directly into
+        prop finishing. Scratch-building structures shares DNA with 3D modeling. And the patience
+        that model railroading demands — doing something slowly and correctly rather than quickly
+        and roughly — is something I try to carry into every other build.
+      </p>
+    </div>
+    <div class="stat-stack">
+      <div class="stat-card">
+        <div class="num">HO</div>
+        <div class="desc">1:87 scale — the most widely modeled scale in the world</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">DCC</div>
+        <div class="desc">Digital Command Control — individual locomotive addressing and sound</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">Scratch</div>
+        <div class="desc">Many structures and details built from raw materials, not kits</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">Slow</div>
+        <div class="desc">Deliberately paced — this is one of the few hobbies that punishes rushing</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- LAYOUT OVERVIEW -->
+  <div class="layout-overview fade">
+    <span class="section-label">// THE LAYOUT</span>
+    <h2>The Layout Plan</h2>
+    <p class="lead">
+      The current layout is a point-to-point HO design built around a combination of mainline
+      running and detailed switching operations. The plan focuses on scene quality over raw
+      track footage — fewer miles, more moments.
+    </p>
+    <div class="layout-card">
+      <div>
+        <h3>HO Scale Point-to-Point</h3>
+        <p>
+          The layout is designed around two end terminals connected by a mainline run with
+          a yard at one end and an industrial switching puzzle at the other. The scenery
+          theme is American diesel-era railroading — late 1970s through early 2000s,
+          the overlap period where older motive power and modern units shared the rails.
+        </p>
+        <p>
+          Benchwork is L-girder construction on a permanent frame — built to last and level.
+          Track is code 83 flex track on cork roadbed throughout, hand-laid through turnouts
+          for the closest visual match to prototype rail. The entire main is wired for DCC
+          with block detection for automatic signaling.
+        </p>
+        <p>
+          Scenery is built in sections — each scene is treated as its own diorama before
+          moving to the next, so no part of the layout ever looks half-finished for long.
+        </p>
+      </div>
+      <div class="layout-specs">
+        <div class="spec-row">
+          <span class="spec-key">SCALE</span>
+          <span class="spec-val">HO — 1:87</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-key">TRACK CODE</span>
+          <span class="spec-val">Code 83 Flex + Hand-Laid Turnouts</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-key">CONTROL</span>
+          <span class="spec-val">DCC + Block Detection</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-key">ERA</span>
+          <span class="spec-val">Late 1970s – Early 2000s</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-key">THEME</span>
+          <span class="spec-val">American Diesel — Industrial + Mainline</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-key">BENCHWORK</span>
+          <span class="spec-val">L-Girder, Permanent Frame</span>
+        </div>
+        <div class="spec-row">
+          <span class="spec-key">STATUS</span>
+          <span class="spec-val">Track & Wiring Complete — Scenery in Progress</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TECHNIQUES -->
+  <div class="techniques-section fade">
+    <span class="section-label">// TECHNIQUES</span>
+    <h2>The Craft Behind the Scene</h2>
+    <p class="lead">
+      Model railroading is a deep stack of individual skills. Here are the major disciplines
+      that go into making a layout look convincingly real.
+    </p>
+    <div class="tech-grid">
+      <div class="tech-card">
+        <span class="tech-icon">🪨</span>
+        <h4>Scenery & Landform</h4>
+        <p>Plaster cloth over foam base for terrain. Hard shell carved and sanded for
+          rock faces. Ground cover is a mix of real dirt, fine turf, static grass at
+          multiple lengths, and scatter foam for shrubs and bushes.</p>
+        <span class="tech-pill">Static Grass</span>
+      </div>
+      <div class="tech-card">
+        <span class="tech-icon">🛤️</span>
+        <h4>Track & Ballasting</h4>
+        <p>Code 83 flex track spiked on cork roadbed. Ballast is fine granite blend,
+          wet-laid with diluted matte medium and a drop of dish soap for surface tension.
+          Rail painted with rust and grime before ballasting.</p>
+        <span class="tech-pill">Wet Ballasting</span>
+      </div>
+      <div class="tech-card">
+        <span class="tech-icon">🎨</span>
+        <h4>Weathering</h4>
+        <p>Locomotives and rolling stock weathered with oil paints, powders, and an
+          airbrush. Rust streaks are hairspray technique over salt masking. Grime
+          is oil wash and dry brushing. Each piece gets a unique treatment.</p>
+        <span class="tech-pill">Oil Wash</span>
+      </div>
+      <div class="tech-card">
+        <span class="tech-icon">🏭</span>
+        <h4>Structure Building</h4>
+        <p>Kit bashing is the standard — taking commercial structure kits and modifying,
+          combining, and adding details to make them look unique and fit the scene. Some
+          structures are scratch-built from sheet styrene and laser-cut wood.</p>
+        <span class="tech-pill">Kit Bashing</span>
+      </div>
+      <div class="tech-card">
+        <span class="tech-icon">💡</span>
+        <h4>Lighting & Signals</h4>
+        <p>Structures lit with warm LED strips through diffused fiber. Block detection
+          drives a working signal system — lights respond to train position on the
+          layout in real time. A few scenes have animated neon signs.</p>
+        <span class="tech-pill">Block Detection</span>
+      </div>
+      <div class="tech-card">
+        <span class="tech-icon">🌊</span>
+        <h4>Water Effects</h4>
+        <p>Still water scenes poured in layers with Woodland Scenics Realistic Water
+          over a painted base. Rippled water is stretched plastic wrap under a coat of
+          gloss medium. Waterfall is stretched cotton over foam carved rock.</p>
+        <span class="tech-pill">Realistic Water</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- ROLLING STOCK -->
+  <div class="rolling-section fade">
+    <span class="section-label">// ROSTER</span>
+    <h2>The Locomotive Roster</h2>
+    <p class="lead">
+      A cross-section of the motive power fleet — each one weathered, DCC-decoded,
+      and sound-equipped. Swap in your actual roster photos under
+      <code style="color:var(--accent);font-size:13px;">images/railroading/</code>.
+    </p>
+    <div class="rolling-slivers">
+
+      <div class="rsliver">
+        <div class="rs-img">
+          <img src="images/railroading/loco-sd40.jpg" alt="EMD SD40-2"
+            onerror="this.parentElement.innerHTML='<div class=rs-placeholder>🚂</div>'">
+        </div>
+        <div class="rs-text">
+          <span class="rs-label">ROAD POWER</span>
+          <h4>EMD SD40-2</h4>
+          <p>The workhorse of the diesel era. Heavily weathered with oil streaks, exhaust
+            staining, and a repainted number board. DCC sound decoder with prime mover
+            audio, dynamic brakes, and full lighting package.</p>
+          <div class="rs-pills">
+            <span class="rs-pill">DCC Sound</span>
+            <span class="rs-pill">Weathered</span>
+            <span class="rs-pill">Custom Paint</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="rsliver">
+        <div class="rs-img">
+          <img src="images/railroading/loco-gp38.jpg" alt="EMD GP38-2"
+            onerror="this.parentElement.innerHTML='<div class=rs-placeholder>🚂</div>'">
+        </div>
+        <div class="rs-text">
+          <span class="rs-label">LOCAL FREIGHT</span>
+          <h4>EMD GP38-2</h4>
+          <p>Assigned to the industrial switching district. Light weathering to suggest
+            regular use without heavy road grime. Knuckle couplers replaced with
+            Kadee #58s throughout for reliable coupling in tight industrial leads.</p>
+          <div class="rs-pills">
+            <span class="rs-pill">Kadee Couplers</span>
+            <span class="rs-pill">DCC Sound</span>
+            <span class="rs-pill">Industrial Duty</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="rsliver">
+        <div class="rs-img">
+          <img src="images/railroading/loco-dash9.jpg" alt="GE Dash 9-44CW"
+            onerror="this.parentElement.innerHTML='<div class=rs-placeholder>🚂</div>'">
+        </div>
+        <div class="rs-text">
+          <span class="rs-label">MODERN POWER</span>
+          <h4>GE Dash 9-44CW</h4>
+          <p>Represents the modern end of the era — cleaner paint, lighter weathering,
+            full ditch light animation wired through the decoder. Factory sound file
+            replaced with a custom recorded prototype sample.</p>
+          <div class="rs-pills">
+            <span class="rs-pill">Ditch Lights</span>
+            <span class="rs-pill">Custom Sound File</span>
+            <span class="rs-pill">Modern Era</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="rsliver">
+        <div class="rs-img">
+          <img src="images/railroading/rolling-stock.jpg" alt="Freight car fleet"
+            onerror="this.parentElement.innerHTML='<div class=rs-placeholder>🚃</div>'">
+        </div>
+        <div class="rs-text">
+          <span class="rs-label">FREIGHT FLEET</span>
+          <h4>Mixed Freight Cars</h4>
+          <p>Boxcars, hoppers, gondolas, and flatcars representing multiple railroads and
+            eras. All individually weathered — no two identical. Trucks and wheels replaced
+            with Proto:87 wheelsets for smooth, quiet running on DCC.</p>
+          <div class="rs-pills">
+            <span class="rs-pill">Proto:87 Wheels</span>
+            <span class="rs-pill">Individual Weathering</span>
+            <span class="rs-pill">Mixed Roads</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- GALLERY -->
+  <div class="gallery-section fade">
+    <span class="section-label">// LAYOUT PHOTOS</span>
+    <h2>The Layout in Progress</h2>
+    <p class="lead">
+      Scenes from the current build state — track, scenery, and rolling stock.
+      Replace with your actual layout photos under <code style="color:var(--accent);font-size:13px;">images/railroading/</code>.
+    </p>
+    <div class="photo-grid">
+      <div class="photo-cell tall">
+        <img src="images/railroading/gallery-hero-scene.jpg" alt="Hero scenic scene"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Hero Scene</div>'">
+        <div class="photo-caption">SCENE // Hero Shot</div>
+      </div>
+      <div class="photo-cell">
+        <img src="images/railroading/gallery-track.jpg" alt="Track and ballast detail"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Track Detail</div>'">
+        <div class="photo-caption">TRACK // Ballasted Rail</div>
+      </div>
+      <div class="photo-cell">
+        <img src="images/railroading/gallery-loco.jpg" alt="Locomotive close-up"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Locomotive</div>'">
+        <div class="photo-caption">LOCO // Close-Up</div>
+      </div>
+      <div class="photo-cell wide">
+        <img src="images/railroading/gallery-layout-wide.jpg" alt="Wide layout shot"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Layout Wide Shot</div>'">
+        <div class="photo-caption">LAYOUT // Wide View</div>
+      </div>
+      <div class="photo-cell">
+        <img src="images/railroading/gallery-scenery.jpg" alt="Scenery detail"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Scenery Detail</div>'">
+        <div class="photo-caption">SCENERY // Ground Cover</div>
+      </div>
+      <div class="photo-cell">
+        <img src="images/railroading/gallery-structure.jpg" alt="Structure detail"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Structure</div>'">
+        <div class="photo-caption">STRUCTURE // Kitbash</div>
+      </div>
+      <div class="photo-cell">
+        <img src="images/railroading/gallery-weathering.jpg" alt="Weathered rolling stock"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Weathering</div>'">
+        <div class="photo-caption">WEATHERING // Rolling Stock</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESS -->
+  <div class="progress-section fade">
+    <div>
+      <span class="section-label">// WHERE IT STANDS</span>
+      <h2>Still Laying Down the World</h2>
+      <p>
+        The benchwork is solid and the track plan is fully laid and wired. DCC is running
+        and the block detection is working across the main. What's left is everything that
+        takes the longest and matters the most — the scenery.
+      </p>
+      <p>
+        The industrial switching district is the most developed scene right now. Ballast is
+        down, rail is painted, and the first structures are in place. The mainline scenic
+        section is roughed in with terrain form but hasn't had ground cover started yet.
+        The yard end is functional but completely unscenicked — strictly operational for now.
+      </p>
+      <p>
+        The goal is to finish scenes in sequence rather than spreading work evenly across the
+        whole layout — that way at least some part always looks done, which helps enormously
+        with the long-game motivation of a project like this.
+      </p>
+    </div>
+    <div>
+      <div class="bars-list" id="skillBars">
+        <div class="bar-row">
+          <div class="bar-label"><span>Benchwork</span><span>100%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="100"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span>Track & Wiring</span><span>95%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="95"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span>DCC & Block Detection</span><span>90%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="90"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span>Switching District Scene</span><span>65%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="65"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span>Mainline Scenery</span><span>20%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="20"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span>Yard Scenery</span><span>5%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="5"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span>Roster (weathering)</span><span>70%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="70"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  © 2026 Devon Shunn &nbsp;·&nbsp;
+  <a href="projects.html" style="color:var(--accent);text-decoration:none;">← All Projects</a>
+</footer>
+
+<script>
+const pc=document.getElementById('particles');
+for(let i=0;i<35;i++){
+  const s=document.createElement('span');
+  const x=Math.random()*100,dur=4+Math.random()*6,delay=Math.random()*8,size=1+Math.random()*2;
+  s.style.cssText=`left:${x}%;bottom:${5+Math.random()*55}%;width:${size}px;height:${size}px;animation-duration:${dur}s;animation-delay:${delay}s;`;
+  pc.appendChild(s);
+}
+const fades=document.querySelectorAll('.fade');
+const fadeObs=new IntersectionObserver(e=>{e.forEach(i=>{if(i.isIntersecting)i.target.classList.add('show');});},{threshold:0.08});
+fades.forEach(el=>fadeObs.observe(el));
+const barObs=new IntersectionObserver(e=>{e.forEach(i=>{if(i.isIntersecting){i.target.querySelectorAll('.bar-fill').forEach(b=>{b.style.width=b.dataset.width+'%';});barObs.unobserve(i.target);}});},{threshold:0.3});
+const ss=document.getElementById('skillBars');
+if(ss)barObs.observe(ss);
+</script>
+</body>
+</html>
