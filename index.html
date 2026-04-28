@@ -4,10 +4,9 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Devon Shunn – Engineering Portfolio</title>
-
-<link rel="icon" type="image/png" href="DSfavicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<script src="nav.js"></script>
 
 <style>
 :root{
@@ -31,42 +30,6 @@ body{
   color:var(--text);
   overflow-x:hidden;
 }
-
-/* ── NAV ── */
-header{
-  position:fixed; top:0; width:100%;
-  backdrop-filter:blur(14px);
-  background:rgba(7,10,18,0.75);
-  border-bottom:1px solid var(--border);
-  z-index:200;
-}
-nav{
-  max-width:1100px; margin:auto;
-  display:flex; justify-content:space-between; align-items:center;
-  padding:14px 24px;
-}
-nav ul{ display:flex; gap:26px; list-style:none; align-items:center; }
-.nav-link{ color:var(--muted); text-decoration:none; transition:0.2s; }
-.nav-link:hover{ color:var(--blue); }
-.logo img{ height:42px; cursor:pointer; transition:0.25s; }
-.logo img:hover{ transform:scale(1.05); filter:drop-shadow(0 0 12px rgba(56,189,248,0.6)); }
-.nav-item{ position:relative; }
-.dropdown{
-  position:absolute; top:100%; left:0; padding-top:12px;
-  min-width:200px; background:transparent;
-  display:flex; flex-direction:column;
-  opacity:0; transform:translateY(6px);
-  pointer-events:none; transition:0.25s;
-}
-.dropdown-inner{
-  background:rgba(7,10,18,0.9);
-  border:1px solid var(--border); border-radius:12px;
-  display:flex; flex-direction:column;
-  overflow:hidden; backdrop-filter:blur(14px);
-}
-.dropdown a{ padding:10px 14px; text-decoration:none; color:var(--muted); font-size:14px; transition:0.2s; }
-.dropdown a:hover{ background:rgba(56,189,248,0.12); color:var(--blue); }
-.nav-item:hover .dropdown{ opacity:1; transform:translateY(0); pointer-events:auto; }
 
 /* ── SHARED ── */
 section{ padding:100px 24px; }
@@ -417,31 +380,6 @@ footer{
 </head>
 <body>
 
-<!-- ═══ NAV ═══ -->
-<header>
-<nav>
-  <a href="index.html" class="logo"><img src="signature.png" alt="Devon Shunn"></a>
-  <ul>
-    <li class="nav-item">
-      <a href="projects.html" class="nav-link">Projects</a>
-      <div class="dropdown">
-        <div class="dropdown-inner">
-          <a href="project-lightsaber.html">Lightsaber</a>
-          <a href="project-delorean.html">DeLorean Animation</a>
-          <a href="project-3dprinting.html">3D Printing</a>
-          <a href="project-bd1.html">BD-1 Droid</a>
-          <a href="project-ios-widgets.html">iOS Widgets</a>
-          <a href="project-game.html">Game</a>
-          <a href="project-led.html">LED Systems</a>
-          <a href="project-horizon.html">Horizon Worlds</a>
-        </div>
-      </div>
-    </li>
-    <li><a href="contact.html" class="nav-link">Contact Me</a></li>
-  </ul>
-</nav>
-</header>
-
 <!-- ═══ HERO ═══ -->
 <section class="hero" id="home">
   <div class="hero-glow"></div>
@@ -473,7 +411,7 @@ footer{
       </div>
       <div class="hstat">
         <div class="hstat-num">∞</div>
-        <div class="hstat-label">Projects in the queue — the list never stops growing!</div>
+        <div class="hstat-label">Projects in the queue — the list never shrinks</div>
       </div>
     </div>
   </div>
@@ -781,8 +719,8 @@ footer{
     Works best with a wide crop and dark/moody lighting.
   -->
   <img
-    src="proficiency.jpg"
-    alt="Devon's Proficiency in Prorams"
+    src="images/workspace.jpg"
+    alt="Devon's workspace"
     onerror="this.style.display='none'; document.getElementById('img-placeholder').style.display='flex';"
   >
   <div class="full-img-placeholder" id="img-placeholder" style="display:none;">
