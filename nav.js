@@ -143,6 +143,16 @@ const NAV_CONFIG = {
 </header>`;
 
   // ── Inject header into page ─────────────────────────────
-  document.body.insertAdjacentHTML("afterbegin", navHTML);
+  // Waits for the body to exist before injecting, no matter
+  // where the <script src="nav.js"> tag is placed on the page.
+  function inject() {
+    document.body.insertAdjacentHTML("afterbegin", navHTML);
+  }
+
+  if (document.body) {
+    inject();
+  } else {
+    document.addEventListener("DOMContentLoaded", inject);
+  }
 
 })();
