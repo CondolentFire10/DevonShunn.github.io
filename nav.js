@@ -20,14 +20,10 @@ const NAV_CONFIG = {
     label: "Projects",
     href: "projects.html",
     links: [
-      { label: "Lightsaber",         href: "project-lightsaber.html"  },
-      { label: "DeLorean Animation", href: "project-delorean.html"    },
       { label: "3D Printing",        href: "project-3dprinting.html"  },
       { label: "BD-1 Droid",         href: "project-bd1.html"         },
-      { label: "iOS Widgets",        href: "project-ios-widgets.html" },
-      { label: "Game",               href: "project-game.html"        },
-      { label: "LED Systems",        href: "project-led.html"         },
-      { label: "Horizon Worlds",     href: "project-horizon.html"     },
+      { label: "DeLorean Animation", href: "project-delorean.html"    },
+      { label: "Model Railroading",     href: "project-railroading.html"     },
     ]
   },
 
