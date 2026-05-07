@@ -23,7 +23,8 @@ const NAV_CONFIG = {
       { label: "3D Printing",        href: "project-3dprinting.html"  },
       { label: "BD-1 Droid",         href: "project-bd1.html"         },
       { label: "DeLorean Animation", href: "project-delorean.html"    },
-      { label: "Model Railroading",     href: "project-railroading.html"     },
+      { label: "Model Railroading",  href: "project-railroading.html" },
+      { label: "Website",            href: "project-website.html" },
     ]
   },
 
