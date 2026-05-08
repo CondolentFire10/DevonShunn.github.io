@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Experience – Devon Shunn</title>
+
+<link rel="icon" type="image/png" href="favicon.png">
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<script src="nav.js"></script>
+  
+<style>
+:root{
+  --bg:#070A12;
+  --glass:rgba(255,255,255,0.06);
+  --glass2:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.12);
+  --text:#fff;
+  --muted:rgba(255,255,255,0.7);
+  --blue:#38bdf8;
+  --blue2:#2563eb;
+  --purple:#a855f7;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+  font-family:Poppins,sans-serif;
+}
+
+body{
+  background: radial-gradient(circle at top, #0b1224, var(--bg));
+  color:var(--text);
+  overflow-x:hidden;
+}
+
+/* NAV */
+header{
+  position:fixed;
+  top:0;
+  width:100%;
+  backdrop-filter:blur(14px);
+  background:rgba(7,10,18,0.75);
+  border-bottom:1px solid var(--border);
+  z-index:100;
+}
+
+nav{
+  max-width:1100px;
+  margin:auto;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  padding:14px 24px;
+}
+
+nav ul{
+  display:flex;
+  gap:26px;
+  list-style:none;
+  align-items:center;
+}
+
+.nav-link{
+  color:var(--muted);
+  text-decoration:none;
+  transition:0.2s ease;
+}
+
+.nav-link:hover{ color:var(--blue); }
+
+.logo img{
+  height:42px;
+  cursor:pointer;
+  transition:0.25s ease;
+}
+
+.logo img:hover{
+  transform:scale(1.05);
+  filter:drop-shadow(0 0 12px rgba(56,189,248,0.6));
+}
+
+/* PAGE HEADER */
+.page-header{
+  padding:160px 24px 80px;
+  text-align:center;
+}
+
+.page-header .tag{
+  color:var(--blue);
+  font-size:13px;
+  letter-spacing:2px;
+  display:block;
+  margin-bottom:16px;
+}
+
+.page-header h1{
+  font-size:52px;
+  line-height:1.1;
+}
+
+.page-header p{
+  margin-top:16px;
+  color:var(--muted);
+  max-width:620px;
+  margin-inline:auto;
+}
+
+/* EXPERIENCE LIST */
+.projects-list{
+  max-width:1200px;
+  margin:0 auto;
+  padding:0 24px 120px;
+  display:flex;
+  flex-direction:column;
+  gap:0;
+}
+
+/* FEATURED ROW */
+.featured-row{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:60px;
+  align-items:center;
+  padding:80px 40px;
+  border-bottom:1px solid var(--border);
+  border-radius:20px;
+  opacity:0;
+  transform:translateY(30px);
+  transition:opacity 0.9s ease, transform 0.9s ease, background 0.3s ease, box-shadow 0.3s ease;
+}
+
+.featured-row.show{
+  opacity:1;
+  transform:translateY(0);
+}
+
+.featured-row:hover{
+  background: rgba(56,189,248,0.04);
+  box-shadow: inset 0 0 0 1px rgba(56,189,248,0.12);
+}
+
+.featured-row.reverse{
+  direction:rtl;
+}
+
+.featured-row.reverse > *{
+  direction:ltr;
+}
+
+/* TEXT SIDE */
+.proj-text{
+  display:flex;
+  flex-direction:column;
+  gap:20px;
+}
+
+.proj-label{
+  color:var(--purple);
+  font-size:13px;
+  font-weight:600;
+  letter-spacing:1px;
+}
+
+.proj-text h2{
+  font-size:36px;
+  line-height:1.15;
+  margin:0;
+}
+
+.proj-desc{
+  background:var(--glass);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:22px 24px;
+  color:var(--muted);
+  font-size:15px;
+  line-height:1.7;
+  backdrop-filter:blur(8px);
+}
+
+/* TAGS */
+.proj-tags{
+  display:flex;
+  flex-wrap:wrap;
+  gap:8px;
+}
+
+.tag-pill{
+  padding:5px 12px;
+  border-radius:999px;
+  border:1px solid var(--border);
+  font-size:12px;
+  color:var(--muted);
+  background:var(--glass);
+}
+
+/* IMAGE SIDE */
+.proj-image{
+  border-radius:20px;
+  overflow:hidden;
+  border:1px solid var(--border);
+  background:var(--glass2);
+  aspect-ratio:16/10;
+  position:relative;
+}
+
+.proj-image img{
+  width:100%;
+  height:100%;
+  object-fit:cover;
+  display:block;
+  transition:0.4s ease;
+}
+
+.proj-image:hover img{
+  transform:scale(1.03);
+}
+
+.proj-image-placeholder{
+  width:100%;
+  height:100%;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:48px;
+  color:var(--border);
+  background: linear-gradient(135deg, rgba(56,189,248,0.05), rgba(37,99,235,0.05));
+  min-height:260px;
+}
+
+/* RESPONSIVE */
+@media(max-width:800px){
+  .featured-row{
+    grid-template-columns:1fr;
+    gap:32px;
+    padding:60px 20px;
+  }
+
+  .featured-row.reverse{
+    direction:ltr;
+  }
+
+  .page-header h1{ font-size:36px; }
+  .proj-text h2{ font-size:26px; }
+}
+</style>
+</head>
+
+<body>
+
+<!-- PAGE HEADER -->
+<div class="page-header">
+  <span class="tag">RESEARCH • ENGINEERING • LEADERSHIP</span>
+  <h1>Experience</h1>
+  <p>A collection of academic programs, technical experiences, and hands-on opportunities that have shaped my interests in engineering, physics, design, and systems thinking.</p>
+</div>
+
+<!-- EXPERIENCE -->
+<div class="projects-list">
+
+  <!-- 1 — ISS PHYSICS -->
+  <div class="featured-row">
+    <div class="proj-text">
+      <div class="proj-label">Academic Experience</div>
+      <h2>ISS Physics Program</h2>
+      <div class="proj-desc">
+        Participated in the International Summer School for Physics, collaborating with students in advanced
+        university-level physics topics and problem solving. The program emphasized analytical thinking,
+        experimental reasoning, and collaborative research while exploring modern concepts in mechanics,
+        electricity, and theoretical physics.
+      </div>
+      <div class="proj-tags">
+        <span class="tag-pill">Physics</span>
+        <span class="tag-pill">Research</span>
+        <span class="tag-pill">Problem Solving</span>
+        <span class="tag-pill">STEM</span>
+      </div>
+    </div>
+    <div class="proj-image">
+      <img src="images/iss-physics.jpg" alt="ISS Physics Program" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>🧪</div>'"/>
+    </div>
+  </div>
+
+  <!-- 2 — MODEL RAILROAD MUSEUM -->
+  <div class="featured-row reverse">
+    <div class="proj-text">
+      <div class="proj-label">Volunteer Experience</div>
+      <h2>Railroad Museum Steam Department</h2>
+      <div class="proj-desc">
+        Worked alongside volunteers and restoration crews in a railroad steam department environment,
+        assisting with locomotive maintenance, restoration work, fabrication, and shop operations.
+        Gained exposure to large-scale mechanical systems, machining processes, and historical engineering practices.
+      </div>
+      <div class="proj-tags">
+        <span class="tag-pill">Mechanical Systems</span>
+        <span class="tag-pill">Restoration</span>
+        <span class="tag-pill">Fabrication</span>
+        <span class="tag-pill">Engineering</span>
+      </div>
+    </div>
+    <div class="proj-image">
+      <img src="images/steam-department.jpg" alt="Steam Department" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>🚂</div>'"/>
+    </div>
+  </div>
+
+  <!-- 3 — SALUTATORIAN -->
+  <div class="featured-row">
+    <div class="proj-text">
+      <div class="proj-label">Leadership Experience</div>
+      <h2>High School Salutatorian</h2>
+      <div class="proj-desc">
+        Graduated as salutatorian while balancing advanced coursework, technical projects, and extracurricular
+        commitments. Developed strong communication, leadership, and presentation skills through public speaking,
+        collaborative work, and academic achievement across STEM-focused classes.
+      </div>
+      <div class="proj-tags">
+        <span class="tag-pill">Leadership</span>
+        <span class="tag-pill">Public Speaking</span>
+        <span class="tag-pill">Academics</span>
+        <span class="tag-pill">STEM</span>
+      </div>
+    </div>
+    <div class="proj-image">
+      <img src="images/salutatorian.jpg" alt="Salutatorian" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>🎓</div>'"/>
+    </div>
+  </div>
+
+  <!-- 4 — DESIGN & FABRICATION -->
+  <div class="featured-row reverse">
+    <div class="proj-text">
+      <div class="proj-label">Technical Experience</div>
+      <h2>Design & Digital Fabrication</h2>
+      <div class="proj-desc">
+        Extensive hands-on experience with CAD modeling, 3D printing, electronics integration, laser cutting,
+        and rapid prototyping workflows. Projects required iterative engineering design, troubleshooting,
+        and translating digital concepts into physical systems and functional assemblies.
+      </div>
+      <div class="proj-tags">
+        <span class="tag-pill">CAD</span>
+        <span class="tag-pill">3D Printing</span>
+        <span class="tag-pill">Electronics</span>
+        <span class="tag-pill">Prototyping</span>
+      </div>
+    </div>
+    <div class="proj-image">
+      <img src="images/fabrication.jpg" alt="Design and Fabrication" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>⚙️</div>'"/>
+    </div>
+  </div>
+
+</div>
+
+<footer style="text-align:center;padding:60px 20px;color:rgba(255,255,255,0.5);border-top:1px solid rgba(255,255,255,0.08)">
+  © 2026 Devon Shunn
+</footer>
+
+<script>
+const rows = document.querySelectorAll('.featured-row');
+
+const obs = new IntersectionObserver(entries=>{
+  entries.forEach(entry=>{
+    if(entry.isIntersecting){
+      entry.target.classList.add('show');
+    }
+  });
+},{threshold:0.1});
+
+rows.forEach(row=>obs.observe(row));
+</script>
+
+</body>
+</html>
