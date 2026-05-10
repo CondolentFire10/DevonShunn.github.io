@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>PC Building – Devon Shunn</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+<script src="nav.js"></script>
+
+<style>
+:root{
+  --bg:#070A12;
+  --glass:rgba(255,255,255,0.06);
+  --glass2:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.12);
+  --text:#fff;
+  --muted:rgba(255,255,255,0.7);
+  --blue:#38bdf8;
+  --purple:#a855f7;
+  --accent:#e2e8f0;
+  --accent2:#94a3b8;
+  --accentglow:rgba(226,232,240,0.35);
+  --dim:rgba(226,232,240,0.45);
+}
+
+*{ margin:0; padding:0; box-sizing:border-box; font-family:Poppins,sans-serif; }
+body{ background:var(--bg); color:var(--text); overflow-x:hidden; }
+body::before{
+  content:''; position:fixed; inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.025) 2px,rgba(0,0,0,0.025) 4px);
+  pointer-events:none; z-index:999;
+}
+
+/* NAV */
+header{ position:fixed; top:0; width:100%; backdrop-filter:blur(14px); background:rgba(7,10,18,0.85); border-bottom:1px solid var(--border); z-index:200; }
+nav{ max-width:1100px; margin:auto; display:flex; justify-content:space-between; align-items:center; padding:14px 24px; }
+nav ul{ display:flex; gap:26px; list-style:none; align-items:center; }
+.nav-link{ color:var(--muted); text-decoration:none; transition:0.2s ease; }
+.nav-link:hover{ color:var(--blue); }
+.logo img{ height:42px; cursor:pointer; transition:0.25s ease; }
+.logo img:hover{ transform:scale(1.05); filter:drop-shadow(0 0 12px rgba(56,189,248,0.6)); }
+.nav-item{ position:relative; }
+.dropdown{ position:absolute; top:100%; left:0; padding-top:12px; min-width:200px; background:transparent; display:flex; flex-direction:column; opacity:0; transform:translateY(6px); pointer-events:none; transition:0.25s ease; }
+.dropdown-inner{ background:rgba(7,10,18,0.85); border:1px solid var(--border); border-radius:12px; display:flex; flex-direction:column; overflow:hidden; backdrop-filter:blur(14px); }
+.dropdown a{ padding:10px 14px; text-decoration:none; color:var(--muted); font-size:14px; transition:0.2s ease; }
+.dropdown a:hover{ background:rgba(56,189,248,0.12); color:var(--blue); }
+.nav-item:hover .dropdown{ opacity:1; transform:translateY(0); pointer-events:auto; }
+
+/* ---- HERO ---- */
+.hero{ position:relative; min-height:100vh; display:flex; align-items:flex-end; overflow:hidden; }
+.hero-bg{ position:absolute; inset:0; background:linear-gradient(180deg,#0a0c10 0%,#080a0f 35%,#070810 65%,#070A12 100%); }
+
+.hero-sweep{ position:absolute; inset:0; overflow:hidden; pointer-events:none; }
+.hero-sweep::before{
+  content:''; position:absolute; top:-20%; left:-60%; width:40%; height:140%;
+  background:linear-gradient(105deg,transparent 0%,rgba(226,232,240,0.015) 30%,rgba(226,232,240,0.05) 50%,rgba(226,232,240,0.015) 70%,transparent 100%);
+  animation:sweepMove 9s ease-in-out infinite;
+}
+.hero-sweep::after{
+  content:''; position:absolute; top:-20%; left:-60%; width:20%; height:140%;
+  background:linear-gradient(105deg,transparent 0%,rgba(226,232,240,0.02) 50%,transparent 100%);
+  animation:sweepMove 9s ease-in-out infinite 1.4s;
+}
+@keyframes sweepMove{ 0%{left:-60%} 100%{left:130%} }
+
+.hero-grid{
+  position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(226,232,240,0.05) 1px,transparent 1px),
+    linear-gradient(90deg,rgba(226,232,240,0.04) 1px,transparent 1px);
+  background-size:55px 55px;
+  transform:perspective(700px) rotateX(54deg) translateY(28%);
+  transform-origin:bottom center;
+  animation:gridPulse 5s ease-in-out infinite;
+}
+@keyframes gridPulse{ 0%,100%{opacity:0.7} 50%{opacity:1} }
+
+.hero-dots{ position:absolute; inset:0; pointer-events:none; overflow:hidden; }
+.hero-dots span{ position:absolute; border-radius:50%; background:var(--accent); animation:dotFloat linear infinite; opacity:0; }
+@keyframes dotFloat{ 0%{opacity:0;transform:translateY(0)} 20%{opacity:0.5} 80%{opacity:0.15} 100%{opacity:0;transform:translateY(-70px)} }
+
+.hero-glow{ position:absolute; bottom:12%; left:50%; transform:translateX(-50%); width:900px; height:300px; background:radial-gradient(ellipse,rgba(148,163,184,0.14) 0%,rgba(226,232,240,0.06) 45%,transparent 70%); filter:blur(50px); pointer-events:none; }
+.hero-img-wrap{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+.hero-img-wrap img{ width:100%; height:100%; object-fit:cover; opacity:0.45; mix-blend-mode:lighten; }
+
+.hero-content{ position:relative; z-index:2; max-width:1100px; margin:0 auto; padding:0 24px 80px; width:100%; }
+.breadcrumb{ display:flex; align-items:center; gap:8px; margin-bottom:24px; font-family:'Share Tech Mono',monospace; font-size:12px; color:rgba(255,255,255,0.4); letter-spacing:1px; }
+.breadcrumb a{ color:var(--accent); text-decoration:none; }
+.breadcrumb a:hover{ text-decoration:underline; }
+.hero-tag{ font-family:'Share Tech Mono',monospace; font-size:12px; letter-spacing:3px; color:var(--accent); margin-bottom:16px; opacity:0.9; }
+.hero-title{ font-size:clamp(40px,7vw,82px); line-height:0.95; font-weight:700; letter-spacing:-2px; margin-bottom:22px; }
+.hero-title .line2{ color:transparent; -webkit-text-stroke:1px rgba(226,232,240,0.45); }
+.hero-sub{ color:var(--muted); max-width:580px; line-height:1.8; font-size:16px; margin-bottom:36px; }
+.hero-meta{ display:flex; gap:32px; flex-wrap:wrap; }
+.meta-item{ display:flex; flex-direction:column; gap:4px; }
+.meta-label{ font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:2px; color:rgba(255,255,255,0.35); text-transform:uppercase; }
+.meta-value{ font-size:14px; color:var(--accent); font-weight:600; }
+.scroll-hint{ position:absolute; bottom:30px; right:40px; display:flex; flex-direction:column; align-items:center; gap:8px; opacity:0.4; animation:bounce 2s ease-in-out infinite; }
+@keyframes bounce{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+.scroll-hint span{ font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--accent); }
+.scroll-arrow{ width:1px; height:40px; background:linear-gradient(to bottom,var(--accent),transparent); }
+
+/* ---- MAIN ---- */
+main{ max-width:1100px; margin:0 auto; padding:0 24px 120px; }
+.section-label{ font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:3px; color:var(--accent); opacity:0.7; margin-bottom:12px; display:block; }
+.fade{ opacity:0; transform:translateY(30px); transition:0.9s ease; }
+.fade.show{ opacity:1; transform:translateY(0); }
+.back-link{ display:inline-flex; align-items:center; gap:8px; color:var(--muted); text-decoration:none; font-size:14px; transition:0.2s ease; margin-bottom:60px; padding-top:40px; font-family:'Share Tech Mono',monospace; letter-spacing:1px; }
+.back-link:hover{ color:var(--accent); }
+
+/* ---- INTRO ---- */
+.intro-block{ padding:80px 0 60px; display:grid; grid-template-columns:1.2fr 1fr; gap:80px; align-items:start; border-bottom:1px solid var(--border); }
+.intro-block h2{ font-size:38px; line-height:1.2; margin-bottom:20px; }
+.intro-block p{ color:var(--muted); line-height:1.9; font-size:15px; margin-bottom:16px; }
+.intro-block em{ color:rgba(255,255,255,0.92); font-style:normal; }
+.stat-stack{ display:flex; flex-direction:column; gap:20px; }
+.stat-card{ background:var(--glass); border:1px solid var(--border); border-radius:16px; padding:20px 24px; backdrop-filter:blur(8px); position:relative; overflow:hidden; }
+.stat-card::before{ content:''; position:absolute; top:0; left:0; width:3px; height:100%; background:linear-gradient(to bottom,var(--accent),var(--purple)); border-radius:3px 0 0 3px; }
+.stat-card .num{ font-size:28px; font-weight:700; color:var(--accent); line-height:1; font-family:'Share Tech Mono',monospace; }
+.stat-card .desc{ font-size:13px; color:var(--muted); margin-top:5px; }
+
+/* ---- ERA TIMELINE ---- */
+.era-section{ padding:80px 0; border-bottom:1px solid var(--border); }
+.era-section > h2{ font-size:34px; margin-bottom:12px; }
+.era-section > .lead{ color:var(--muted); max-width:680px; line-height:1.8; margin-bottom:64px; }
+
+.era-track{ display:flex; flex-direction:column; position:relative; }
+.era-track::before{
+  content:''; position:absolute; left:28px; top:0; bottom:0; width:2px;
+  background:linear-gradient(to bottom,var(--accent),var(--purple),transparent);
+  opacity:0.25;
+}
+
+.era-block{ display:grid; grid-template-columns:72px 1fr; padding:0 0 72px; }
+.era-block:last-child{ padding-bottom:0; }
+.era-dot-col{ display:flex; flex-direction:column; align-items:center; padding-top:5px; }
+.era-dot{ width:18px; height:18px; border-radius:50%; background:var(--bg); flex-shrink:0; position:relative; z-index:1; border:2px solid rgba(226,232,240,0.25); }
+.era-dot.glow{ border-color:var(--accent); background:rgba(226,232,240,0.08); box-shadow:0 0 18px var(--accentglow); }
+.era-dot.upcoming{ border-color:rgba(168,85,247,0.4); background:rgba(168,85,247,0.06); animation:upcomingPulse 2s ease-in-out infinite; }
+@keyframes upcomingPulse{ 0%,100%{box-shadow:0 0 8px rgba(168,85,247,0.3)} 50%{box-shadow:0 0 22px rgba(168,85,247,0.6)} }
+
+.era-body{ padding-left:24px; }
+.era-kicker{ font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:2px; color:var(--dim); margin-bottom:6px; display:block; }
+.era-kicker.bright{ color:var(--accent); }
+.era-kicker.k-upcoming{ color:rgba(168,85,247,0.8); }
+.era-body h3{ font-size:26px; margin-bottom:12px; line-height:1.2; }
+.era-body > p{ color:var(--muted); line-height:1.9; font-size:15px; max-width:720px; margin-bottom:22px; }
+
+/* Callout box */
+.callout-box{
+  background:rgba(226,232,240,0.04); border:1px solid rgba(226,232,240,0.13);
+  border-radius:14px; padding:20px 24px; margin-bottom:24px; position:relative; overflow:hidden;
+}
+.callout-box::before{ content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--accent),transparent); }
+.callout-box p{ color:var(--muted); font-size:14px; line-height:1.8; margin:0; }
+.callout-box strong{ color:var(--accent); font-weight:600; }
+
+/* Spec table */
+.spec-table{ background:var(--glass2); border:1px solid var(--border); border-radius:16px; overflow:hidden; margin-bottom:24px; }
+.spec-table-header{ padding:12px 20px; background:rgba(226,232,240,0.04); border-bottom:1px solid var(--border); font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:2px; color:var(--dim); }
+.spec-row-item{ display:grid; grid-template-columns:160px 1fr; padding:11px 20px; border-bottom:1px solid rgba(255,255,255,0.05); font-size:14px; }
+.spec-row-item:last-child{ border-bottom:none; }
+.skey{ font-family:'Share Tech Mono',monospace; font-size:12px; color:rgba(226,232,240,0.4); letter-spacing:0.5px; padding-top:1px; }
+.sval{ color:var(--text); font-weight:500; }
+
+/* Photo row */
+.photo-row{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:12px; margin-bottom:24px; }
+.photo-cell-sm{ border-radius:12px; overflow:hidden; border:1px solid var(--border); background:var(--glass2); position:relative; }
+.photo-cell-sm img{ width:100%; height:160px; object-fit:cover; display:block; transition:transform 0.4s ease; }
+.photo-cell-sm:hover img{ transform:scale(1.05); }
+.ph-sm-placeholder{ width:100%; height:160px; display:flex; align-items:center; justify-content:center; font-size:28px; opacity:0.12; background:linear-gradient(135deg,rgba(226,232,240,0.04),rgba(148,163,184,0.03)); }
+.ph-sm-cap{ position:absolute; bottom:0; left:0; right:0; padding:14px 10px 8px; background:linear-gradient(to top,rgba(0,0,0,0.8),transparent); font-size:10px; color:rgba(255,255,255,0.7); opacity:0; transition:0.3s ease; font-family:'Share Tech Mono',monospace; letter-spacing:1px; }
+.photo-cell-sm:hover .ph-sm-cap{ opacity:1; }
+
+/* Pills */
+.era-pills{ display:flex; flex-wrap:wrap; gap:7px; margin-top:20px; }
+.era-pill{ padding:4px 12px; border-radius:999px; font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:0.5px; border:1px solid rgba(226,232,240,0.18); color:rgba(226,232,240,0.7); background:rgba(226,232,240,0.04); }
+.era-pill.p-upcoming{ border-color:rgba(168,85,247,0.25); color:rgba(168,85,247,0.8); background:rgba(168,85,247,0.05); }
+
+/* Upcoming banner */
+.upcoming-banner{ display:inline-flex; align-items:center; gap:8px; padding:5px 14px; border-radius:999px; border:1px solid rgba(168,85,247,0.3); background:rgba(168,85,247,0.07); font-family:'Share Tech Mono',monospace; font-size:11px; color:rgba(168,85,247,0.85); margin-bottom:12px; }
+
+/* ---- OMEN FEATURE CARD ---- */
+.omen-card{
+  margin:40px 0;
+  background:linear-gradient(135deg,rgba(226,232,240,0.05),rgba(148,163,184,0.03));
+  border:1px solid rgba(226,232,240,0.18);
+  border-radius:22px; padding:40px;
+  position:relative; overflow:hidden;
+  display:grid; grid-template-columns:1fr 300px; gap:48px; align-items:start;
+}
+.omen-card::before{ content:''; position:absolute; top:0; left:0; right:0; height:2px; background:linear-gradient(90deg,transparent,var(--accent),rgba(168,85,247,0.5),transparent); }
+.omen-card h3{ font-size:26px; margin-bottom:10px; }
+.omen-card .omen-body > p{ color:var(--muted); font-size:15px; line-height:1.8; margin-bottom:20px; }
+
+.omen-specs-list{ display:flex; flex-direction:column; gap:0; }
+.omen-spec{ display:flex; flex-direction:column; gap:3px; padding:12px 0; border-bottom:1px solid rgba(255,255,255,0.06); }
+.omen-spec:last-child{ border-bottom:none; }
+.omen-spec-key{ font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:2px; color:rgba(226,232,240,0.38); }
+.omen-spec-val{ font-size:14px; color:var(--accent); font-weight:600; }
+.omen-spec-sub{ font-size:12px; color:var(--muted); }
+
+/* ---- SKILLS ---- */
+.skills-section{ padding:80px 0; border-bottom:1px solid var(--border); }
+.skills-section h2{ font-size:34px; margin-bottom:12px; }
+.skills-section .lead{ color:var(--muted); max-width:680px; line-height:1.8; margin-bottom:56px; }
+.skills-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.skill-card{ background:var(--glass); border:1px solid var(--border); border-radius:20px; padding:28px; backdrop-filter:blur(8px); transition:border-color 0.3s ease,background 0.3s ease; position:relative; overflow:hidden; }
+.skill-card::after{ content:''; position:absolute; inset:0; border-radius:20px; background:linear-gradient(135deg,rgba(226,232,240,0.03),transparent 60%); pointer-events:none; }
+.skill-card:hover{ border-color:rgba(226,232,240,0.22); background:rgba(255,255,255,0.07); }
+.skill-num{ font-family:'Share Tech Mono',monospace; font-size:38px; font-weight:700; color:rgba(226,232,240,0.08); line-height:1; margin-bottom:12px; }
+.skill-card h3{ font-size:18px; margin-bottom:10px; }
+.skill-card p{ color:var(--muted); font-size:14px; line-height:1.8; }
+.tech-row{ display:flex; flex-wrap:wrap; gap:8px; margin-top:14px; }
+.tech-pill{ padding:4px 12px; border-radius:999px; font-family:'Share Tech Mono',monospace; font-size:11px; border:1px solid rgba(226,232,240,0.2); color:var(--accent); background:rgba(226,232,240,0.04); }
+
+/* ---- GALLERY ---- */
+.photo-section{ padding:80px 0; border-bottom:1px solid var(--border); }
+.photo-section h2{ font-size:34px; margin-bottom:12px; }
+.photo-section .lead{ color:var(--muted); max-width:600px; line-height:1.8; margin-bottom:48px; }
+.photo-grid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+.photo-cell{ border-radius:16px; overflow:hidden; border:1px solid var(--border); background:var(--glass2); position:relative; cursor:pointer; }
+.photo-cell img{ width:100%; height:100%; min-height:190px; object-fit:cover; display:block; transition:transform 0.5s ease; }
+.photo-cell:hover img{ transform:scale(1.05); }
+.photo-cell.tall{ grid-row:span 2; }
+.photo-cell.wide{ grid-column:span 2; }
+.photo-caption{ position:absolute; bottom:0; left:0; right:0; padding:20px 14px 12px; background:linear-gradient(to top,rgba(0,0,0,0.85),transparent); font-size:11px; color:rgba(255,255,255,0.8); opacity:0; transition:0.3s ease; font-family:'Share Tech Mono',monospace; letter-spacing:1px; }
+.photo-cell:hover .photo-caption{ opacity:1; }
+.photo-placeholder{ width:100%; min-height:190px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; background:linear-gradient(135deg,rgba(226,232,240,0.03),rgba(148,163,184,0.03)); color:rgba(255,255,255,0.13); font-size:12px; font-family:'Share Tech Mono',monospace; }
+.photo-placeholder .icon{ font-size:26px; opacity:0.2; }
+
+/* ---- PROGRESS ---- */
+.progress-section{ padding:80px 0; display:grid; grid-template-columns:1.1fr 1fr; gap:80px; align-items:start; }
+.progress-section h2{ font-size:34px; margin-bottom:20px; }
+.progress-section p{ color:var(--muted); line-height:1.9; font-size:15px; margin-bottom:16px; }
+.bars-list{ display:flex; flex-direction:column; gap:16px; }
+.bar-row{ display:flex; flex-direction:column; gap:6px; }
+.bar-label{ display:flex; justify-content:space-between; font-size:13px; color:var(--muted); }
+.bar-label span:last-child{ color:var(--accent); font-family:'Share Tech Mono',monospace; }
+.bar-track{ height:5px; background:rgba(255,255,255,0.08); border-radius:5px; overflow:hidden; }
+.bar-fill{ height:100%; border-radius:5px; background:linear-gradient(90deg,var(--accent),var(--purple)); width:0%; transition:width 1.3s ease; }
+
+footer{ text-align:center; padding:60px 20px; color:rgba(255,255,255,0.5); border-top:1px solid var(--border); }
+
+/* ---- RESPONSIVE ---- */
+@media(max-width:900px){
+  .intro-block,.progress-section{ grid-template-columns:1fr; gap:40px; }
+  .skills-grid{ grid-template-columns:1fr; }
+  .photo-row{ grid-template-columns:1fr 1fr; }
+  .photo-grid{ grid-template-columns:1fr 1fr; }
+  .omen-card{ grid-template-columns:1fr; gap:32px; }
+  .hero-title{ font-size:44px; }
+}
+@media(max-width:600px){
+  .photo-grid{ grid-template-columns:1fr; }
+  .photo-cell.tall,.photo-cell.wide{ grid-column:span 1; grid-row:span 1; }
+  .photo-row{ grid-template-columns:1fr; }
+  .hero-meta{ gap:20px; }
+  .era-track::before{ left:20px; }
+  .era-block{ grid-template-columns:56px 1fr; }
+  .spec-row-item{ grid-template-columns:1fr; gap:2px; }
+}
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-sweep"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-dots" id="heroDots"></div>
+  <!--
+    HERO IMAGE — the OMEN build, desk setup, or college machine.
+    A dark shot with the silver/white hardware works best with the lighten blend.
+    Path: images/pcbuilding/hero.jpg
+  -->
+  <div class="hero-img-wrap">
+    <img src="images/pcbuilding/hero.jpg" alt="PC Build" onerror="this.style.display='none'">
+  </div>
+  <div class="hero-content">
+    <div class="breadcrumb">
+      <a href="projects.html">Projects</a><span>/</span><span>PC Building</span>
+    </div>
+    <div class="hero-tag">// REPAIR · REBUILD · UPGRADE · TWO MACHINES</div>
+    <h1 class="hero-title">Fixing What's<br><span class="line2">Broken</span></h1>
+    <p class="hero-sub">
+      It started with my grandmother's dead Dell XPS. One hard drive replacement, three case swaps,
+      one custom OMEN build, and a college PC later — this is what learning hardware
+      by actually doing it looks like.
+    </p>
+    <div class="hero-meta">
+      <div class="meta-item"><span class="meta-label">Origin</span><span class="meta-value">2013 Dell XPS</span></div>
+      <div class="meta-item"><span class="meta-label">Current Build</span><span class="meta-value">OMEN i7-13700K</span></div>
+      <div class="meta-item"><span class="meta-label">Machines Running</span><span class="meta-value">2 Active</span></div>
+      <div class="meta-item"><span class="meta-label">Next Up</span><span class="meta-value" style="color:#a78bfa">Friend's Upgrade</span></div>
+    </div>
+  </div>
+  <div class="scroll-hint"><span>SCROLL</span><div class="scroll-arrow"></div></div>
+</section>
+
+<!-- MAIN -->
+<main>
+
+  <a class="back-link fade" href="projects.html">← Back to Projects</a>
+
+  <!-- INTRO -->
+  <div class="intro-block fade">
+    <div>
+      <span class="section-label">// HOW IT STARTED</span>
+      <h2>A Dead Computer and a Curiosity About What Killed It</h2>
+      <p>
+        My grandmother's computer stopped working. The obvious move is to hand it to a
+        repair shop and let someone else deal with it. Instead, I took it apart — not
+        because I knew what I was doing, but because I wanted to understand what had
+        actually gone wrong. That decision turned a written-off Dell XPS into a machine
+        that's now keeping a friend through college, and turned a one-time curiosity
+        into a skill I've been building ever since.
+      </p>
+      <p>
+        What I've learned from all of this isn't just how to assemble components.
+        It's how to <em>think about</em> a machine — what each part does, what failure
+        looks like, what an upgrade actually changes versus what's just numbers on a
+        spec sheet. That kind of knowledge only comes from opening the case.
+      </p>
+    </div>
+    <div class="stat-stack">
+      <div class="stat-card">
+        <div class="num">2013</div>
+        <div class="desc">Dell XPS — the machine that started everything, still running over a decade later</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">i7-13700K</div>
+        <div class="desc">Current build CPU — Intel 13th Gen, the machine I designed from scratch</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">RTX 4070</div>
+        <div class="desc">Running 240Hz — the component the OMEN build is centered around</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">2 running</div>
+        <div class="desc">Both machines active — one daily driver, one at college two semesters strong</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ERA TIMELINE -->
+  <div class="era-section fade">
+    <span class="section-label">// THE FULL TIMELINE</span>
+    <h2>One Machine That Became Two</h2>
+    <p class="lead">
+      The same hardware has lived in multiple cases, across multiple configurations,
+      and is now split across two computers on opposite ends of the country.
+      Here's exactly how it unfolded.
+    </p>
+
+    <div class="era-track">
+
+      <!-- ERA 1 -->
+      <div class="era-block">
+        <div class="era-dot-col"><div class="era-dot glow"></div></div>
+        <div class="era-body">
+          <span class="era-kicker bright">ERA 01 — THE DIAGNOSIS</span>
+          <h3>Grandmother's Dell XPS, 2013. Something's Wrong.</h3>
+          <p>
+            The Dell XPS had stopped booting. Before considering any other option,
+            I took the side panel off and started looking. There's a specific satisfaction
+            in opening a machine everyone else has written off and tracing the problem to
+            a single component — not guessing, but looking carefully until something
+            appears obviously wrong.
+          </p>
+          <p>
+            One part looked visually damaged. The hard drive. Replaced it, and the
+            machine came back to life immediately. One component, correctly identified,
+            cleanly swapped — and a computer that went from dead to running in less
+            than an hour. That disproportionate result is what made this feel worth
+            pursuing further.
+          </p>
+
+          <div class="callout-box">
+            <p><strong>The lesson from ERA 01:</strong> Most dead computers aren't dead —
+              they have one failed component. Learning to identify which one is the
+              entire skill. The rest is just knowing how to safely remove and replace it.</p>
+          </div>
+
+          <div class="photo-row">
+            <div class="photo-cell-sm">
+              <img src="images/pcbuilding/dell-open.jpg" alt="Dell XPS opened"
+                onerror="this.parentElement.innerHTML='<div class=ph-sm-placeholder>🔍</div>'">
+              <div class="ph-sm-cap">TEARDOWN // Dell XPS</div>
+            </div>
+            <div class="photo-cell-sm">
+              <img src="images/pcbuilding/dell-hdd.jpg" alt="Damaged hard drive"
+                onerror="this.parentElement.innerHTML='<div class=ph-sm-placeholder>💾</div>'">
+              <div class="ph-sm-cap">CULPRIT // Failed HDD</div>
+            </div>
+            <div class="photo-cell-sm">
+              <img src="images/pcbuilding/dell-fixed.jpg" alt="Dell working again"
+                onerror="this.parentElement.innerHTML='<div class=ph-sm-placeholder>✅</div>'">
+              <div class="ph-sm-cap">FIXED // Back Online</div>
+            </div>
+          </div>
+
+          <div class="era-pills">
+            <span class="era-pill">Dell XPS 2013</span>
+            <span class="era-pill">Hardware Diagnosis</span>
+            <span class="era-pill">HDD Replacement</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ERA 2 -->
+      <div class="era-block">
+        <div class="era-dot-col"><div class="era-dot"></div></div>
+        <div class="era-body">
+          <span class="era-kicker">ERA 02 — THE FIRST REBUILD</span>
+          <h3>Out of the Dell Case. Into Something Better.</h3>
+          <p>
+            Once the machine was working and I understood how it was put together,
+            the next question was inevitable: what can be improved? The original Dell
+            enclosure was proprietary and limiting — poor airflow, no room to grow,
+            a layout that made everything harder than it needed to be. Pulling the
+            components out and migrating them into a standard case was the next logical step.
+          </p>
+          <p>
+            A case swap sounds simple, but it forces you to handle every component,
+            trace every cable, and understand every connection. You find out what's
+            standard and what's proprietary, which cables need extending, which
+            headers are in inconvenient positions. By the end of this era the
+            internals were genuinely familiar in a way that one hard drive swap
+            couldn't have produced. The machine also got a few component upgrades
+            while everything was already out and on the table.
+          </p>
+
+          <div class="photo-row">
+            <div class="photo-cell-sm">
+              <img src="images/pcbuilding/migrate-out.jpg" alt="Components removed from Dell"
+                onerror="this.parentElement.innerHTML='<div class=ph-sm-placeholder>📦</div>'">
+              <div class="ph-sm-cap">MIGRATION // Out of Dell</div>
+            </div>
+            <div class="photo-cell-sm">
+              <img src="images/pcbuilding/new-case.jpg" alt="New case"
+                onerror="this.parentElement.innerHTML='<div class=ph-sm-placeholder>🖥️</div>'">
+              <div class="ph-sm-cap">NEW HOME // Standard ATX</div>
+            </div>
+            <div class="photo-cell-sm">
+              <img src="images/pcbuilding/rebuilt-running.jpg" alt="Rebuilt and running"
+                onerror="this.parentElement.innerHTML='<div class=ph-sm-placeholder>⬆️</div>'">
+              <div class="ph-sm-cap">DONE // Rebuilt &amp; Upgraded</div>
+            </div>
+          </div>
+
+          <div class="era-pills">
+            <span class="era-pill">Case Migration</span>
+            <span class="era-pill">Component Upgrades</span>
+            <span class="era-pill">ATX Form Factor</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ERA 3 — OMEN -->
+      <div class="era-block">
+        <div class="era-dot-col"><div class="era-dot glow"></div></div>
+        <div class="era-body">
+          <span class="era-kicker bright">ERA 03 — THE OMEN BUILD</span>
+          <h3>If I'm Going to Do This, I Should Build My Own.</h3>
+          <p>
+            At a certain point, working on inherited hardware stops being interesting —
+            you've learned what that machine has to teach, and the ceiling is set by
+            components you didn't choose. The decision to build from scratch was about
+            taking full ownership of every part. An OMEN case sourced online, and
+            components chosen deliberately around the workloads that actually matter:
+            3D rendering in Blender, sim racing, and gaming at a display that justified
+            building around it.
+          </p>
+          <p>
+            The i7-13700K makes sense for both gaming clock speed and the core count
+            that Blender rewards. The RTX 4070 drives the 240Hz display and handles
+            Cycles GPU rendering. 32GB of DDR5 at 4400MHz for the scenes that need it.
+            This wasn't spec-sheet shopping — every decision came from understanding
+            the workload first and working backward to the hardware.
+          </p>
+
+          <div class="omen-card">
+            <div class="omen-body">
+              <span class="section-label" style="color:var(--accent)">// CURRENT BUILD — OMEN 45L</span>
+              <h3>Built Around the Workload</h3>
+              <p>
+                The 13700K for single-core gaming performance and multi-core rendering headroom simultaneously.
+                The 4070 for 240Hz gaming and GPU-accelerated Blender Cycles.
+                DDR5 at 4400MHz because the 13th Gen Intel platform benefits from the speed and
+                the capability gap over DDR4 is real at this tier.
+              </p>
+              <div class="era-pills" style="margin-top:0">
+                <span class="era-pill">Intel 13th Gen</span>
+                <span class="era-pill">DDR5 4400MHz</span>
+                <span class="era-pill">RTX 4070</span>
+                <span class="era-pill">240Hz</span>
+                <span class="era-pill">Windows 11</span>
+              </div>
+            </div>
+            <div class="omen-specs-list">
+              <div class="omen-spec">
+                <span class="omen-spec-key">CPU</span>
+                <span class="omen-spec-val">i7-13700K</span>
+                <span class="omen-spec-sub">Intel 13th Gen · 3400MHz Base</span>
+              </div>
+              <div class="omen-spec">
+                <span class="omen-spec-key">GPU</span>
+                <span class="omen-spec-val">RTX 4070</span>
+                <span class="omen-spec-sub">NVIDIA · 240Hz Output</span>
+              </div>
+              <div class="omen-spec">
+                <span class="omen-spec-key">RAM</span>
+                <span class="omen-spec-val">32GB DDR5</span>
+                <span class="omen-spec-sub">2 × 16GB HP · 4400MHz</span>
+              </div>
+              <div class="omen-spec">
+                <span class="omen-spec-key">CASE</span>
+                <span class="omen-spec-val">OMEN by HP 45L</span>
+                <span class="omen-spec-sub">GT22-1xxx Series</span>
+              </div>
+              <div class="omen-spec">
+                <span class="omen-spec-key">OS</span>
+                <span class="omen-spec-val">Windows 11 Home</span>
+                <span class="omen-spec-sub">Build 26200</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="photo-row">
+            <div class="photo-cell-sm">
+              <img src="images/pcbuilding/omen-parts.jpg" alt="OMEN build parts"
+                onerror="this.parentElement.innerHTML='<div class=ph-sm-placeholder>📦</div>'">
+              <div class="ph-sm-cap">PARTS // Pre-Build</div>
+            </div>
+            <div class="photo-cell-sm">
+              <img src="images/pcbuilding/omen-interior.jpg" alt="OMEN interior"
+                onerror="this.parentElement.innerHTML='<div class=ph-sm-placeholder>🖥️</div>'">
+              <div class="ph-sm-cap">INTERIOR // Assembled</div>
+            </div>
+            <div class="photo-cell-sm">
+              <img src="images/pcbuilding/omen-desk.jpg" alt="OMEN on desk setup"
+                onerror="this.parentElement.innerHTML='<div class=ph-sm-placeholder>⭐</div>'">
+              <div class="ph-sm-cap">SETUP // Daily Driver</div>
+            </div>
+          </div>
+
+          <div class="era-pills">
+            <span class="era-pill">From Scratch</span>
+            <span class="era-pill">OMEN 45L</span>
+            <span class="era-pill">i7-13700K</span>
+            <span class="era-pill">RTX 4070</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ERA 4 — COLLEGE PC -->
+      <div class="era-block">
+        <div class="era-dot-col"><div class="era-dot"></div></div>
+        <div class="era-body">
+          <span class="era-kicker">ERA 04 — THE COLLEGE MACHINE</span>
+          <h3>The Old Build Gets a New Purpose.</h3>
+          <p>
+            Once the OMEN was running, the previous build was sitting idle. A friend heading
+            to college needed a reliable machine that could handle real coursework. The
+            refurbished Dell components — already proven across two eras of use — were
+            more than capable of doing that job with some targeted upgrades.
+          </p>
+          <p>
+            The case got swapped again — a clean build deserves a clean enclosure.
+            The old WiFi card came out and was replaced with a brand new one, a shiny red
+            card that immediately made the connection more reliable on a campus network.
+            RGB lighting went in because the machine lives in a dorm room and that matters.
+            The storage got upgraded to SSD — boot times and load speeds that make a machine
+            feel modern, not something from 2013. She has used it for two full semesters now
+            without issue.
+          </p>
+
+          <div class="callout-box">
+            <p><strong>Two semesters strong.</strong> The 2013 Dell XPS components — in their
+              third case, with a new SSD, new WiFi card, and RGB — still running. The hard drive
+              diagnosis that started all of this eventually became someone else's reliable college
+              computer. That's a good use of hardware.</p>
+          </div>
+
+          <div class="spec-table">
+            <div class="spec-table-header">// COLLEGE BUILD — UPGRADES APPLIED</div>
+            <div class="spec-row-item"><span class="skey">Case</span><span class="sval">New Enclosure — Third Case for These Components</span></div>
+            <div class="spec-row-item"><span class="skey">Storage</span><span class="sval">Upgraded to SSD — Replaced the Old HDD</span></div>
+            <div class="spec-row-item"><span class="skey">WiFi</span><span class="sval">New Card — Brand New Shiny Red, Campus-Ready</span></div>
+            <div class="spec-row-item"><span class="skey">Lighting</span><span class="sval">RGB Added — Dorm Room Approved</span></div>
+            <div class="spec-row-item"><span class="skey">Status</span><span class="sval">Two Semesters Running. No Issues.</span></div>
+          </div>
+
+          <div class="photo-row">
+            <div class="photo-cell-sm">
+              <img src="images/pcbuilding/college-build.jpg" alt="College PC build"
+                onerror="this.parentElement.innerHTML='<div class=ph-sm-placeholder>🎓</div>'">
+              <div class="ph-sm-cap">BUILD // College Machine</div>
+            </div>
+            <div class="photo-cell-sm">
+              <img src="images/pcbuilding/college-wifi.jpg" alt="New red WiFi card"
+                onerror="this.parentElement.innerHTML='<div class=ph-sm-placeholder>📡</div>'">
+              <div class="ph-sm-cap">UPGRADE // Red WiFi Card</div>
+            </div>
+            <div class="photo-cell-sm">
+              <img src="images/pcbuilding/college-rgb.jpg" alt="RGB lighting"
+                onerror="this.parentElement.innerHTML='<div class=ph-sm-placeholder>🌈</div>'">
+              <div class="ph-sm-cap">LIGHTING // RGB Done</div>
+            </div>
+          </div>
+
+          <div class="era-pills">
+            <span class="era-pill">Case Swap</span>
+            <span class="era-pill">SSD Upgrade</span>
+            <span class="era-pill">New WiFi Card</span>
+            <span class="era-pill">RGB</span>
+            <span class="era-pill">2 Semesters</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- ERA 5 — UPCOMING -->
+      <div class="era-block">
+        <div class="era-dot-col"><div class="era-dot upcoming"></div></div>
+        <div class="era-body">
+          <div class="upcoming-banner">// NEXT SEMESTER — PLANNED</div>
+          <span class="era-kicker k-upcoming">ERA 05 — THE NEXT UPGRADE</span>
+          <h3>Motherboard, CPU, and RAM. Doing It Together.</h3>
+          <p>
+            After two semesters of reliable service on decade-old hardware, the plan
+            for next semester is a full platform upgrade — new motherboard, new CPU,
+            new RAM. Not a replacement from scratch, but a generational jump that keeps
+            everything else intact and gives the machine real headroom for whatever
+            comes next in her coursework.
+          </p>
+          <p>
+            The best part: she's going to be part of it. Doing this together means she'll
+            understand the machine she's been using in a way most people never do about
+            something they rely on every day. That feels like the right way to close
+            the loop on where all of this started — a broken computer, taken apart
+            out of curiosity, now being upgraded by the person who's been using it.
+          </p>
+
+          <div class="era-pills">
+            <span class="era-pill p-upcoming">New Motherboard</span>
+            <span class="era-pill p-upcoming">New CPU</span>
+            <span class="era-pill p-upcoming">New RAM</span>
+            <span class="era-pill p-upcoming">Next Semester</span>
+            <span class="era-pill p-upcoming">Together</span>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- SKILLS -->
+  <div class="skills-section fade">
+    <span class="section-label">// WHAT THIS ALL TAUGHT ME</span>
+    <h2>The Knowledge That Actually Sticks</h2>
+    <p class="lead">
+      Most of this can't be learned from a spec sheet or a YouTube guide.
+      It comes from opening cases, making decisions, and watching what happens next.
+    </p>
+    <div class="skills-grid">
+      <div class="skill-card">
+        <div class="skill-num">01</div>
+        <h3>Diagnose Before You Replace</h3>
+        <p>
+          The instinct to replace everything when something breaks is expensive and
+          misses the point. The skill worth developing is the ability to narrow a
+          failure to a single component — visually, logically, by elimination —
+          before buying anything. The Dell hard drive was the first version of this.
+          It's the most transferable hardware skill there is.
+        </p>
+        <div class="tech-row">
+          <span class="tech-pill">Visual Inspection</span>
+          <span class="tech-pill">Component Isolation</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-num">02</div>
+        <h3>Case Swaps Teach the Whole Machine</h3>
+        <p>
+          Migrating components from one case to another forces you to handle every
+          part, trace every cable, and understand every connection. It's a better
+          education in how a machine is actually built than assembling from scratch —
+          because you're dealing with what was already there and figuring out
+          what needs to change.
+        </p>
+        <div class="tech-row">
+          <span class="tech-pill">Cable Management</span>
+          <span class="tech-pill">Form Factors</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-num">03</div>
+        <h3>Know the Workload First</h3>
+        <p>
+          The OMEN build wasn't spec-sheet shopping — every component was chosen
+          around what the machine actually does. The 13700K for Blender and gaming
+          simultaneously. The 4070 for a 240Hz display. DDR5 because the platform
+          benefits from it at that tier. Knowing your workload first makes every
+          component decision both easier and more correct.
+        </p>
+        <div class="tech-row">
+          <span class="tech-pill">Use-Case Matching</span>
+          <span class="tech-pill">Platform Research</span>
+        </div>
+      </div>
+      <div class="skill-card">
+        <div class="skill-num">04</div>
+        <h3>Hardware Has More Life Than People Think</h3>
+        <p>
+          A 2013 Dell XPS, correctly repaired and incrementally upgraded, is running
+          reliably at college over a decade later. Most hardware written off as dead
+          isn't — it has one failed component or one fixable problem. Treating old
+          hardware as repairable rather than disposable is both the smarter and more
+          satisfying approach.
+        </p>
+        <div class="tech-row">
+          <span class="tech-pill">Repair First</span>
+          <span class="tech-pill">Incremental Upgrade</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- GALLERY -->
+  <div class="photo-section fade">
+    <span class="section-label">// BOTH MACHINES IN PHOTOS</span>
+    <h2>From Dell Teardown to OMEN Daily Driver</h2>
+    <p class="lead">
+      The full journey in photos — the original diagnosis, the rebuilds, the OMEN build,
+      and the college machine. Replace placeholders with your actual photos under
+      <code style="color:var(--accent);font-size:13px;">images/pcbuilding/</code>.
+    </p>
+    <div class="photo-grid">
+      <div class="photo-cell tall">
+        <img src="images/pcbuilding/gallery-omen-hero.jpg" alt="OMEN hero shot"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>OMEN Hero Shot</div>'">
+        <div class="photo-caption">HERO // OMEN Build</div>
+      </div>
+      <div class="photo-cell">
+        <img src="images/pcbuilding/gallery-dell-open.jpg" alt="Dell XPS opened up"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Dell Opened</div>'">
+        <div class="photo-caption">ORIGIN // Dell XPS Teardown</div>
+      </div>
+      <div class="photo-cell">
+        <img src="images/pcbuilding/gallery-omen-inside.jpg" alt="OMEN interior"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>OMEN Interior</div>'">
+        <div class="photo-caption">INTERIOR // OMEN 45L</div>
+      </div>
+      <div class="photo-cell wide">
+        <img src="images/pcbuilding/gallery-desk.jpg" alt="Full desk setup"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Full Desk Setup</div>'">
+        <div class="photo-caption">SETUP // Desk — 240Hz Running</div>
+      </div>
+      <div class="photo-cell">
+        <img src="images/pcbuilding/gallery-college-rgb.jpg" alt="College PC with RGB"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>College PC RGB</div>'">
+        <div class="photo-caption">COLLEGE // RGB Build</div>
+      </div>
+      <div class="photo-cell">
+        <img src="images/pcbuilding/gallery-wifi.jpg" alt="Red WiFi card"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Red WiFi Card</div>'">
+        <div class="photo-caption">UPGRADE // New WiFi Card</div>
+      </div>
+      <div class="photo-cell">
+        <img src="images/pcbuilding/gallery-ssd.jpg" alt="SSD install"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>SSD Upgrade</div>'">
+        <div class="photo-caption">UPGRADE // SSD Install</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PROGRESS + REFLECTION -->
+  <div class="progress-section fade">
+    <div>
+      <span class="section-label">// WHERE THIS STANDS</span>
+      <h2>Two Machines. One Story.</h2>
+      <p>
+        The OMEN is the daily driver — every 3D render, every print job, every sim session
+        documented across this site has run on it. It's exactly what it was designed to be
+        and nothing about it needs to change right now.
+      </p>
+      <p>
+        The college machine is the more interesting part of the story. It started as a broken
+        computer nobody thought was worth repairing, got rebuilt twice, upgraded into something
+        genuinely capable, and is now two semesters into being someone's primary machine at
+        college. That's the outcome I'm most proud of — hardware that was written off, kept
+        going because someone took the time to understand it.
+      </p>
+      <p>
+        Next semester the motherboard, CPU, and RAM get upgraded together — and for the first
+        time, someone else is going to learn exactly what I learned the day I opened that
+        first Dell case. That feels like the right place for this to go.
+      </p>
+    </div>
+    <div>
+      <div class="bars-list" id="skillBars">
+        <div class="bar-row">
+          <div class="bar-label"><span>Hardware Diagnosis</span><span>90%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="90"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span>Component Selection</span><span>88%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="88"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span>Case Migration &amp; Assembly</span><span>92%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="92"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span>Cable Management</span><span>80%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="80"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span>Targeted Upgrades</span><span>85%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="85"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span>BIOS &amp; System Config</span><span>75%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="75"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span>Platform Research</span><span>82%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="82"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  © 2026 Devon Shunn &nbsp;·&nbsp;
+  <a href="projects.html" style="color:var(--accent);text-decoration:none;">← All Projects</a>
+</footer>
+
+<script>
+/* HERO DOTS */
+const dots=document.getElementById('heroDots');
+for(let i=0;i<30;i++){
+  const s=document.createElement('span');
+  const x=Math.random()*100,dur=4+Math.random()*6,delay=Math.random()*8,size=1+Math.random()*2;
+  s.style.cssText=`left:${x}%;bottom:${5+Math.random()*55}%;width:${size}px;height:${size}px;animation-duration:${dur}s;animation-delay:${delay}s;`;
+  dots.appendChild(s);
+}
+
+/* FADE IN */
+const fades=document.querySelectorAll('.fade');
+const fadeObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{ if(e.isIntersecting) e.target.classList.add('show'); });
+},{threshold:0.08});
+fades.forEach(el=>fadeObs.observe(el));
+
+/* SKILL BARS */
+const barObs=new IntersectionObserver(entries=>{
+  entries.forEach(e=>{
+    if(e.isIntersecting){
+      e.target.querySelectorAll('.bar-fill').forEach(bar=>{
+        bar.style.width=bar.dataset.width+'%';
+      });
+      barObs.unobserve(e.target);
+    }
+  });
+},{threshold:0.3});
+const ss=document.getElementById('skillBars');
+if(ss) barObs.observe(ss);
+</script>
+
+</body>
+</html>
