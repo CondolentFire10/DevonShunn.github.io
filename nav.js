@@ -24,7 +24,10 @@ const NAV_CONFIG = {
       { label: "BD-1 Droid",         href: "project-bd1.html"         },
       { label: "DeLorean Animation", href: "project-delorean.html"    },
       { label: "Model Railroading",  href: "project-railroading.html" },
-      { label: "Website",            href: "project-website.html" },
+      { label: "PC Building",        href: "project-pc.html"          },
+      { label: "CPB Website",        href: "project-cpb.html"         },
+      { label: "This Website",       href: "project-website.html"     },
+
     ]
   },
 
