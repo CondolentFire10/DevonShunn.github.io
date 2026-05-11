@@ -188,8 +188,6 @@ nav ul{
   box-shadow: inset 0 0 0 1px rgba(56,189,248,0.12);
 }
 
-/* odd rows: text left, image right (default) */
-/* even rows: image left, text right */
 .featured-row.reverse{
   direction:rtl;
 }
@@ -277,7 +275,6 @@ nav ul{
   transform:scale(1.03);
 }
 
-/* placeholder when no image */
 .proj-image-placeholder{
   width:100%;
   height:100%;
@@ -310,8 +307,6 @@ nav ul{
 
 <body>
 
-
-
 <!-- PAGE HEADER -->
 <div class="page-header">
   <span class="tag">ENGINEERING • SYSTEMS • BUILDING</span>
@@ -323,24 +318,25 @@ nav ul{
 <div class="projects-list">
 
   <!-- 1 — 3D PRINTING -->
-  <div class="featured-row" onclick="window.location='project-3d-printing.html'">
+  <div class="featured-row" onclick="window.location='project-3dprinting.html'">
     <div class="proj-text">
       <div class="proj-label">Featured Project</div>
       <h2><a class="proj-title-link" href="project-3dprinting.html">3D Printing</a></h2>
       <div class="proj-desc">
-        A collection of functional and display-focused 3D printed projects ranging from prop replicas
-        to mechanical assemblies and custom-designed parts. Projects involve CAD modeling, print optimization,
-        material testing, and post-processing techniques to create durable, high-detail final pieces.
+        Four years of printing across multiple machines, culminating in a Bambu X1C. Every major jump in
+        CAD skill has been tested by building something from a film — props with real reference material that
+        expose every gap in technique. Movie props, functional parts, and everything in between.
       </div>
       <div class="proj-tags">
         <span class="tag-pill">3D Printing</span>
-        <span class="tag-pill">CAD</span>
-        <span class="tag-pill">Prototyping</span>
-        <span class="tag-pill">Engineering</span>
+        <span class="tag-pill">CAD / Fusion 360</span>
+        <span class="tag-pill">Movie Props</span>
+        <span class="tag-pill">Bambu X1C</span>
+        <span class="tag-pill">Post-Processing</span>
       </div>
     </div>
     <div class="proj-image">
-      <img src="images/3d-printing.jpg" alt="3D Printing" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>🖨️</div>'"/>
+      <img src="images/printing/hero.jpg" alt="3D Printing" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>🖨️</div>'"/>
     </div>
   </div>
 
@@ -350,41 +346,43 @@ nav ul{
       <div class="proj-label">Featured Project</div>
       <h2><a class="proj-title-link" href="project-bd1.html">BD-1 Droid</a></h2>
       <div class="proj-desc">
-        A full-scale BD-1 replica inspired by Star Wars Jedi: Fallen Order and Survivor. Built using
-        custom 3D printed components, embedded electronics, and articulated mechanisms to recreate
-        the droid’s movement, proportions, and interactive features with high screen accuracy.
+        A full-scale 1:1 BD-1 replica from Jedi: Fallen Order — 80+ parts, seven build phases, and every
+        skill in one project. The files were sourced and significantly modified to accommodate an Arduino Nano,
+        WS2812B eye LEDs, DFPlayer sound system, PIR motion sensor, and head servo. Currently deep in the printing phase.
       </div>
       <div class="proj-tags">
         <span class="tag-pill">Star Wars</span>
-        <span class="tag-pill">Electronics</span>
+        <span class="tag-pill">Arduino</span>
         <span class="tag-pill">3D Printing</span>
-        <span class="tag-pill">Animatronics</span>
+        <span class="tag-pill">Electronics</span>
+        <span class="tag-pill">In Progress</span>
       </div>
     </div>
     <div class="proj-image">
-      <img src="images/bd1.jpg" alt="BD-1 Droid" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>🤖</div>'"/>
+      <img src="images/bd1/hero.jpg" alt="BD-1 Droid" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>🤖</div>'"/>
     </div>
   </div>
 
-  <!-- 3 — BLENDER -->
-  <div class="featured-row" onclick="window.location='project-blender-animation.html'">
+  <!-- 3 — DELOREAN ANIMATION -->
+  <div class="featured-row" onclick="window.location='project-delorean.html'">
     <div class="proj-text">
       <div class="proj-label">Featured Project</div>
-      <h2><a class="proj-title-link" href="project-delorean.html">Blender Animation</a></h2>
+      <h2><a class="proj-title-link" href="project-delorean.html">DeLorean Animation</a></h2>
       <div class="proj-desc">
-        Cinematic animation and rendering projects created in Blender, exploring environment design,
-        hard-surface modeling, lighting, compositing, and camera motion. Projects range from short animated
-        sequences to highly detailed still renders using procedural materials and physics simulations.
+        A cinematic Blender animation of a DeLorean DMC-12 placed in a neon-drenched cyberpunk world —
+        built from scratch as a personal creative challenge and a love letter to Ready Player One. Hard-surface
+        modeling, procedural stainless steel shader, volumetric fog, wet street reflections, and a fully animated camera rig.
       </div>
       <div class="proj-tags">
         <span class="tag-pill">Blender</span>
+        <span class="tag-pill">Cycles Rendering</span>
+        <span class="tag-pill">Hard-Surface Modeling</span>
         <span class="tag-pill">Animation</span>
-        <span class="tag-pill">Rendering</span>
-        <span class="tag-pill">VFX</span>
+        <span class="tag-pill">Cyberpunk</span>
       </div>
     </div>
     <div class="proj-image">
-      <img src="images/blender-animation.jpg" alt="Blender Animation" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>🎬</div>'"/>
+      <img src="images/delorean/hero-render.jpg" alt="DeLorean Animation" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>🎬</div>'"/>
     </div>
   </div>
 
@@ -392,48 +390,95 @@ nav ul{
   <div class="featured-row reverse" onclick="window.location='project-railroading.html'">
     <div class="proj-text">
       <div class="proj-label">Featured Project</div>
-      <h2><a class="proj-title-link" href="project-model-railroading.html">Model Railroading</a></h2>
+      <h2><a class="proj-title-link" href="project-railroading.html">Model Railroading</a></h2>
       <div class="proj-desc">
-        A growing collection of model railroading projects involving layout design, scenery construction,
-        weathering, electronics integration, and railroad operations. Focused on realistic environments,
-        lighting systems, and immersive scene-building inspired by real railroads and historic locomotives.
+        An HO scale point-to-point layout covering the late 1970s through early 2000s American diesel era.
+        Code 83 flex track on cork roadbed, DCC with block detection, working signals, static grass scenery,
+        weathered rolling stock, and a roster of sound-equipped locomotives. Track and wiring complete — scenery in progress.
       </div>
       <div class="proj-tags">
-        <span class="tag-pill">Model Trains</span>
+        <span class="tag-pill">HO Scale</span>
+        <span class="tag-pill">DCC</span>
         <span class="tag-pill">Scenery</span>
-        <span class="tag-pill">Electronics</span>
         <span class="tag-pill">Weathering</span>
+        <span class="tag-pill">In Progress</span>
       </div>
     </div>
     <div class="proj-image">
-      <img src="images/model-railroading.jpg" alt="Model Railroading" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>🚂</div>'"/>
+      <img src="images/railroading/hero.jpg" alt="Model Railroading" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>🚂</div>'"/>
     </div>
   </div>
 
-  <!-- 5 — WEBSITE -->
+  <!-- 5 — PC BUILDING -->
+  <div class="featured-row" onclick="window.location='project-pcbuilding.html'">
+    <div class="proj-text">
+      <div class="proj-label">Featured Project</div>
+      <h2><a class="proj-title-link" href="project-pcbuilding.html">PC Building</a></h2>
+      <div class="proj-desc">
+        Started by diagnosing my grandmother's dead Dell XPS — found the failed hard drive, replaced it, then
+        rebuilt the machine in a new case with upgrades. Later built a custom OMEN i7-13700K / RTX 4070 daily driver
+        from scratch, then repurposed the old hardware into a college PC for a friend, now two semesters strong.
+      </div>
+      <div class="proj-tags">
+        <span class="tag-pill">Hardware</span>
+        <span class="tag-pill">i7-13700K</span>
+        <span class="tag-pill">RTX 4070</span>
+        <span class="tag-pill">Repair & Upgrade</span>
+        <span class="tag-pill">OMEN 45L</span>
+      </div>
+    </div>
+    <div class="proj-image">
+      <img src="images/pcbuilding/hero.jpg" alt="PC Building" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>🖥️</div>'"/>
+    </div>
+  </div>
+
+  <!-- 6 — CPB EVENT SYSTEM -->
+  <div class="featured-row reverse" onclick="window.location='project-cpb.html'">
+    <div class="proj-text">
+      <div class="proj-label">Featured Project</div>
+      <h2><a class="proj-title-link" href="project-cpb.html">CPB Event System</a></h2>
+      <div class="proj-desc">
+        As Director of Experiential Programming at CMC's CPB, I replaced the manual Google Form signup process
+        with a full Node.js / SQLite web application. Automatic waitlists, email confirmations, one-click cancellation
+        tokens, raffle draws with DOS driver weighting, a no-show and late-cancel strike system, and a full director and admin portal.
+      </div>
+      <div class="proj-tags">
+        <span class="tag-pill">Node.js</span>
+        <span class="tag-pill">SQLite</span>
+        <span class="tag-pill">Email Automation</span>
+        <span class="tag-pill">Full Stack</span>
+        <span class="tag-pill">Self-Initiated</span>
+      </div>
+    </div>
+    <div class="proj-image">
+      <img src="images/cpb/hero.jpg" alt="CPB Event System" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>⚙️</div>'"/>
+    </div>
+  </div>
+
+  <!-- 7 — THIS WEBSITE -->
   <div class="featured-row" onclick="window.location='project-website.html'">
     <div class="proj-text">
       <div class="proj-label">Featured Project</div>
       <h2><a class="proj-title-link" href="project-website.html">This Website</a></h2>
       <div class="proj-desc">
-        A fully custom-built portfolio website designed and developed from scratch. Features include
-        animated layouts, interactive project showcases, responsive design systems, and a cyber-inspired
-        visual identity built entirely with custom HTML, CSS, and JavaScript.
+        My seventh attempt at a personal website — and the first one I'm genuinely proud of. Self-taught HTML, CSS,
+        and JavaScript across six increasingly less-bad versions, each one replaced because the previous taught enough
+        to see its problems. This version has a real design system, per-page identities, scroll animations, and actual content.
       </div>
       <div class="proj-tags">
-        <span class="tag-pill">Web Design</span>
-        <span class="tag-pill">HTML</span>
-        <span class="tag-pill">CSS</span>
-        <span class="tag-pill">JavaScript</span>
+        <span class="tag-pill">HTML / CSS / JS</span>
+        <span class="tag-pill">Self-Taught</span>
+        <span class="tag-pill">Version 7</span>
+        <span class="tag-pill">Design System</span>
+        <span class="tag-pill">Live</span>
       </div>
     </div>
     <div class="proj-image">
-      <img src="images/website.jpg" alt="This Website" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>🌐</div>'"/>
+      <img src="images/website/hero.jpg" alt="This Website" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>🌐</div>'"/>
     </div>
   </div>
 
 </div>
-
 
 <footer style="text-align:center;padding:60px 20px;color:rgba(255,255,255,0.5);border-top:1px solid rgba(255,255,255,0.08)">
   © 2026 Devon Shunn
