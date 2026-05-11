@@ -1,4 +1,4 @@
-  <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
@@ -325,11 +325,15 @@ section{ padding:100px 24px; }
   will-change:transform,opacity;
 }
 
-.carousel-card img{
-  width:100%; height:100%; object-fit:cover; display:block;
+/* shared media styles — applies to both img and video inside a card */
+.carousel-card img,
+.carousel-card video{
+  width:100%; height:100%;
+  object-fit:cover; display:block;
   filter:brightness(0.65);
 }
-.carousel-card.is-active img{ filter:brightness(0.82); }
+.carousel-card.is-active img,
+.carousel-card.is-active video{ filter:brightness(0.82); }
 
 .card-placeholder{
   width:100%; height:100%;
@@ -541,34 +545,32 @@ footer{
       <span class="section-label">// WHO I AM</span>
       <h2>Not Just an Engineer.<br>A Builder.</h2>
       <p>
-      I've been taking things apart and putting them back together, usually better than I found them,
-      for as long as I can remember. What started with Lego Technic sets and a curiosity about how things
-      work has turned into a full-stack approach to creating: <em>hardware, software,
-      fabrication, and the code that ties it all together.</em>
+        I've been taking things apart and putting them back together, usually better than I found them,
+        for as long as I can remember. What started with Lego Technic sets and a curiosity about how things
+        work has turned into a full-stack approach to creating: <em>hardware, software,
+        fabrication, and the code that ties it all together.</em>
       </p>
-
       <p>
-      I'm currently pursuing degrees in engineering and economics, but most of what I've learned has come from
-      late-night projects — designing, troubleshooting, and rebuilding until something finally works.
-      And this isn’t a complaint. It’s honestly the most effective way to learn that I’ve found.
-      A failed print job, debugging a state machine, resolving a servo linkage conflict in CAD:
-      that’s where understanding actually lives.
+        I'm currently pursuing degrees in engineering and economics, but most of what I've learned has come from
+        late-night projects — designing, troubleshooting, and rebuilding until something finally works.
+        And this isn't a complaint. It's honestly the most effective way to learn that I've found.
+        A failed print job, debugging a state machine, resolving a servo linkage conflict in CAD:
+        that's where understanding actually lives.
       </p>
-
       <p>
-      Most of my projects live where embedded systems, mechanical design, and interactive software overlap.
-      I care a lot about craft, not just whether something works, but whether it’s <em>built right</em>.
-      Clean wire routing, tight tolerances, code that doesn’t block itself.
-      The details no one sees unless they’re looking for them.
+        Most of my projects live where embedded systems, mechanical design, and interactive software overlap.
+        I care a lot about craft, not just whether something works, but whether it's <em>built right</em>.
+        Clean wire routing, tight tolerances, code that doesn't block itself.
+        The details no one sees unless they're looking for them.
       </p>
-
       <p>
-      Outside the build desk, I’m a huge Star Wars fan (the lightsaber and BD-1 aren’t by accident),
-      a sim racing enthusiast who decided building the wheel was more interesting than buying one,
-      and someone who will absolutely spend three weekends perfecting a paint weathering technique
-      before calling something done.
+        Outside the build desk, I'm a huge Star Wars fan (the lightsaber and BD-1 aren't by accident),
+        a sim racing enthusiast who decided building the wheel was more interesting than buying one,
+        and someone who will absolutely spend three weekends perfecting a paint weathering technique
+        before calling something done.
       </p>
-      </div>
+    </div>
+
     <div class="about-right fade">
       <div class="about-card">
         <h4>🎓 Education</h4>
@@ -830,11 +832,11 @@ footer{
     <div class="car-pause-badge">⏸ PAUSED</div>
     <div class="carousel-stage" id="carouselStage">
 
-      <!-- 1 — 3D PRINTING -->
+      <!-- 1 — 3D PRINTING (video background) -->
       <div class="carousel-card" data-href="project-3dprinting.html">
-        <img src="images/printing/hero.jpg" alt="3D Printing"
-          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="card-placeholder" style="display:none">🖨️</div>
+        <video autoplay loop muted playsinline>
+          <source src="videos/printing/thumbnail.mp4" type="video/mp4">
+        </video>
         <div class="card-overlay"></div>
         <div class="card-text">
           <span class="card-label">// FABRICATION · CAD · MOVIE PROPS</span>
@@ -914,14 +916,11 @@ footer{
         </div>
       </div>
 
-      <!-- 7 — THIS WEBSITE -->
+      <!-- 7 — THIS WEBSITE (video background) -->
       <div class="carousel-card" data-href="project-website.html">
-        <video autoplay loop muted playsinline
-          style="width:100%; height:100%; object-fit:cover;"
-          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+        <video autoplay loop muted playsinline>
           <source src="videos/website/thumbnail.mp4" type="video/mp4">
         </video>
-        <div class="card-placeholder" style="display:none">🌐</div>
         <div class="card-overlay"></div>
         <div class="card-text">
           <span class="card-label">// HTML · CSS · JS · VERSION 7</span>
@@ -1072,17 +1071,18 @@ els.forEach(el=>obs.observe(el));
 
   const cards    = Array.from(stage.querySelectorAll('.carousel-card'));
   const N        = cards.length;
-  const INTERVAL = 4200;  // ms per slide
-  const SPREAD   = 260;   // px horizontal spread of side cards
-  const SIDE_SCALE  = 0.78;
-  const SIDE_OPACITY= 0.45;
-  const FAR_OPACITY = 0.18;
+  const INTERVAL = 4200;
+  const SPREAD   = 260;
+  const SIDE_SCALE   = 0.78;
+  const SIDE_OPACITY = 0.45;
+  const FAR_OPACITY  = 0.18;
 
   let current  = 0;
   let paused   = false;
   let timer    = null;
   let progStart= null;
   let progRaf  = null;
+  let elapsed  = 0;
 
   /* ── build dots ── */
   cards.forEach((_,i)=>{
@@ -1095,11 +1095,9 @@ els.forEach(el=>obs.observe(el));
 
   function getDots(){ return Array.from(dotsWrap.querySelectorAll('.car-dot')); }
 
-  /* ── layout: assign 3D transform to every card based on offset from current ── */
   function layout(){
     cards.forEach((card,i)=>{
       const offset = ((i - current + N) % N);
-      // map offset to -N/2 … +N/2 range for shortest path
       const rel = offset > N/2 ? offset - N : offset;
 
       card.classList.toggle('is-active', rel === 0);
@@ -1109,10 +1107,8 @@ els.forEach(el=>obs.observe(el));
       if(rel === 0){
         tx=0; scale=1; opacity=1; zIndex=10;
       } else if(rel === 1 || rel === -(N-1)){
-        // one to the right
         tx = SPREAD; scale=SIDE_SCALE; opacity=SIDE_OPACITY; zIndex=5;
       } else if(rel === -1 || rel === (N-1)){
-        // one to the left
         tx = -SPREAD; scale=SIDE_SCALE; opacity=SIDE_OPACITY; zIndex=5;
       } else if(rel === 2 || rel === -(N-2)){
         tx = SPREAD*1.6; scale=SIDE_SCALE*0.85; opacity=FAR_OPACITY; zIndex=3;
@@ -1123,21 +1119,16 @@ els.forEach(el=>obs.observe(el));
         scale=0.6; opacity=0; zIndex=1;
       }
 
-      card.style.transform  = `translateX(${tx}px) scale(${scale})`;
-      card.style.opacity    = opacity;
-      card.style.zIndex     = zIndex;
+      card.style.transform   = `translateX(${tx}px) scale(${scale})`;
+      card.style.opacity     = opacity;
+      card.style.zIndex      = zIndex;
       card.style.pointerEvents = rel === 0 ? 'auto' : 'none';
     });
 
-    // update dots
-    getDots().forEach((d,i)=>{
-      d.classList.toggle('active', i===current);
-    });
+    getDots().forEach((d,i)=>{ d.classList.toggle('active', i===current); });
   }
 
-  /* ── progress bar animation ── */
-  let elapsed = 0; // ms already consumed before a pause
-
+  /* ── progress bar ── */
   function startProgress(){
     progress.style.transition = 'none';
     progress.style.width = '0%';
@@ -1171,12 +1162,9 @@ els.forEach(el=>obs.observe(el));
     progRaf = requestAnimationFrame(tick);
   }
 
-  /* ── auto-advance ── */
   function scheduleNext(){
     clearTimeout(timer);
-    timer = setTimeout(()=>{
-      if(!paused){ advance(1); }
-    }, INTERVAL - elapsed);
+    timer = setTimeout(()=>{ if(!paused){ advance(1); } }, INTERVAL - elapsed);
   }
 
   function advance(dir){
@@ -1193,7 +1181,7 @@ els.forEach(el=>obs.observe(el));
     scheduleNext();
   }
 
-  /* ── pause on hover (active card only) ── */
+  /* ── pause on hover ── */
   const badge = scene.querySelector('.car-pause-badge');
   cards.forEach(card=>{
     card.addEventListener('mouseenter',()=>{
@@ -1215,7 +1203,7 @@ els.forEach(el=>obs.observe(el));
     });
   });
 
-  /* ── click side cards to navigate ── */
+  /* ── click side cards ── */
   cards.forEach((card,i)=>{
     card.addEventListener('click',()=>{
       if(!card.classList.contains('is-active')){
@@ -1226,7 +1214,7 @@ els.forEach(el=>obs.observe(el));
     });
   });
 
-  /* ── prev / next buttons ── */
+  /* ── prev / next ── */
   document.getElementById('carPrev').addEventListener('click',()=>advance(-1));
   document.getElementById('carNext').addEventListener('click',()=>advance(1));
 
