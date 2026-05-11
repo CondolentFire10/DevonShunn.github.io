@@ -3,9 +3,9 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>Experience – Devon Shunn</title>
-
+<title>Devon Shunn – Engineering Portfolio</title>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
 <script src="nav.js"></script>
   
 <style>
@@ -19,294 +19,890 @@
   --blue:#38bdf8;
   --blue2:#2563eb;
   --purple:#a855f7;
+  --accent:#60a5fa;
 }
 
-*{
-  margin:0;
-  padding:0;
-  box-sizing:border-box;
-  font-family:Poppins,sans-serif;
-}
+*{ margin:0; padding:0; box-sizing:border-box; font-family:Poppins,sans-serif; }
+a{ color:inherit; text-decoration:none; }
 
+  
 body{
-  background: radial-gradient(circle at top, #0b1224, var(--bg));
+  background:radial-gradient(circle at top, #0b1224, var(--bg));
   color:var(--text);
   overflow-x:hidden;
 }
 
-/* PAGE HEADER */
-.page-header{
-  padding:160px 24px 80px;
-  text-align:center;
+/* ── SHARED ── */
+section{ padding:100px 24px; }
+.container{ max-width:1100px; margin:auto; }
+.section-label{
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px; letter-spacing:3px; color:var(--blue);
+  opacity:0.8; margin-bottom:12px; display:block;
+}
+.fade{ opacity:0; transform:translateY(28px); transition:0.9s ease; }
+.fade.show{ opacity:1; transform:translateY(0); }
+
+/* ── HERO ── */
+.hero{
+  min-height:100vh;
+  display:flex; align-items:center; justify-content:center;
+  padding:120px 24px 60px;
+  position:relative; overflow:hidden;
+}
+.hero::before{
+  content:''; position:absolute; inset:0;
+  background-image:
+    linear-gradient(rgba(96,165,250,0.05) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(96,165,250,0.04) 1px, transparent 1px);
+  background-size:60px 60px;
+  transform:perspective(800px) rotateX(50deg) translateY(20%);
+  transform-origin:bottom center;
+  pointer-events:none;
+}
+.hero-glow{
+  position:absolute; bottom:0; left:50%; transform:translateX(-50%);
+  width:900px; height:300px;
+  background:radial-gradient(ellipse, rgba(37,99,235,0.18) 0%, rgba(56,189,248,0.07) 50%, transparent 70%);
+  filter:blur(60px); pointer-events:none;
+}
+.hero-inner{
+  position:relative; z-index:2;
+  max-width:1100px; width:100%;
+  display:grid; grid-template-columns:1.15fr 1fr;
+  gap:60px; align-items:center;
+}
+.hero-tag{
+  color:var(--blue); font-size:13px; letter-spacing:2px;
+  margin-bottom:14px; font-family:'Share Tech Mono',monospace;
+}
+.hero h1{ font-size:56px; line-height:1.05; font-weight:700; }
+.hero h1 span{ color:transparent; -webkit-text-stroke:1px rgba(56,189,248,0.55); }
+.hero-sub{ margin-top:18px; color:var(--muted); max-width:520px; line-height:1.8; font-size:15px; }
+.hero-buttons{ display:flex; gap:14px; flex-wrap:wrap; margin-top:28px; }
+.btn{
+  display:inline-block; padding:12px 22px; border-radius:12px;
+  background:linear-gradient(135deg, var(--blue), var(--blue2));
+  color:#fff; font-weight:600; font-size:14px; transition:0.3s;
+}
+.btn:hover{ transform:translateY(-3px); box-shadow:0 16px 36px rgba(56,189,248,0.25); }
+.btn-outline{
+  display:inline-block; padding:12px 22px; border-radius:12px;
+  border:1px solid var(--border); color:var(--muted);
+  font-size:14px; transition:0.3s;
+}
+.btn-outline:hover{ border-color:var(--blue); color:var(--blue); }
+.hero-stats{ display:grid; grid-template-columns:1fr 1fr; gap:14px; }
+.hstat{
+  background:var(--glass); border:1px solid var(--border);
+  border-radius:16px; padding:20px 22px; backdrop-filter:blur(8px);
+}
+.hstat-num{ font-size:32px; font-weight:700; color:var(--blue); font-family:'Share Tech Mono',monospace; line-height:1; }
+.hstat-label{ font-size:12px; color:var(--muted); margin-top:6px; line-height:1.4; }
+
+/* ── ABOUT ── */
+#about{ padding:100px 24px; }
+.about-grid{ display:grid; grid-template-columns:220px 1fr 1fr; gap:50px; align-items:start; }
+#about h2{ font-size:38px; margin-bottom:20px; }
+#about p{ color:var(--muted); line-height:1.9; font-size:15px; margin-bottom:16px; }
+#about p em{ color:rgba(255,255,255,0.92); font-style:normal; }
+.about-right{ display:flex; flex-direction:column; gap:14px; }
+.about-card{
+  background:var(--glass); border:1px solid var(--border);
+  border-radius:16px; padding:20px 22px;
+  position:relative; overflow:hidden;
+}
+.about-card::before{
+  content:''; position:absolute; top:0; left:0;
+  width:3px; height:100%;
+  background:linear-gradient(to bottom, var(--blue), var(--purple));
+  border-radius:3px 0 0 3px;
+}
+.about-card h4{ font-size:14px; font-weight:600; margin-bottom:4px; }
+.about-card p{ color:var(--muted); font-size:13px; margin:0; line-height:1.6; }
+
+/* photo column */
+.about-photo{ display:flex; flex-direction:column; gap:14px; align-items:center; position:sticky; top:100px; }
+.about-photo-frame{
+  width:200px; height:250px; border-radius:20px; overflow:hidden;
+  border:1px solid var(--border); background:var(--glass2); flex-shrink:0;
+}
+.about-photo-frame img{ width:100%; height:100%; object-fit:cover; display:block; }
+.about-photo-placeholder{
+  width:100%; height:100%;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:10px; color:rgba(255,255,255,0.18);
+  font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:1px;
+  background:linear-gradient(145deg, rgba(56,189,248,0.05), rgba(168,85,247,0.05));
+}
+.about-photo-placeholder .ph-face{ font-size:48px; opacity:0.25; }
+.about-name-tag{
+  font-family:'Share Tech Mono',monospace; font-size:11px;
+  color:var(--blue); letter-spacing:1px; text-align:center; opacity:0.7;
 }
 
-.page-header .tag{
-  color:var(--blue);
-  font-size:13px;
-  letter-spacing:2px;
-  display:block;
-  margin-bottom:16px;
-}
-
-.page-header h1{
-  font-size:52px;
-  line-height:1.1;
-}
-
-.page-header p{
-  margin-top:16px;
-  color:var(--muted);
-  max-width:620px;
-  margin-inline:auto;
-}
-
-/* EXPERIENCE LIST */
-.projects-list{
-  max-width:1200px;
-  margin:0 auto;
-  padding:0 24px 120px;
-  display:flex;
-  flex-direction:column;
-  gap:0;
-}
-
-/* FEATURED ROW */
-.featured-row{
-  display:grid;
-  grid-template-columns:1fr 1fr;
-  gap:60px;
-  align-items:center;
-  padding:80px 40px;
+/* ── TIMELINE ── */
+#timeline{
+  padding:100px 24px;
+  background:rgba(255,255,255,0.015);
+  border-top:1px solid var(--border);
   border-bottom:1px solid var(--border);
-  border-radius:20px;
-  opacity:0;
-  transform:translateY(30px);
-  transition:opacity 0.9s ease, transform 0.9s ease, background 0.3s ease, box-shadow 0.3s ease;
-  cursor:pointer;
+}
+#timeline h2{ font-size:38px; margin-bottom:10px; }
+.tl-sub{ color:var(--muted); font-size:15px; max-width:600px; line-height:1.7; margin-bottom:56px; }
+
+.tl-wrap{ width:100%; padding-bottom:16px; }
+.tl-track{
+  position:relative; width:100%; height:260px;
+  display:flex; align-items:center;
+}
+/* The main line — stops before the squiggle gap */
+.tl-track::before{
+  content:''; position:absolute;
+  top:50%; left:0; width:83%; height:2px;
+  background:linear-gradient(90deg, var(--blue), rgba(96,165,250,0.4));
+  transform:translateY(-50%); border-radius:2px;
+}
+/* The line resumes after the squiggle */
+.tl-line-resume{
+  position:absolute; top:50%; left:89%; right:0; height:2px;
+  background:linear-gradient(90deg, rgba(168,85,247,0.5), var(--purple));
+  transform:translateY(-50%); border-radius:2px;
+}
+/* Arrow at end */
+.tl-line-resume::after{
+  content:''; position:absolute; right:-1px; top:50%;
+  transform:translateY(-50%);
+  border-top:6px solid transparent;
+  border-bottom:6px solid transparent;
+  border-left:10px solid var(--purple);
+}
+.tl-item{ position:absolute; }
+.tl-dot{
+  width:12px; height:12px; border-radius:50%;
+  background:var(--blue); border:2px solid var(--bg);
+  box-shadow:0 0 10px rgba(56,189,248,0.5);
+  position:absolute; top:50%; left:50%;
+  transform:translate(-50%,-50%); z-index:2;
+}
+.tl-age{
+  position:absolute; top:calc(50% + 16px); left:50%;
+  transform:translateX(-50%);
+  font-family:'Share Tech Mono',monospace; font-size:11px;
+  color:var(--blue); white-space:nowrap;
+}
+.tl-conn-up{
+  position:absolute; left:50%; transform:translateX(-50%);
+  width:1px; background:rgba(96,165,250,0.3);
+  bottom:calc(50% + 10px); height:20px;
+}
+.tl-conn-down{
+  position:absolute; left:50%; transform:translateX(-50%);
+  width:1px; background:rgba(96,165,250,0.3);
+  top:calc(50% + 10px); height:20px;
+}
+.tl-card{
+  position:absolute; left:50%; transform:translateX(-50%);
+  background:rgba(7,10,18,0.92);
+  border:1px dashed rgba(96,165,250,0.28);
+  border-radius:10px; padding:10px 14px;
+  width:13%; min-width:120px; font-size:12px; font-weight:600;
+  color:var(--text); line-height:1.4;
+  backdrop-filter:blur(8px); text-align:center;
+}
+.tl-card.above{ bottom:calc(50% + 32px); }
+.tl-card.below{ top:calc(50% + 32px); }
+.tl-card-sub{ font-size:10px; color:var(--muted); font-weight:400; margin-top:3px; font-style:italic; }
+
+/* SQUIGGLE TIME-SKIP */
+.tl-squiggle{
+  position:absolute; left:83%; width:6%;
+  top:50%; transform:translateY(-50%);
+  display:flex; flex-direction:column; align-items:center; gap:4px;
+  z-index:4;
+}
+.tl-squiggle svg{
+  width:100%; height:28px; overflow:visible;
+}
+.tl-squiggle-label{
+  font-family:'Share Tech Mono',monospace; font-size:9px;
+  color:rgba(168,85,247,0.55); letter-spacing:1px; white-space:nowrap;
+  text-align:center; margin-top:2px;
 }
 
-.featured-row.show{
-  opacity:1;
-  transform:translateY(0);
+.tl-now-dot{
+  width:16px; height:16px; border-radius:50%;
+  background:var(--purple); border:2px solid var(--bg);
+  box-shadow:0 0 16px rgba(168,85,247,0.6);
+  position:absolute; top:50%; left:50%;
+  transform:translate(-50%,-50%); z-index:3;
+  animation:nowpulse 2s infinite;
+}
+@keyframes nowpulse{
+  0%,100%{ box-shadow:0 0 10px rgba(168,85,247,0.5); }
+  50%{ box-shadow:0 0 24px rgba(168,85,247,0.85); }
 }
 
-.featured-row:hover{
-  background: rgba(56,189,248,0.04);
-  box-shadow: inset 0 0 0 1px rgba(56,189,248,0.12);
+/* ── SKILLS ── */
+#skills{ padding:100px 24px; }
+#skills h2{ font-size:38px; margin-bottom:12px; }
+.skills-sub{ color:var(--muted); max-width:640px; line-height:1.8; margin-bottom:52px; }
+.skill-group{ margin-bottom:42px; }
+.skill-group-label{
+  font-family:'Share Tech Mono',monospace;
+  font-size:11px; letter-spacing:2px; color:var(--blue);
+  opacity:0.75; margin-bottom:16px; display:block;
+}
+.skill-bubbles{ display:flex; flex-wrap:wrap; gap:10px; }
+.bubble{
+  padding:7px 16px; border-radius:999px;
+  border:1px solid rgba(96,165,250,0.22);
+  background:rgba(96,165,250,0.06);
+  font-family:'Share Tech Mono',monospace;
+  font-size:12px; color:rgba(96,165,250,0.9);
+  transition:0.2s;
+}
+.bubble:hover{ background:rgba(96,165,250,0.14); border-color:rgba(96,165,250,0.45); }
+.bubble.purple{
+  border-color:rgba(168,85,247,0.25); background:rgba(168,85,247,0.06);
+  color:rgba(168,85,247,0.85);
+}
+.bubble.purple:hover{ background:rgba(168,85,247,0.14); }
+.bubble.green{
+  border-color:rgba(74,222,128,0.22); background:rgba(74,222,128,0.05);
+  color:rgba(74,222,128,0.85);
+}
+.bubble.green:hover{ background:rgba(74,222,128,0.12); }
+.bubble.amber{
+  border-color:rgba(251,191,36,0.22); background:rgba(251,191,36,0.05);
+  color:rgba(251,191,36,0.85);
+}
+.bubble.amber:hover{ background:rgba(251,191,36,0.12); }
+
+/* ── FULL-WIDTH IMAGE ── */
+.full-img-section{
+  width:100%; overflow:hidden;
+  border-top:1px solid var(--border); border-bottom:1px solid var(--border);
+  min-height:340px; display:flex; align-items:center; justify-content:center;
+  background:var(--glass2); position:relative;
+}
+.full-img-section img{ width:100%; display:block; object-fit:cover; max-height:480px; opacity:0.85; }
+.full-img-placeholder{
+  width:100%; min-height:340px;
+  display:flex; flex-direction:column; align-items:center; justify-content:center;
+  gap:14px; color:rgba(255,255,255,0.15);
+  font-family:'Share Tech Mono',monospace; font-size:13px; letter-spacing:2px;
+  background:linear-gradient(135deg, rgba(56,189,248,0.03), rgba(168,85,247,0.03));
+}
+.full-img-placeholder .ph-icon{ font-size:40px; opacity:0.2; }
+
+/* ── PROJECTS ── */
+#projects{ padding:100px 24px; }
+#projects h2{ font-size:38px; margin-bottom:40px; }
+.proj-grid{
+  display:grid; grid-template-columns:repeat(auto-fit,minmax(260px,1fr)); gap:22px;
+}
+.project-card{
+  position:relative; height:200px; border-radius:18px; overflow:hidden;
+  border:1px solid var(--border); background:var(--glass);
+  cursor:pointer; transition:transform 0.25s, box-shadow 0.25s;
+  text-decoration:none; display:block;
+}
+.project-card:hover{ transform:scale(1.04); box-shadow:0 10px 30px rgba(56,189,248,0.22); }
+.project-card img{ width:100%; height:100%; object-fit:cover; filter:brightness(0.85); transition:0.3s; }
+.overlay{ position:absolute; inset:0; background:rgba(10,15,30,0.22); transition:0.3s; }
+.card-text{
+  position:absolute; bottom:14px; left:14px; right:14px;
+  opacity:0; transform:translateY(10px); transition:0.3s;
+}
+.card-text h3{ font-size:1.05rem; color:#fff; }
+.card-text p{ font-size:0.82rem; color:var(--muted); margin-top:4px; }
+.project-card:hover .overlay{ background:rgba(10,15,30,0.58); backdrop-filter:blur(6px); }
+.project-card:hover .card-text{ opacity:1; transform:translateY(0); }
+
+/* ── EXPERIENCE ── */
+#experience{
+  padding:100px 24px;
+  background:rgba(255,255,255,0.015);
+  border-top:1px solid var(--border);
+}
+#experience h2{ font-size:38px; margin-bottom:48px; }
+.exp-list{ display:flex; flex-direction:column; }
+.exp-item{
+  display:grid; grid-template-columns:180px 1fr;
+  gap:40px; padding:36px 0;
+  border-top:1px solid var(--border);
+}
+.exp-item:last-child{ border-bottom:1px solid var(--border); }
+.exp-date{
+  font-family:'Share Tech Mono',monospace;
+  font-size:12px; letter-spacing:1px; color:var(--blue);
+  padding-top:4px; line-height:1.6;
+}
+.exp-org{ color:var(--muted); font-size:11px; display:block; margin-top:4px; }
+.exp-body h3{ font-size:19px; font-weight:600; margin-bottom:10px; }
+.exp-body p{ color:var(--muted); font-size:14px; line-height:1.8; margin-bottom:12px; }
+.exp-tags{ display:flex; flex-wrap:wrap; gap:8px; }
+.exp-tag{
+  padding:4px 12px; border-radius:999px;
+  border:1px solid var(--border); font-size:12px;
+  color:var(--muted); background:var(--glass);
 }
 
-.featured-row.reverse{
-  direction:rtl;
+/* ── CTA ── */
+#cta{ padding:120px 24px; text-align:center; }
+#cta h2{ font-size:44px; margin-bottom:18px; }
+#cta p{ color:var(--muted); max-width:520px; margin:0 auto 36px; line-height:1.8; }
+.cta-buttons{ display:flex; gap:16px; justify-content:center; flex-wrap:wrap; }
+
+footer{
+  text-align:center; padding:50px 20px;
+  color:rgba(255,255,255,0.35); font-size:13px;
+  border-top:1px solid var(--border);
 }
 
-.featured-row.reverse > *{
-  direction:ltr;
+/* ── RESPONSIVE ── */
+@media(max-width:1000px){
+  .about-grid{ grid-template-columns:1fr 1fr; }
+  .about-photo{ display:none; }
 }
-
-/* TEXT SIDE */
-.proj-text{
-  display:flex;
-  flex-direction:column;
-  gap:20px;
+@media(max-width:900px){
+  .hero-inner{ grid-template-columns:1fr; text-align:center; }
+  .hero h1{ font-size:40px; }
+  .about-grid{ grid-template-columns:1fr; gap:40px; }
+  .exp-item{ grid-template-columns:1fr; gap:10px; }
 }
-
-.proj-label{
-  color:var(--purple);
-  font-size:13px;
-  font-weight:600;
-  letter-spacing:1px;
-}
-
-.proj-title-link{
-  text-decoration:none;
-  color:var(--text);
-  transition:color 0.2s ease;
-}
-
-.proj-title-link:hover{
-  color:var(--blue);
-}
-
-.proj-text h2{
-  font-size:36px;
-  line-height:1.15;
-  margin:0;
-}
-
-.proj-desc{
-  background:var(--glass);
-  border:1px solid var(--border);
-  border-radius:16px;
-  padding:22px 24px;
-  color:var(--muted);
-  font-size:15px;
-  line-height:1.7;
-  backdrop-filter:blur(8px);
-}
-
-/* TAGS */
-.proj-tags{
-  display:flex;
-  flex-wrap:wrap;
-  gap:8px;
-}
-
-.tag-pill{
-  padding:5px 12px;
-  border-radius:999px;
-  border:1px solid var(--border);
-  font-size:12px;
-  color:var(--muted);
-  background:var(--glass);
-}
-
-/* IMAGE SIDE */
-.proj-image{
-  border-radius:20px;
-  overflow:hidden;
-  border:1px solid var(--border);
-  background:var(--glass2);
-  aspect-ratio:16/10;
-  position:relative;
-}
-
-.proj-image img{
-  width:100%;
-  height:100%;
-  object-fit:cover;
-  display:block;
-  transition:0.4s ease;
-}
-
-.proj-image:hover img{
-  transform:scale(1.03);
-}
-
-.proj-image-placeholder{
-  width:100%;
-  height:100%;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:48px;
-  color:var(--border);
-  background: linear-gradient(135deg, rgba(56,189,248,0.05), rgba(37,99,235,0.05));
-  min-height:260px;
-}
-
-/* RESPONSIVE */
-@media(max-width:800px){
-  .featured-row{
-    grid-template-columns:1fr;
-    gap:32px;
-    padding:60px 20px;
-  }
-
-  .featured-row.reverse{
-    direction:ltr;
-  }
-
-  .page-header h1{ font-size:36px; }
-  .proj-text h2{ font-size:26px; }
+@media(max-width:600px){
+  .hero h1{ font-size:32px; }
+  .hero-stats{ grid-template-columns:1fr 1fr; }
+  #cta h2{ font-size:30px; }
 }
 </style>
 </head>
-
 <body>
 
-<!-- PAGE HEADER -->
-<div class="page-header">
-  <span class="tag">RESEARCH • ENGINEERING • LEADERSHIP</span>
-  <h1>Experience</h1>
-  <p>A collection of academic programs, technical experiences, and hands-on opportunities that have shaped my interests in engineering, physics, design, and systems thinking.</p>
+<!-- ═══ HERO ═══ -->
+<section class="hero" id="home">
+  <div class="hero-glow"></div>
+  <div class="hero-inner fade">
+    <div>
+      <div class="hero-tag">// ENGINEERING · SYSTEMS · BUILDING</div>
+      <h1>Engineering ideas<br>into <span>real-world</span> systems.</h1>
+      <p class="hero-sub">
+        I'm Devon — a builder who works across hardware, software, and everything in between.
+        From 3D-printed droids to embedded electronics to sim rigs, I design things that actually work.
+      </p>
+      <div class="hero-buttons">
+        <a class="btn" href="#projects">See My Work</a>
+        <a class="btn-outline" href="contact.html">Get In Touch</a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat">
+        <div class="hstat-num">8+</div>
+        <div class="hstat-label">Projects across hardware, software & embedded systems</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-num">4+</div>
+        <div class="hstat-label">Years building with 3D printing, Arduino & microcontrollers</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-num">1:1</div>
+        <div class="hstat-label">Screen-accurate prop builds at full scale</div>
+      </div>
+      <div class="hstat">
+        <div class="hstat-num">∞</div>
+        <div class="hstat-label">Projects in the queue — the list never shrinks</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ABOUT ═══ -->
+<section id="about">
+<div class="container">
+  <div class="about-grid">
+
+    <!-- PHOTO COLUMN -->
+    <div class="about-photo fade">
+      <div class="about-photo-frame">
+        <img src="me.jpg" alt="Devon Shunn"
+          onerror="this.style.display='none'; this.nextElementSibling.style.display='flex'">
+        <div class="about-photo-placeholder" style="display:none;">
+          <div class="ph-face">🧑‍💻</div>
+          <span>// me.jpg</span>
+        </div>
+      </div>
+      <div class="about-name-tag">// Devon Shunn</div>
+    </div>
+
+    <div class="fade">
+      <span class="section-label">// WHO I AM</span>
+      <h2>Not Just an Engineer.<br>A Builder.</h2>
+      <p>
+        I've been taking things apart and putting them back together — usually better than I found them —
+        for as long as I can remember. What started with Lego Technic sets and a curiosity about why things
+        worked the way they did has turned into a full-stack approach to making: <em>hardware, software,
+        fabrication, and the code that ties them all together.</em>
+      </p>
+      <p>
+        I'm currently studying engineering, but the honest truth is that most of what I know came from
+        building things at 1am and figuring out why they broke. That's not a complaint — it's the best
+        education I've found. Failing a print, debugging a state machine, resolving a servo linkage
+        conflict in CAD — that's where understanding actually lives.
+      </p>
+      <p>
+        My work spans embedded systems, 3D design and fabrication, interactive software, and increasingly
+        the intersection of all three. I care a lot about craft — not just whether something works,
+        but whether it's <em>built right</em>. Clean wire routing, tight tolerances, code that doesn't
+        block itself. The details no one sees unless they're looking for them.
+      </p>
+      <p>
+        Outside the build desk: I'm a huge Star Wars fan (the lightsaber and BD-1 aren't accidents),
+        a sim racing enthusiast who decided building the wheel was more interesting than buying one,
+        and someone who will absolutely spend three weekends perfecting a paint weathering technique
+        before calling something done.
+      </p>
+    </div>
+    <div class="about-right fade">
+      <div class="about-card">
+        <h4>🎓 Education</h4>
+        <p>Engineering student · Salutatorian · More learned in the build lab than any classroom</p>
+      </div>
+      <div class="about-card">
+        <h4>🖨️ Fabrication</h4>
+        <p>Bambu X1C · 4+ years FDM printing · PLA, PETG, ABS · Multi-material AMS workflows</p>
+      </div>
+      <div class="about-card">
+        <h4>⚡ Embedded Systems</h4>
+        <p>Arduino, Raspberry Pi Pico W · C++, MicroPython · Sensor integration, servo control, LED systems</p>
+      </div>
+      <div class="about-card">
+        <h4>🧩 Design & CAD</h4>
+        <p>Fusion 360 · Clearance engineering, wire routing, heat insert design, multi-body assemblies</p>
+      </div>
+      <div class="about-card">
+        <h4>🎯 Leadership</h4>
+        <p>CPB Director of Experiential Programming · Event production, logistics, budget, team coordination</p>
+      </div>
+      <div class="about-card">
+        <h4>💻 Software</h4>
+        <p>JavaScript, Python, C++ · Web development, game systems, embedded firmware, iOS automation</p>
+      </div>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ DREAM JOB TIMELINE ═══ -->
+<section id="timeline">
+<div class="container">
+  <div class="fade">
+    <span class="section-label">// THE ROAD SO FAR</span>
+    <h2>Dream Job Progression</h2>
+    <p class="tl-sub">
+      Every engineer has a version of this list. Mine went from railroading to broader engineering, as I have realized my love for engineering extends far beyond the tracks.
+      The thread through all of it: I always wanted to build the thing, not just use it.
+    </p>
+  </div>
+
+  <div class="tl-wrap fade">
+    <div class="tl-track">
+
+      <!-- Resumed line after squiggle -->
+      <div class="tl-line-resume"></div>
+
+      <!-- Age 2 — below -->
+      <div class="tl-item" style="left:3%">
+        <div class="tl-dot"></div>
+        <div class="tl-age">Age 2</div>
+        <div class="tl-conn-down"></div>
+        <div class="tl-card below">A Train<div class="tl-card-sub">idealistic, I know</div></div>
+      </div>
+
+      <!-- Age 4 — above -->
+      <div class="tl-item" style="left:15%">
+        <div class="tl-dot"></div>
+        <div class="tl-age">Age 4</div>
+        <div class="tl-conn-up"></div>
+        <div class="tl-card above">Train Engineer<div class="tl-card-sub">the guy "driving" the train</div></div>
+      </div>
+
+      <!-- Age 7 — below -->
+      <div class="tl-item" style="left:28%">
+        <div class="tl-dot"></div>
+        <div class="tl-age">Age 7</div>
+        <div class="tl-conn-down"></div>
+        <div class="tl-card below">Train Engineer<div class="tl-card-sub">as in, designing the train</div></div>
+      </div>
+
+      <!-- Age 11 — above -->
+      <div class="tl-item" style="left:41%">
+        <div class="tl-dot"></div>
+        <div class="tl-age">Age 11</div>
+        <div class="tl-conn-up"></div>
+        <div class="tl-card above">"Inventor"<div class="tl-card-sub">very serious about this</div></div>
+      </div>
+
+      <!-- Age 14 — below -->
+      <div class="tl-item" style="left:54%">
+        <div class="tl-dot"></div>
+        <div class="tl-age">Age 14</div>
+        <div class="tl-conn-down"></div>
+        <div class="tl-card below">Product Design Engineer<div class="tl-card-sub"></div></div>
+      </div>
+
+      <!-- Age 17 — above -->
+      <div class="tl-item" style="left:67%">
+        <div class="tl-dot"></div>
+        <div class="tl-age">Age 17</div>
+        <div class="tl-conn-up"></div>
+        <div class="tl-card above">Automotive Design Engineer<div class="tl-card-sub"></div></div>
+      </div>
+
+      <!-- Age 19 — below -->
+      <div class="tl-item" style="left:78%">
+        <div class="tl-dot"></div>
+        <div class="tl-age">Age 19</div>
+        <div class="tl-conn-down"></div>
+        <div class="tl-card below">R&D Scientist<div class="tl-card-sub">automotive industry?</div></div>
+      </div>
+
+      <!-- SQUIGGLE TIME-SKIP (between 19 and Ancient) -->
+      <div class="tl-squiggle">
+        <svg viewBox="0 0 60 28" fill="none" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none">
+          <!-- Mask the straight line underneath -->
+          <rect x="0" y="11" width="60" height="6" fill="#070A12"/>
+          <!-- Squiggle path -->
+          <path d="M0 14 C5 4, 10 24, 15 14 C20 4, 25 24, 30 14 C35 4, 40 24, 45 14 C50 4, 55 24, 60 14"
+            stroke="url(#sq-grad)" stroke-width="2" stroke-linecap="round" fill="none"/>
+          <defs>
+            <linearGradient id="sq-grad" x1="0" y1="0" x2="60" y2="0" gradientUnits="userSpaceOnUse">
+              <stop offset="0%" stop-color="#60a5fa"/>
+              <stop offset="100%" stop-color="#a855f7"/>
+            </linearGradient>
+          </defs>
+        </svg>
+        <div class="tl-squiggle-label">time skip</div>
+      </div>
+
+      <!-- Age: Ancient — above, purple -->
+      <div class="tl-item" style="left:92%">
+        <div class="tl-now-dot"></div>
+        <div class="tl-age" style="color:var(--purple); font-size:10px;">Age: Ancient</div>
+        <div class="tl-conn-up" style="background:rgba(168,85,247,0.35)"></div>
+        <div class="tl-card above" style="border-color:rgba(168,85,247,0.35); color:rgba(200,150,255,0.95);">
+          The Guy Driving the Train?..
+          <div class="tl-card-sub" style="color:rgba(168,85,247,0.6);">still figuring it out</div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ SKILLS ═══ -->
+<section id="skills">
+<div class="container">
+  <div class="fade">
+    <span class="section-label">// TOOLBOX</span>
+    <h2>Skills & Technologies</h2>
+    <p class="skills-sub">
+      Built across years of projects — some from coursework, most from debugging things at midnight.
+      Every bubble on this list has a real project behind it.
+    </p>
+  </div>
+
+  <div class="skill-group fade">
+    <span class="skill-group-label">// HARDWARE & FABRICATION</span>
+    <div class="skill-bubbles">
+      <span class="bubble">Bambu X1C</span>
+      <span class="bubble">FDM 3D Printing</span>
+      <span class="bubble">Fusion 360 CAD</span>
+      <span class="bubble">Multi-Material AMS</span>
+      <span class="bubble">Variable Layer Height</span>
+      <span class="bubble">Heat Insert Design</span>
+      <span class="bubble">Wire Routing</span>
+      <span class="bubble">Gyroid Infill</span>
+      <span class="bubble">Support Strategy</span>
+      <span class="bubble">PLA · PETG · ABS</span>
+      <span class="bubble">Clearance Engineering</span>
+      <span class="bubble">Ironing</span>
+      <span class="bubble">Sanding & Finishing</span>
+      <span class="bubble">Primer & Paint</span>
+      <span class="bubble">Panel Masking</span>
+      <span class="bubble">Oil Wash Weathering</span>
+      <span class="bubble">Board Tray Design</span>
+    </div>
+  </div>
+
+  <div class="skill-group fade">
+    <span class="skill-group-label">// EMBEDDED SYSTEMS & ELECTRONICS</span>
+    <div class="skill-bubbles">
+      <span class="bubble">Arduino Nano</span>
+      <span class="bubble">Raspberry Pi Pico W</span>
+      <span class="bubble">Proffie Soundboard</span>
+      <span class="bubble">WS2812B Neopixel</span>
+      <span class="bubble">DFPlayer Mini</span>
+      <span class="bubble">HC-SR501 PIR</span>
+      <span class="bubble">MG90S Servo</span>
+      <span class="bubble">Slip Ring Integration</span>
+      <span class="bubble">LiPo Power Systems</span>
+      <span class="bubble">Buck Converters</span>
+      <span class="bubble">TP4056 Charge Circuits</span>
+      <span class="bubble">Perfboard Wiring</span>
+      <span class="bubble">State Machine Design</span>
+      <span class="bubble">Non-Blocking Firmware</span>
+      <span class="bubble">millis() Timing</span>
+      <span class="bubble">Sensor Integration</span>
+      <span class="bubble">PCB Layout (basic)</span>
+    </div>
+  </div>
+
+  <div class="skill-group fade">
+    <span class="skill-group-label">// SOFTWARE & CODE</span>
+    <div class="skill-bubbles">
+      <span class="bubble purple">C++ (Arduino)</span>
+      <span class="bubble purple">MicroPython</span>
+      <span class="bubble purple">Python</span>
+      <span class="bubble purple">JavaScript</span>
+      <span class="bubble purple">HTML & CSS</span>
+      <span class="bubble purple">Scriptable (iOS)</span>
+      <span class="bubble purple">Game Systems Design</span>
+      <span class="bubble purple">Procedural Generation</span>
+      <span class="bubble purple">RPG Mechanics</span>
+      <span class="bubble purple">State Machines</span>
+      <span class="bubble purple">API Integration</span>
+      <span class="bubble purple">EmailJS</span>
+      <span class="bubble purple">Intersection Observer</span>
+    </div>
+  </div>
+
+  <div class="skill-group fade">
+    <span class="skill-group-label">// TOOLS & WORKFLOW</span>
+    <div class="skill-bubbles">
+      <span class="bubble green">Bambu Studio</span>
+      <span class="bubble green">Fusion 360</span>
+      <span class="bubble green">VS Code</span>
+      <span class="bubble green">Arduino IDE</span>
+      <span class="bubble green">Thonny</span>
+      <span class="bubble green">Git & GitHub</span>
+      <span class="bubble green">Figma</span>
+      <span class="bubble green">Blender (basic)</span>
+      <span class="bubble green">Horizon Worlds</span>
+      <span class="bubble green">Bambu Studio Slicer</span>
+    </div>
+  </div>
+
+  <div class="skill-group fade">
+    <span class="skill-group-label">// LEADERSHIP & SOFT SKILLS</span>
+    <div class="skill-bubbles">
+      <span class="bubble amber">Event Planning & Logistics</span>
+      <span class="bubble amber">Team Leadership</span>
+      <span class="bubble amber">Systems Thinking</span>
+      <span class="bubble amber">Budget Management</span>
+      <span class="bubble amber">Creative Direction</span>
+      <span class="bubble amber">Technical Documentation</span>
+      <span class="bubble amber">Project Scoping</span>
+      <span class="bubble amber">Cross-discipline Execution</span>
+      <span class="bubble amber">Problem Decomposition</span>
+    </div>
+  </div>
+</div>
+</section>
+
+<!-- ═══ IMAGE ═══ -->
+<div style="display:flex; justify-content:center; margin:60px 0; text-align:center;">
+  <img
+    src="proficiency.png"
+    alt="Devon's proficiency in programs"
+    style="display:block; width:auto; max-width:60vw; height:auto; opacity:0.85;"
+    onerror="this.style.display='none'; document.getElementById('img-placeholder').style.display='flex';"
+  >
+
+  <div id="img-placeholder" style="display:none;">
+    <div>📸</div>
+    <span>// proficiency.png</span>
+  </div>
 </div>
 
-<!-- EXPERIENCE -->
-<div class="projects-list">
+<!-- ═══ PROJECTS ═══ -->
+<section id="projects">
+<div class="container">
+  <span class="section-label fade">// WHAT I'VE BUILT</span>
+  <h2 class="fade">Projects</h2>
 
-  <!-- 1 — ISS PHYSICS -->
-  <div class="featured-row" onclick="window.location='experience-iss-physics.html'">
-    <div class="proj-text">
-      <div class="proj-label">Academic Experience</div>
-      <h2><a class="proj-title-link" href="experience-iss-physics.html">ISS Physics Program</a></h2>
-      <div class="proj-desc">
-        Participated in the International Summer School for Physics, collaborating with students in advanced
-        university-level physics topics and problem solving. The program emphasized analytical thinking,
-        experimental reasoning, and collaborative research while exploring modern concepts in mechanics,
-        electricity, and theoretical physics.
-      </div>
-      <div class="proj-tags">
-        <span class="tag-pill">Physics</span>
-        <span class="tag-pill">Research</span>
-        <span class="tag-pill">Problem Solving</span>
-        <span class="tag-pill">STEM</span>
-      </div>
-    </div>
-    <div class="proj-image">
-      <img src="images/iss-physics.jpg" alt="ISS Physics Program" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>🧪</div>'"/>
-    </div>
+  <div class="proj-grid">
+
+    <a class="project-card fade" href="project-lightsaber.html">
+      <img src="images/lightsaber.jpg" onerror="this.style.display='none'">
+      <div class="overlay"></div>
+      <div class="card-text"><h3>Proffie Lightsaber</h3><p>Custom cross-guard saber with embedded Neopixel control</p></div>
+    </a>
+
+    <a class="project-card fade" href="project-bd1.html">
+      <img src="images/bd1/hero.jpg" onerror="this.style.display='none'">
+      <div class="overlay"></div>
+      <div class="card-text"><h3>BD-1 Droid Build</h3><p>Full 1:1 screen-accurate droid — print, paint, wire & code</p></div>
+    </a>
+
+    <a class="project-card fade" href="project-f1-rig.html">
+      <img src="images/f1rig.jpg" onerror="this.style.display='none'">
+      <div class="overlay"></div>
+      <div class="card-text"><h3>F1 Simulator Rig</h3><p>3D printed steering wheel with Pico W integration</p></div>
+    </a>
+
+    <a class="project-card fade" href="project-3dprinting.html">
+      <img src="images/3dprinting.jpg" onerror="this.style.display='none'">
+      <div class="overlay"></div>
+      <div class="card-text"><h3>3D Printing</h3><p>Prints, modifications, and fabrication projects</p></div>
+    </a>
+
+    <a class="project-card fade" href="project-delorean.html">
+      <img src="images/delorean.jpg" onerror="this.style.display='none'">
+      <div class="overlay"></div>
+      <div class="card-text"><h3>DeLorean Animation</h3><p>3D animation modeled and rendered from scratch</p></div>
+    </a>
+
+    <a class="project-card fade" href="project-ios-widgets.html">
+      <img src="images/widgets.jpg" onerror="this.style.display='none'">
+      <div class="overlay"></div>
+      <div class="card-text"><h3>iOS Widget Builder</h3><p>Custom home screen widget system with dynamic links</p></div>
+    </a>
+
+    <a class="project-card fade" href="project-game.html">
+      <img src="images/game.jpg" onerror="this.style.display='none'">
+      <div class="overlay"></div>
+      <div class="card-text"><h3>Turn-Based RPG</h3><p>Exploration RPG with modular crafting and combat</p></div>
+    </a>
+
+    <a class="project-card fade" href="project-led.html">
+      <img src="images/led.jpg" onerror="this.style.display='none'">
+      <div class="overlay"></div>
+      <div class="card-text"><h3>Neopixel LED Systems</h3><p>Arduino-based dynamic LED lighting effects</p></div>
+    </a>
+
+    <a class="project-card fade" href="project-horizon.html">
+      <img src="images/horizon.jpg" onerror="this.style.display='none'">
+      <div class="overlay"></div>
+      <div class="card-text"><h3>Horizon Worlds</h3><p>Interactive VR environments and experiences</p></div>
+    </a>
+
   </div>
 
-  <!-- 2 — MODEL RAILROAD MUSEUM -->
-  <div class="featured-row reverse" style="cursor:default;">
-    <div class="proj-text">
-      <div class="proj-label">Volunteer Experience</div>
-      <h2>Niles Canyon Railway</h2>
-      <div class="proj-desc">
-        Volunteer in the engineering and steam locomotion division at Niles Canyon Railway.
-        Working alongside restoration crews with exposure to large-scale mechanical systems,
-        steam locomotive maintenance, fabrication, and historic engineering practices.
-      </div>
-      <div class="proj-tags">
-        <span class="tag-pill">Steam Locomotion</span>
-        <span class="tag-pill">Mechanical Systems</span>
-        <span class="tag-pill">Restoration</span>
-        <span class="tag-pill">Fabrication</span>
-        <span class="tag-pill" style="color:var(--blue);border-color:rgba(56,189,248,0.3);background:rgba(56,189,248,0.08);">🔧 Coming Soon</span>
-      </div>
-    </div>
-    <div class="proj-image">
-      <img src="images/steam-department.jpg" alt="Niles Canyon Railway" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>🚂</div>'"/>
-    </div>
+  <div style="margin-top:44px; text-align:center;" class="fade">
+    <a class="btn" href="projects.html">View All Projects →</a>
   </div>
-
-  <!-- 3 — DESIGN & FABRICATION -->
-  <div class="featured-row" onclick="window.location='project-3dprinting.html'">
-    <div class="proj-text">
-      <div class="proj-label">Technical Experience</div>
-      <h2><a class="proj-title-link" href="project-3dprinting.html">Design & Digital Fabrication</a></h2>
-      <div class="proj-desc">
-        Extensive hands-on experience with CAD modeling, 3D printing, electronics integration, and
-        rapid prototyping workflows. My design and fabrication work lives in the 3D Printing project
-        page — head there to see the full collection of builds, parts, and CAD projects.
-      </div>
-      <div class="proj-tags">
-        <span class="tag-pill">CAD</span>
-        <span class="tag-pill">3D Printing</span>
-        <span class="tag-pill">Electronics</span>
-        <span class="tag-pill">Prototyping</span>
-        <span class="tag-pill" style="color:var(--blue);border-color:rgba(56,189,248,0.3);background:rgba(56,189,248,0.08);">→ View 3D Printing Projects</span>
-      </div>
-    </div>
-    <div class="proj-image">
-      <img src="images/fabrication.jpg" alt="Design and Fabrication" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>⚙️</div>'"/>
-    </div>
-  </div>
-
 </div>
+</section>
 
-<footer style="text-align:center;padding:60px 20px;color:rgba(255,255,255,0.5);border-top:1px solid rgba(255,255,255,0.08)">
-  © 2026 Devon Shunn
+<!-- ═══ EXPERIENCE ═══ -->
+<section id="experience">
+<div class="container">
+  <span class="section-label fade">// SELECT WORK EXPERIENCE & RECOGNITION</span>
+  <h2 class="fade">Select Work Experience</h2>
+
+  <div class="exp-list">
+
+    <div class="exp-item fade">
+      <div class="exp-date">
+        2024 – Present
+        <span class="exp-org">Campus Programming Board</span>
+      </div>
+      <div class="exp-body">
+        <h3>Director of Experiential Programming</h3>
+        <p>
+          Lead the planning, logistics, and execution of campus-wide experiential events.
+          Responsible for budgeting, vendor coordination, team management, and creative direction —
+          turning concepts into real, running experiences for hundreds of students. Applied systems
+          thinking to event design: building workflows, contingency plans, and feedback loops that
+          made each event run cleaner than the last.
+        </p>
+        <div class="exp-tags">
+          <span class="exp-tag">Leadership</span>
+          <span class="exp-tag">Event Production</span>
+          <span class="exp-tag">Logistics</span>
+          <span class="exp-tag">Budget Management</span>
+          <span class="exp-tag">Team Coordination</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item fade">
+      <div class="exp-date">
+        2023
+        <span class="exp-org">High School Graduation</span>
+      </div>
+      <div class="exp-body">
+        <h3>Salutatorian</h3>
+        <p>
+          Graduated second in class — recognition that came not from grinding a narrow academic lane,
+          but from staying genuinely curious across every subject. Engineering, writing, math, the sciences.
+          Curiosity is a more durable skill than memorization, and this proved it.
+        </p>
+        <div class="exp-tags">
+          <span class="exp-tag">Academic Excellence</span>
+          <span class="exp-tag">Cross-disciplinary Thinking</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="exp-item fade">
+      <div class="exp-date">
+        2020 – Present
+        <span class="exp-org">Self-Directed</span>
+      </div>
+      <div class="exp-body">
+        <h3>Independent Builder & Engineer</h3>
+        <p>
+          Four-plus years of self-directed hardware and software projects — no class required, no
+          grade assigned. Built a working lightsaber from scratch, designed and wired a sim racing
+          wheel, printed hundreds of hours of parts, wrote embedded firmware, created games and apps,
+          and am currently deep in a full BD-1 droid build that touches every skill I've developed.
+          The portfolio on this site is the honest record of it.
+        </p>
+        <div class="exp-tags">
+          <span class="exp-tag">Hardware Engineering</span>
+          <span class="exp-tag">Embedded Systems</span>
+          <span class="exp-tag">3D Fabrication</span>
+          <span class="exp-tag">Software Development</span>
+          <span class="exp-tag">Self-Taught</span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</section>
+
+<!-- ═══ CTA ═══ -->
+<section id="cta">
+<div class="container fade">
+  <span class="section-label" style="text-align:center; display:block; margin-bottom:16px;">// WHAT'S NEXT</span>
+  <h2>Let's build something.</h2>
+  <p>
+    Open to engineering roles, internships, and build-focused opportunities.
+    If you've got something interesting — or just want to talk shop — I'm in.
+  </p>
+  <div class="cta-buttons">
+    <a class="btn" href="contact.html">Get In Touch</a>
+    <a class="btn-outline" href="projects.html">Browse Projects</a>
+    <a class="btn-outline" href="resume.pdf" target="_blank">Download Resume</a>
+  </div>
+</div>
+</section>
+
+<footer>
+  © 2026 Devon Shunn &nbsp;·&nbsp; Built from scratch
 </footer>
 
 <script>
-const rows = document.querySelectorAll('.featured-row');
-const obs = new IntersectionObserver(entries=>{
-  entries.forEach(entry=>{
-    if(entry.isIntersecting) entry.target.classList.add('show');
-  });
-},{threshold:0.1});
-rows.forEach(row=>obs.observe(row));
+const els = document.querySelectorAll('.fade');
+const obs = new IntersectionObserver(e=>{
+  e.forEach(i=>{ if(i.isIntersecting) i.target.classList.add('show'); });
+},{threshold:0.08});
+els.forEach(el=>obs.observe(el));
 </script>
 
 </body>
