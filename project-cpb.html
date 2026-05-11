@@ -1,0 +1,729 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CPB Event System – Devon Shunn</title>
+
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+<style>
+:root{
+  --bg:#070A12;
+  --glass:rgba(255,255,255,0.06);
+  --glass2:rgba(255,255,255,0.04);
+  --border:rgba(255,255,255,0.12);
+  --border2:rgba(255,255,255,0.06);
+  --text:#fff;
+  --muted:rgba(255,255,255,0.7);
+  --blue:#38bdf8;
+  --purple:#a855f7;
+  --accent:#818cf8;
+  --accent2:#4f46e5;
+  --accentglow:rgba(129,140,248,0.4);
+  --teal:#2dd4bf;
+  --green:#4ade80;
+  --red:#f87171;
+}
+
+*{ margin:0; padding:0; box-sizing:border-box; font-family:Poppins,sans-serif; }
+body{ background:var(--bg); color:var(--text); overflow-x:hidden; }
+body::before{
+  content:''; position:fixed; inset:0;
+  background:repeating-linear-gradient(0deg,transparent,transparent 2px,rgba(0,0,0,0.025) 2px,rgba(0,0,0,0.025) 4px);
+  pointer-events:none; z-index:999;
+}
+
+
+/* HERO */
+.hero{ position:relative; min-height:100vh; display:flex; align-items:flex-end; overflow:hidden; }
+.hero-bg{ position:absolute; inset:0; background:linear-gradient(180deg,#08001a 0%,#0c0520 35%,#060210 65%,#070A12 100%); }
+
+.hero-lines{ position:absolute; inset:0; overflow:hidden; pointer-events:none; }
+.hero-lines span{
+  position:absolute; left:0; right:0; height:1px;
+  background:linear-gradient(90deg,transparent 0%,rgba(129,140,248,0.15) 30%,rgba(45,212,191,0.1) 60%,transparent 100%);
+  animation:lineSlide 6s ease-in-out infinite;
+}
+.hero-lines span:nth-child(1){ top:25%; animation-delay:0s; }
+.hero-lines span:nth-child(2){ top:42%; animation-delay:1.5s; opacity:0.6; }
+.hero-lines span:nth-child(3){ top:58%; animation-delay:3s; opacity:0.4; }
+.hero-lines span:nth-child(4){ top:74%; animation-delay:4.5s; opacity:0.7; }
+@keyframes lineSlide{
+  0%{ transform:scaleX(0) translateX(-30%); opacity:0; }
+  30%{ opacity:1; }
+  60%{ transform:scaleX(1.05) translateX(2%); }
+  100%{ transform:scaleX(0.3) translateX(80%); opacity:0; }
+}
+
+.hero-grid{
+  position:absolute; inset:0;
+  background-image:linear-gradient(rgba(129,140,248,0.06) 1px,transparent 1px),linear-gradient(90deg,rgba(129,140,248,0.04) 1px,transparent 1px);
+  background-size:55px 55px;
+  transform:perspective(700px) rotateX(54deg) translateY(28%);
+  transform-origin:bottom center;
+  animation:gridDrift 10s linear infinite;
+}
+@keyframes gridDrift{ from{background-position:0 0} to{background-position:0 55px} }
+
+.hero-glow{ position:absolute; bottom:10%; left:50%; transform:translateX(-50%); width:800px; height:320px; background:radial-gradient(ellipse,rgba(79,70,229,0.2) 0%,rgba(129,140,248,0.08) 45%,transparent 70%); filter:blur(55px); pointer-events:none; }
+
+.hero-nodes{ position:absolute; inset:0; pointer-events:none; }
+.hero-nodes span{ position:absolute; border-radius:50%; animation:nodePulse ease-in-out infinite; }
+@keyframes nodePulse{ 0%,100%{opacity:0.15;transform:scale(1)} 50%{opacity:0.5;transform:scale(1.3)} }
+
+.hero-img-wrap{ position:absolute; inset:0; display:flex; align-items:center; justify-content:center; }
+.hero-img-wrap img{ width:100%; height:100%; object-fit:cover; opacity:0.4; mix-blend-mode:lighten; }
+
+.hero-content{ position:relative; z-index:2; max-width:1100px; margin:0 auto; padding:0 24px 80px; width:100%; }
+.breadcrumb{ display:flex; align-items:center; gap:8px; margin-bottom:24px; font-family:'Share Tech Mono',monospace; font-size:12px; color:rgba(255,255,255,0.4); letter-spacing:1px; }
+.breadcrumb a{ color:var(--accent); text-decoration:none; }
+.breadcrumb a:hover{ text-decoration:underline; }
+.hero-tag{ font-family:'Share Tech Mono',monospace; font-size:12px; letter-spacing:3px; color:var(--accent); margin-bottom:16px; opacity:0.9; }
+.hero-title{ font-size:clamp(40px,7vw,82px); line-height:0.95; font-weight:700; letter-spacing:-2px; margin-bottom:22px; }
+.hero-title .line2{ color:transparent; -webkit-text-stroke:1px rgba(129,140,248,0.5); }
+.hero-sub{ color:var(--muted); max-width:580px; line-height:1.8; font-size:16px; margin-bottom:36px; }
+.hero-meta{ display:flex; gap:32px; flex-wrap:wrap; }
+.meta-item{ display:flex; flex-direction:column; gap:4px; }
+.meta-label{ font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:2px; color:rgba(255,255,255,0.35); text-transform:uppercase; }
+.meta-value{ font-size:14px; color:var(--accent); font-weight:600; }
+
+.scroll-hint{ position:absolute; bottom:30px; right:40px; display:flex; flex-direction:column; align-items:center; gap:8px; opacity:0.4; animation:bounce 2s ease-in-out infinite; }
+@keyframes bounce{ 0%,100%{transform:translateY(0)} 50%{transform:translateY(6px)} }
+.scroll-hint span{ font-family:'Share Tech Mono',monospace; font-size:10px; letter-spacing:2px; color:var(--accent); }
+.scroll-arrow{ width:1px; height:40px; background:linear-gradient(to bottom,var(--accent),transparent); }
+
+/* MAIN */
+main{ max-width:1100px; margin:0 auto; padding:0 24px 120px; }
+.section-label{ font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:3px; color:var(--accent); opacity:0.7; margin-bottom:12px; display:block; }
+.fade{ opacity:0; transform:translateY(30px); transition:0.9s ease; }
+.fade.show{ opacity:1; transform:translateY(0); }
+.back-link{ display:inline-flex; align-items:center; gap:8px; color:var(--muted); text-decoration:none; font-size:14px; transition:0.2s ease; margin-bottom:60px; padding-top:40px; font-family:'Share Tech Mono',monospace; letter-spacing:1px; }
+.back-link:hover{ color:var(--accent); }
+
+/* INTRO */
+.intro-block{ padding:80px 0 60px; display:grid; grid-template-columns:1.2fr 1fr; gap:80px; align-items:start; border-bottom:1px solid var(--border); }
+.intro-block h2{ font-size:38px; line-height:1.2; margin-bottom:20px; }
+.intro-block p{ color:var(--muted); line-height:1.9; font-size:15px; margin-bottom:16px; }
+.intro-block em{ color:rgba(255,255,255,0.92); font-style:normal; }
+
+.stat-stack{ display:flex; flex-direction:column; gap:20px; }
+.stat-card{ background:var(--glass); border:1px solid var(--border); border-radius:16px; padding:20px 24px; backdrop-filter:blur(8px); position:relative; overflow:hidden; }
+.stat-card::before{ content:''; position:absolute; top:0; left:0; width:3px; height:100%; background:linear-gradient(to bottom,var(--accent),var(--teal)); border-radius:3px 0 0 3px; }
+.stat-card .num{ font-size:28px; font-weight:700; color:var(--accent); line-height:1; font-family:'Share Tech Mono',monospace; }
+.stat-card .desc{ font-size:13px; color:var(--muted); margin-top:5px; }
+
+/* OLD VS NEW */
+.problems-section{ padding:80px 0; border-bottom:1px solid var(--border); }
+.problems-section h2{ font-size:34px; margin-bottom:12px; }
+.problems-section .lead{ color:var(--muted); max-width:680px; line-height:1.8; margin-bottom:52px; }
+
+.compare-grid{ display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.compare-card{ border-radius:18px; padding:28px; position:relative; overflow:hidden; }
+.compare-card.old{ background:rgba(248,113,113,0.05); border:1px solid rgba(248,113,113,0.18); }
+.compare-card.new{ background:rgba(74,222,128,0.05); border:1px solid rgba(74,222,128,0.18); }
+.compare-card::before{ content:''; position:absolute; top:0; left:0; right:0; height:2px; }
+.compare-card.old::before{ background:linear-gradient(90deg,transparent,rgba(248,113,113,0.5),transparent); }
+.compare-card.new::before{ background:linear-gradient(90deg,transparent,rgba(74,222,128,0.5),transparent); }
+.compare-label{ font-family:'Share Tech Mono',monospace; font-size:11px; letter-spacing:2px; margin-bottom:14px; display:block; }
+.compare-card.old .compare-label{ color:rgba(248,113,113,0.7); }
+.compare-card.new .compare-label{ color:rgba(74,222,128,0.7); }
+.compare-card h3{ font-size:17px; margin-bottom:16px; }
+.compare-list{ display:flex; flex-direction:column; gap:10px; }
+.compare-item{ display:flex; align-items:flex-start; gap:10px; font-size:13px; color:var(--muted); line-height:1.6; }
+.compare-item .ci{ flex-shrink:0; font-size:14px; margin-top:1px; }
+
+/* FEATURES */
+.features-section{ padding:80px 0; border-bottom:1px solid var(--border); }
+.features-section h2{ font-size:34px; margin-bottom:12px; }
+.features-section .lead{ color:var(--muted); max-width:680px; line-height:1.8; margin-bottom:52px; }
+.features-grid{ display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+.feature-card{ background:var(--glass); border:1px solid var(--border); border-radius:18px; padding:26px; backdrop-filter:blur(8px); transition:border-color 0.3s ease,background 0.3s ease; position:relative; overflow:hidden; }
+.feature-card::after{ content:''; position:absolute; inset:0; border-radius:18px; background:linear-gradient(135deg,rgba(129,140,248,0.03),transparent 60%); pointer-events:none; }
+.feature-card:hover{ border-color:rgba(129,140,248,0.25); background:rgba(255,255,255,0.07); }
+.feature-icon{ font-size:26px; margin-bottom:12px; display:block; opacity:0.8; }
+.feature-card h4{ font-size:16px; margin-bottom:9px; }
+.feature-card p{ color:var(--muted); font-size:13px; line-height:1.75; }
+.feature-pills{ display:flex; flex-wrap:wrap; gap:6px; margin-top:12px; }
+.feature-pill{ padding:3px 10px; border-radius:999px; font-family:'Share Tech Mono',monospace; font-size:10px; border:1px solid rgba(129,140,248,0.2); color:rgba(129,140,248,0.8); background:rgba(129,140,248,0.05); }
+
+/* FLOW */
+.flow-section{ padding:80px 0; border-bottom:1px solid var(--border); }
+.flow-section h2{ font-size:34px; margin-bottom:12px; }
+.flow-section .lead{ color:var(--muted); max-width:680px; line-height:1.8; margin-bottom:48px; }
+.flow{ display:flex; align-items:center; gap:0; flex-wrap:nowrap; overflow-x:auto; padding:8px 0 20px; }
+.flow-step{ background:var(--glass); border:1px solid var(--border); border-radius:14px; padding:18px 20px; min-width:155px; flex-shrink:0; text-align:center; transition:border-color 0.3s; }
+.flow-step:hover{ border-color:rgba(129,140,248,0.3); }
+.flow-step .ficon{ font-size:22px; margin-bottom:7px; display:block; }
+.flow-step h4{ font-size:12px; font-weight:600; margin-bottom:4px; }
+.flow-step p{ font-size:11px; color:var(--muted); line-height:1.5; }
+.flow-arrow{ font-size:16px; color:rgba(129,140,248,0.4); padding:0 6px; flex-shrink:0; }
+.flow-step.hl{ border-color:rgba(74,222,128,0.3); background:rgba(74,222,128,0.04); }
+
+/* TECH */
+.tech-section{ padding:80px 0; border-bottom:1px solid var(--border); }
+.tech-section h2{ font-size:34px; margin-bottom:12px; }
+.tech-section .lead{ color:var(--muted); max-width:680px; line-height:1.8; margin-bottom:48px; }
+.tech-grid{ display:grid; grid-template-columns:repeat(4,1fr); gap:14px; margin-bottom:48px; }
+.tech-box{ background:var(--glass2); border:1px solid var(--border); border-radius:14px; padding:20px; text-align:center; transition:border-color 0.3s; }
+.tech-box:hover{ border-color:rgba(129,140,248,0.22); }
+.tech-box .ticon{ font-size:26px; margin-bottom:10px; display:block; opacity:0.7; }
+.tech-box h4{ font-size:14px; margin-bottom:5px; }
+.tech-box p{ font-size:12px; color:var(--muted); line-height:1.6; }
+
+/* CODE */
+.code-block{ background:rgba(0,0,0,0.55); border:1px solid rgba(129,140,248,0.14); border-radius:16px; overflow:hidden; margin-bottom:20px; }
+.code-header{ display:flex; align-items:center; justify-content:space-between; padding:12px 20px; background:rgba(129,140,248,0.04); border-bottom:1px solid rgba(129,140,248,0.1); }
+.code-header span{ font-family:'Share Tech Mono',monospace; font-size:12px; color:rgba(129,140,248,0.6); letter-spacing:1px; }
+.code-dots{ display:flex; gap:6px; }
+.code-dots i{ width:10px; height:10px; border-radius:50%; }
+.code-dots i:nth-child(1){ background:rgba(255,90,90,0.5); }
+.code-dots i:nth-child(2){ background:rgba(255,200,50,0.5); }
+.code-dots i:nth-child(3){ background:rgba(50,200,100,0.5); }
+.code-body{ padding:22px 24px; overflow-x:auto; }
+.code-body pre{ font-family:'Share Tech Mono',monospace; font-size:13px; line-height:1.75; color:rgba(255,255,255,0.8); white-space:pre; margin:0; }
+.c-comment{ color:rgba(255,255,255,0.28); }
+.c-keyword{ color:#c792ea; }
+.c-fn{ color:#82aaff; }
+.c-str{ color:#c3e88d; }
+.c-num{ color:#818cf8; }
+.c-prop{ color:#f07178; }
+
+/* GALLERY */
+.gallery-section{ padding:80px 0; border-bottom:1px solid var(--border); }
+.gallery-section h2{ font-size:34px; margin-bottom:12px; }
+.gallery-section .lead{ color:var(--muted); max-width:600px; line-height:1.8; margin-bottom:48px; }
+.photo-grid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:16px; }
+.photo-cell{ border-radius:16px; overflow:hidden; border:1px solid var(--border); background:var(--glass2); position:relative; cursor:pointer; }
+.photo-cell img{ width:100%; height:100%; min-height:190px; object-fit:cover; display:block; transition:transform 0.5s ease; }
+.photo-cell:hover img{ transform:scale(1.05); }
+.photo-cell.tall{ grid-row:span 2; }
+.photo-cell.wide{ grid-column:span 2; }
+.photo-caption{ position:absolute; bottom:0; left:0; right:0; padding:20px 14px 12px; background:linear-gradient(to top,rgba(0,0,0,0.85),transparent); font-size:11px; color:rgba(255,255,255,0.8); opacity:0; transition:0.3s ease; font-family:'Share Tech Mono',monospace; letter-spacing:1px; }
+.photo-cell:hover .photo-caption{ opacity:1; }
+.photo-placeholder{ width:100%; min-height:190px; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px; background:linear-gradient(135deg,rgba(129,140,248,0.04),rgba(79,70,229,0.04)); color:rgba(255,255,255,0.13); font-size:12px; font-family:'Share Tech Mono',monospace; }
+.photo-placeholder .icon{ font-size:26px; opacity:0.22; }
+
+/* REFLECTION */
+.reflection-section{ padding:80px 0; display:grid; grid-template-columns:1.1fr 1fr; gap:80px; align-items:start; }
+.reflection-section h2{ font-size:34px; margin-bottom:20px; }
+.reflection-section p{ color:var(--muted); line-height:1.9; font-size:15px; margin-bottom:16px; }
+.bars-list{ display:flex; flex-direction:column; gap:16px; }
+.bar-row{ display:flex; flex-direction:column; gap:6px; }
+.bar-label{ display:flex; justify-content:space-between; font-size:13px; color:var(--muted); }
+.bar-label span:last-child{ color:var(--accent); font-family:'Share Tech Mono',monospace; }
+.bar-track{ height:5px; background:rgba(255,255,255,0.08); border-radius:5px; overflow:hidden; }
+.bar-fill{ height:100%; border-radius:5px; background:linear-gradient(90deg,var(--accent),var(--teal)); width:0%; transition:width 1.3s ease; }
+
+footer{ text-align:center; padding:60px 20px; color:rgba(255,255,255,0.5); border-top:1px solid var(--border); }
+
+@media(max-width:900px){
+  .intro-block,.compare-grid,.reflection-section{ grid-template-columns:1fr; gap:40px; }
+  .features-grid{ grid-template-columns:1fr; }
+  .tech-grid{ grid-template-columns:1fr 1fr; }
+  .photo-grid{ grid-template-columns:1fr 1fr; }
+  .hero-title{ font-size:44px; }
+}
+@media(max-width:600px){
+  .tech-grid{ grid-template-columns:1fr 1fr; }
+  .photo-grid{ grid-template-columns:1fr; }
+  .photo-cell.tall,.photo-cell.wide{ grid-column:span 1; grid-row:span 1; }
+  .hero-meta{ gap:20px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+<nav>
+  <a href="index.html" class="logo"><img src="signature.png" alt="Devon Shunn"></a>
+  <ul>
+    <li class="nav-item">
+      <a href="projects.html" class="nav-link">Projects</a>
+      <div class="dropdown">
+        <div class="dropdown-inner">
+          <a href="project-lightsaber.html">Lightsaber</a>
+          <a href="project-delorean.html">DeLorean Animation</a>
+          <a href="project-3dprinting.html">3D Printing</a>
+          <a href="project-bd1.html">BD-1 Droid</a>
+          <a href="project-railroading.html">Model Railroading</a>
+          <a href="project-cpb.html">CPB Event System</a>
+          <a href="project-website.html">This Website</a>
+          <a href="project-ios-widgets.html">iOS Widgets</a>
+          <a href="project-game.html">Game</a>
+          <a href="project-led.html">LED Systems</a>
+          <a href="project-horizon.html">Horizon Worlds</a>
+        </div>
+      </div>
+    </li>
+    <li><a href="contact.html" class="nav-link">Contact Me</a></li>
+  </ul>
+</nav>
+</header>
+
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-lines"><span></span><span></span><span></span><span></span></div>
+  <div class="hero-grid"></div>
+  <div class="hero-glow"></div>
+  <div class="hero-nodes" id="nodes"></div>
+  <!--
+    HERO IMAGE — a screenshot of the running app works great here.
+    Path: images/cpb/hero.jpg
+  -->
+  <div class="hero-img-wrap">
+    <img src="images/cpb/hero.jpg" alt="CPB Event System" onerror="this.style.display='none'">
+  </div>
+  <div class="hero-content">
+    <div class="breadcrumb"><a href="projects.html">Projects</a><span>/</span><span>CPB Event System</span></div>
+    <div class="hero-tag">// NODE.JS · SQLITE · EMAIL AUTOMATION · FULL STACK</div>
+    <h1 class="hero-title">CPB Event<br><span class="line2">System</span></h1>
+    <p class="hero-sub">
+      The CPB was running event signups through a manual Google Form email chain.
+      I built a full web application to replace it — automatic waitlists, email confirmations,
+      a strike system, and a director portal to manage everything.
+    </p>
+    <div class="hero-meta">
+      <div class="meta-item"><span class="meta-label">Role</span><span class="meta-value">Director + Builder</span></div>
+      <div class="meta-item"><span class="meta-label">Stack</span><span class="meta-value">Node.js / SQLite</span></div>
+      <div class="meta-item"><span class="meta-label">Status</span><span class="meta-value" style="color:var(--teal)">Complete</span></div>
+      <div class="meta-item"><span class="meta-label">Type</span><span class="meta-value" style="color:#a78bfa">Self-Initiated</span></div>
+    </div>
+  </div>
+  <div class="scroll-hint"><span>SCROLL</span><div class="scroll-arrow"></div></div>
+</section>
+
+<main>
+  <a class="back-link fade" href="projects.html">← Back to Projects</a>
+
+  <!-- INTRO -->
+  <div class="intro-block fade">
+    <div>
+      <span class="section-label">// THE PROBLEM I FOUND</span>
+      <h2>A System That Was Slowing Everyone Down</h2>
+      <p>
+        As Director of Experiential Programming at Claremont McKenna's CPB, I plan five
+        events per semester — hikes, off-campus experiences, skill workshops — all substance-free
+        and designed to give students something genuinely new to try. With a $3,500 per-semester
+        budget and real events on the line, the logistics matter.
+      </p>
+      <p>
+        The system everyone was using to handle signups was a Google Form emailed out each week.
+        Students would submit the form, then directors would manually read every response, individually
+        message each accepted student, individually message five people on a waitlist, and manually
+        track everything in a spreadsheet. Every week. For every event. <em>For every director across
+        the entire CPB.</em>
+      </p>
+      <p>
+        The problems compounded quickly. Some events were raffles, not first-come-first-served —
+        and DOS certified drivers needed priority in both systems, neither of which the form could
+        handle. There was no automatic waitlist promotion when someone cancelled. No way to track
+        who consistently no-showed. No confirmation emails. Just a spreadsheet and a lot of
+        manual DMs.
+      </p>
+      <p>
+        I decided to build a replacement instead of working around it.
+      </p>
+    </div>
+    <div class="stat-stack">
+      <div class="stat-card">
+        <div class="num">$3,500</div>
+        <div class="desc">Per-semester budget managed through this system</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">5 events</div>
+        <div class="desc">Per semester, on and off campus, substance-free community building</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">0 manual</div>
+        <div class="desc">Confirmations, waitlist updates, and cancellations needed from directors</div>
+      </div>
+      <div class="stat-card">
+        <div class="num">Full stack</div>
+        <div class="desc">Backend, database, email system, and multi-role portal — built from scratch</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OLD VS NEW -->
+  <div class="problems-section fade">
+    <span class="section-label">// BEFORE &amp; AFTER</span>
+    <h2>What Changed</h2>
+    <p class="lead">
+      The old system wasn't broken — it put all of the work on directors and none of it on the software.
+      Every process that could be automated wasn't.
+    </p>
+    <div class="compare-grid">
+      <div class="compare-card old">
+        <span class="compare-label">// BEFORE — Google Form System</span>
+        <h3>How It Used to Work</h3>
+        <div class="compare-list">
+          <div class="compare-item"><span class="ci">❌</span>Director emails a Google Form link to the list each week</div>
+          <div class="compare-item"><span class="ci">❌</span>Director manually reads every submission and picks who gets in</div>
+          <div class="compare-item"><span class="ci">❌</span>Director individually DMs each accepted student</div>
+          <div class="compare-item"><span class="ci">❌</span>Director manually picks 5 waitlist people and DMs them separately</div>
+          <div class="compare-item"><span class="ci">❌</span>If someone cancels, director finds the next waitlist person and DMs them</div>
+          <div class="compare-item"><span class="ci">❌</span>Raffle events handled manually — director picks at random themselves</div>
+          <div class="compare-item"><span class="ci">❌</span>DOS driver priority tracked and applied by hand</div>
+          <div class="compare-item"><span class="ci">❌</span>No record of who no-showed or cancelled repeatedly</div>
+          <div class="compare-item"><span class="ci">❌</span>All of this repeated for every event, every director, every semester</div>
+        </div>
+      </div>
+      <div class="compare-card new">
+        <span class="compare-label">// AFTER — CPB Events System</span>
+        <h3>How It Works Now</h3>
+        <div class="compare-list">
+          <div class="compare-item"><span class="ci">✅</span>Director creates the event in a two-minute form</div>
+          <div class="compare-item"><span class="ci">✅</span>Students sign up themselves — confirmation email sent instantly</div>
+          <div class="compare-item"><span class="ci">✅</span>Waitlist managed automatically, positions tracked in real time</div>
+          <div class="compare-item"><span class="ci">✅</span>Cancellation link in every email — one click, no login required</div>
+          <div class="compare-item"><span class="ci">✅</span>When someone cancels, the next person on the waitlist is promoted and emailed automatically</div>
+          <div class="compare-item"><span class="ci">✅</span>Raffle draw is one button — weighted for DOS drivers, emails all entrants instantly</div>
+          <div class="compare-item"><span class="ci">✅</span>DOS and car-owner status stored on accounts, priority applied automatically</div>
+          <div class="compare-item"><span class="ci">✅</span>Late cancellations and no-shows tracked with a warning and suspension system</div>
+          <div class="compare-item"><span class="ci">✅</span>Directors see a full roster, attendance tool, and event archive</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- FEATURES -->
+  <div class="features-section fade">
+    <span class="section-label">// WHAT IT DOES</span>
+    <h2>Every Feature, Explained</h2>
+    <p class="lead">
+      Built around the actual requirements of CPB events — not a generic signup form.
+      Each piece exists because the old system couldn't do it.
+    </p>
+    <div class="features-grid">
+      <div class="feature-card">
+        <span class="feature-icon">🔐</span>
+        <h4>CMC-Only Accounts</h4>
+        <p>Registration is locked to @cmc.edu email addresses. Students store their DOS certification
+          and whether they have a car and are willing to drive with reimbursement.
+          All of this is editable from their own account page at any time.</p>
+        <div class="feature-pills"><span class="feature-pill">@cmc.edu enforced</span><span class="feature-pill">DOS flag</span><span class="feature-pill">Car flag</span></div>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">⚡</span>
+        <h4>First Come First Served</h4>
+        <p>Standard FCFS with automatic waitlisting. When the event fills, new signups go to the
+          waitlist in order. If DOS priority is on, certified drivers bypass the capacity limit —
+          they always get a confirmed spot regardless of how full the event is.</p>
+        <div class="feature-pills"><span class="feature-pill">Auto waitlist</span><span class="feature-pill">DOS bypass</span><span class="feature-pill">Position tracking</span></div>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🎟️</span>
+        <h4>Raffle Events</h4>
+        <p>Directors set events as raffles with a close time. Students enter the pool. The director
+          draws with one button — winners are selected randomly, with DOS drivers counted twice if
+          DOS priority is on. Every entrant is emailed their result automatically.</p>
+        <div class="feature-pills"><span class="feature-pill">Weighted draw</span><span class="feature-pill">Auto email results</span><span class="feature-pill">Close time</span></div>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">📧</span>
+        <h4>Automatic Email System</h4>
+        <p>Every action sends the right email: confirmation, waitlist position, promotion when a spot
+          opens, raffle win or loss. Every email has a one-click cancel link with a unique token —
+          no login required to cancel, and the token can't be reused.</p>
+        <div class="feature-pills"><span class="feature-pill">Gmail + Nodemailer</span><span class="feature-pill">Secure cancel token</span><span class="feature-pill">No login to cancel</span></div>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">⚠️</span>
+        <h4>Late Cancellation Tracking</h4>
+        <p>Cancelling within 24 hours of an event counts as a late cancellation — unless the person
+          was promoted from the waitlist within that same window (so they can't be penalized for
+          something they didn't cause). Email warning at 1 strike, final warning at 2, suspended at 3.</p>
+        <div class="feature-pills"><span class="feature-pill">24h window</span><span class="feature-pill">Promotion grace</span><span class="feature-pill">3-strike suspend</span></div>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🚫</span>
+        <h4>No-Show Tracking</h4>
+        <p>Directors submit an attendance roster after each event. Anyone who had a confirmed spot,
+          didn't attend, and didn't cancel gets a no-show strike. Email warning on the first, suspended
+          on the second — a harder threshold than late cancels because it's a worse outcome for everyone.</p>
+        <div class="feature-pills"><span class="feature-pill">Attendance tool</span><span class="feature-pill">2-strike suspend</span><span class="feature-pill">Auto email</span></div>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">📋</span>
+        <h4>Director Portal</h4>
+        <p>Directors create events, view confirmed and waitlist rosters, manually remove people
+          (which triggers automatic waitlist promotion), take attendance, draw raffles, and archive
+          past events. Signup type, DOS priority, capacity, and waitlist size are all configurable.</p>
+        <div class="feature-pills"><span class="feature-pill">Roster view</span><span class="feature-pill">Manual remove</span><span class="feature-pill">Archive</span></div>
+      </div>
+      <div class="feature-card">
+        <span class="feature-icon">🛠️</span>
+        <h4>Admin Portal</h4>
+        <p>Admins manage director roles, DOS and car certifications, and student accounts. They can
+          search any user, view their full strike history, adjust strike counts, suspend or unsuspend
+          accounts with a reason that gets emailed to the student — everything needed to handle
+          edge cases and appeals.</p>
+        <div class="feature-pills"><span class="feature-pill">Role management</span><span class="feature-pill">Strike editing</span><span class="feature-pill">Suspend / unsuspend</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- SIGNUP FLOW -->
+  <div class="flow-section fade">
+    <span class="section-label">// HOW A SIGNUP WORKS</span>
+    <h2>The Automatic Flow</h2>
+    <p class="lead">
+      The system handles the entire lifecycle without any director involvement. Here's what
+      happens from the moment a student clicks Sign Up to the moment they walk in.
+    </p>
+
+    <div class="flow">
+      <div class="flow-step">
+        <span class="ficon">🖱️</span>
+        <h4>Student signs up</h4>
+        <p>Clicks Sign Up on the events page</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step hl">
+        <span class="ficon">✅</span>
+        <h4>Confirmed</h4>
+        <p>Confirmation email sent instantly</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <span class="ficon">📅</span>
+        <h4>Event day</h4>
+        <p>Student attends, director marks attendance</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step hl">
+        <span class="ficon">✓</span>
+        <h4>Done</h4>
+        <p>No strikes, no action needed</p>
+      </div>
+    </div>
+
+    <p style="color:var(--muted);font-size:13px;margin:24px 0 12px">If the event is full when they sign up:</p>
+    <div class="flow">
+      <div class="flow-step">
+        <span class="ficon">⏳</span>
+        <h4>Waitlisted</h4>
+        <p>Position #N — waitlist email sent</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <span class="ficon">❌</span>
+        <h4>Someone cancels</h4>
+        <p>Confirmed student clicks their cancel link</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step hl">
+        <span class="ficon">🎉</span>
+        <h4>Auto-promoted</h4>
+        <p>#1 on waitlist confirmed + emailed</p>
+      </div>
+      <div class="flow-arrow">→</div>
+      <div class="flow-step">
+        <span class="ficon">📋</span>
+        <h4>List renumbered</h4>
+        <p>Remaining waitlist positions updated</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TECH STACK -->
+  <div class="tech-section fade">
+    <span class="section-label">// HOW IT'S BUILT</span>
+    <h2>The Technical Stack</h2>
+    <p class="lead">
+      No frameworks, no build step, no unnecessary dependencies. The whole thing runs from a
+      single Node.js process and a SQLite file — deployable anywhere Node runs.
+    </p>
+    <div class="tech-grid">
+      <div class="tech-box">
+        <span class="ticon">🟢</span>
+        <h4>Node.js + Express</h4>
+        <p>Web server and all routing. Every page is server-rendered HTML — no client framework needed.</p>
+      </div>
+      <div class="tech-box">
+        <span class="ticon">🗄️</span>
+        <h4>SQLite</h4>
+        <p>Zero-config database stored as a single file. Handles users, events, signups, and strike log.</p>
+      </div>
+      <div class="tech-box">
+        <span class="ticon">📧</span>
+        <h4>Nodemailer</h4>
+        <p>All emails sent via Gmail App Password. Dev mode logs to console so the app works without credentials.</p>
+      </div>
+      <div class="tech-box">
+        <span class="ticon">🔑</span>
+        <h4>JWT + bcrypt</h4>
+        <p>Passwords hashed with bcrypt. Sessions stored as HTTP-only cookies signed with JWT tokens.</p>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <div class="code-dots"><i></i><i></i><i></i></div>
+        <span>server.js — automatic waitlist promotion</span>
+      </div>
+      <div class="code-body">
+<pre><span class="c-comment">// When someone cancels, find #1 on the waitlist and promote them automatically</span>
+<span class="c-keyword">async function</span> <span class="c-fn">promoteWaitlist</span>(eventId) {
+  <span class="c-keyword">const</span> next = db.<span class="c-fn">prepare</span>(<span class="c-str">`
+    SELECT s.*, u.email, u.name FROM signups s
+    JOIN users u ON u.id = s.user_id
+    WHERE s.event_id = ? AND s.status = 'waitlist'
+    ORDER BY s.position ASC LIMIT 1
+  `</span>).<span class="c-fn">get</span>(eventId);
+
+  <span class="c-keyword">if</span> (!next) <span class="c-keyword">return</span>; <span class="c-comment">// nobody waiting — nothing to do</span>
+
+  <span class="c-keyword">const</span> newToken = crypto.<span class="c-fn">randomBytes</span>(<span class="c-num">28</span>).<span class="c-fn">toString</span>(<span class="c-str">'hex'</span>);
+  db.<span class="c-fn">prepare</span>(<span class="c-str">"UPDATE signups SET status='accepted', cancel_token=?, accepted_at=? WHERE id=?"</span>)
+    .<span class="c-fn">run</span>(newToken, <span class="c-keyword">new</span> <span class="c-fn">Date</span>().<span class="c-fn">toISOString</span>(), next.id);
+
+  <span class="c-comment">// Shift everyone else's position up by one</span>
+  db.<span class="c-fn">prepare</span>(<span class="c-str">"UPDATE signups SET position = position - 1 WHERE event_id = ? AND status = 'waitlist'"</span>)
+    .<span class="c-fn">run</span>(eventId);
+
+  <span class="c-comment">// Email the promoted person their confirmation</span>
+  <span class="c-keyword">const</span> event = db.<span class="c-fn">prepare</span>(<span class="c-str">'SELECT * FROM events WHERE id = ?'</span>).<span class="c-fn">get</span>(eventId);
+  <span class="c-keyword">await</span> <span class="c-fn">sendPromoted</span>({ to: next.email, name: next.name, event, cancelToken: newToken });
+}</pre>
+      </div>
+    </div>
+  </div>
+
+  <!-- GALLERY -->
+  <div class="gallery-section fade">
+    <span class="section-label">// SCREENSHOTS</span>
+    <h2>The App</h2>
+    <p class="lead">
+      Screenshots of the running system. Drop your actual screenshots into
+      <code style="color:var(--accent);font-size:13px">images/cpb/</code>.
+    </p>
+    <div class="photo-grid">
+      <div class="photo-cell tall">
+        <img src="images/cpb/events-page.jpg" alt="Events page"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Events Page</div>'">
+        <div class="photo-caption">STUDENT // Events Browser</div>
+      </div>
+      <div class="photo-cell">
+        <img src="images/cpb/director-portal.jpg" alt="Director portal"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Director Portal</div>'">
+        <div class="photo-caption">DIRECTOR // Event List</div>
+      </div>
+      <div class="photo-cell">
+        <img src="images/cpb/create-event.jpg" alt="Create event form"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Create Event Form</div>'">
+        <div class="photo-caption">DIRECTOR // Create Event</div>
+      </div>
+      <div class="photo-cell wide">
+        <img src="images/cpb/roster.jpg" alt="Roster view"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Roster &amp; Waitlist</div>'">
+        <div class="photo-caption">DIRECTOR // Roster &amp; Waitlist</div>
+      </div>
+      <div class="photo-cell">
+        <img src="images/cpb/admin-panel.jpg" alt="Admin panel"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Admin Panel</div>'">
+        <div class="photo-caption">ADMIN // User Management</div>
+      </div>
+      <div class="photo-cell">
+        <img src="images/cpb/email-confirmation.jpg" alt="Email confirmation"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Confirmation Email</div>'">
+        <div class="photo-caption">EMAIL // Confirmation</div>
+      </div>
+      <div class="photo-cell">
+        <img src="images/cpb/account-page.jpg" alt="Account page"
+          onerror="this.parentElement.innerHTML='<div class=photo-placeholder><div class=icon>⬡</div>Account Page</div>'">
+        <div class="photo-caption">STUDENT // Account &amp; Strikes</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- REFLECTION -->
+  <div class="reflection-section fade">
+    <div>
+      <span class="section-label">// WHAT I TOOK FROM IT</span>
+      <h2>Why I Built It</h2>
+      <p>
+        The honest answer is that I was annoyed. I was doing the same manual work every week
+        for every event, and it was obvious that a computer should be doing all of it. The system
+        wasn't failing — it just had no reason to be as inefficient as it was except that nobody had
+        sat down to replace it yet.
+      </p>
+      <p>
+        Building it turned out to be a genuine full-stack project in a way that portfolio exercises
+        rarely are — there were real constraints, real users, and real edge cases. The late-cancel
+        grace period for people promoted from the waitlist within 24 hours is a good example: that
+        rule doesn't appear in any tutorial, but it's obviously the right call, and I only thought of
+        it because I was building for a real situation with real people in it.
+      </p>
+      <p>
+        It also pushed my Node.js and SQL further than anything I'd built before. Getting waitlist
+        position renumbering right, making cancellations work through email tokens without requiring
+        a login, handling the weighted raffle draw, and building a multi-role auth system all took
+        genuine problem-solving — not just following a pattern.
+      </p>
+      <p>
+        The bigger lesson was about initiative. The problem had existed for a long time before I
+        got there. The fix wasn't complicated once someone decided to build it. Sometimes the most
+        useful thing you can do is notice the thing nobody assigned.
+      </p>
+    </div>
+    <div>
+      <div class="bars-list" id="skillBars">
+        <div class="bar-row">
+          <div class="bar-label"><span>Node.js / Express</span><span>80%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="80"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span>SQL / SQLite</span><span>75%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="75"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span>Auth (JWT / bcrypt)</span><span>72%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="72"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span>Email Automation</span><span>78%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="78"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span>Systems Thinking</span><span>88%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="88"></div></div>
+        </div>
+        <div class="bar-row">
+          <div class="bar-label"><span>Product Design</span><span>82%</span></div>
+          <div class="bar-track"><div class="bar-fill" data-width="82"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</main>
+
+<footer>
+  © 2026 Devon Shunn &nbsp;·&nbsp;
+  <a href="projects.html" style="color:var(--accent);text-decoration:none;">← All Projects</a>
+</footer>
+
+<script>
+/* floating nodes */
+const nc=document.getElementById('nodes');
+for(let i=0;i<20;i++){
+  const s=document.createElement('span');
+  const size=3+Math.random()*5;
+  s.style.cssText=`left:${Math.random()*100}%;top:${Math.random()*100}%;width:${size}px;height:${size}px;background:rgba(129,140,248,0.3);animation-duration:${3+Math.random()*4}s;animation-delay:${Math.random()*5}s;`;
+  nc.appendChild(s);
+}
+
+/* fade in */
+const fo=new IntersectionObserver(e=>{e.forEach(i=>{if(i.isIntersecting)i.target.classList.add('show');});},{threshold:0.08});
+document.querySelectorAll('.fade').forEach(el=>fo.observe(el));
+
+/* skill bars */
+const bo=new IntersectionObserver(e=>{e.forEach(i=>{if(i.isIntersecting){i.target.querySelectorAll('.bar-fill').forEach(b=>{b.style.width=b.dataset.width+'%';});bo.unobserve(i.target);}});},{threshold:0.3});
+const ss=document.getElementById('skillBars');
+if(ss)bo.observe(ss);
+</script>
+</body>
+</html>
