@@ -331,14 +331,19 @@ section{ padding:100px 24px; }
   width:100%; height:100%;
   object-fit:cover; display:block;
   filter:brightness(0.65);
+  position:absolute; top:0; left:0;
+  transform:translateZ(0);
+  will-change:filter;
 }
 .carousel-card.is-active img,
 .carousel-card.is-active video{ filter:brightness(0.82); }
 
 .card-placeholder{
+  position:absolute; top:0; left:0;
   width:100%; height:100%;
   display:flex; align-items:center; justify-content:center;
   font-size:72px; opacity:0.1;
+  z-index:0;
 }
 
 .card-overlay{
@@ -834,7 +839,8 @@ footer{
 
       <!-- 1 — 3D PRINTING (video background) -->
       <div class="carousel-card" data-href="project-3dprinting.html">
-        <video autoplay loop muted playsinline>
+        <div class="card-placeholder">🖨️</div>
+        <video autoplay loop muted playsinline style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.65);transform:translateZ(0);">
           <source src="videos/printing/thumbnail.mp4" type="video/mp4">
         </video>
         <div class="card-overlay"></div>
@@ -918,7 +924,8 @@ footer{
 
       <!-- 7 — THIS WEBSITE (video background) -->
       <div class="carousel-card" data-href="project-website.html">
-        <video autoplay loop muted playsinline>
+        <div class="card-placeholder">🌐</div>
+        <video autoplay loop muted playsinline style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.65);transform:translateZ(0);">
           <source src="videos/website/thumbnail.mp4" type="video/mp4">
         </video>
         <div class="card-overlay"></div>
