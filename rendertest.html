@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<title>Video Test</title>
+<style>
+  body { background: #070A12; color: white; font-family: monospace; padding: 40px; }
+  .test { margin-bottom: 40px; }
+  h2 { margin-bottom: 12px; color: #38bdf8; }
+  video { width: 500px; height: 300px; object-fit: cover; display: block; border: 2px solid #38bdf8; }
+  p { margin-top: 8px; color: rgba(255,255,255,0.5); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<h1 style="margin-bottom:40px;">Video Render Test</h1>
+
+<!-- TEST 1: website video, direct path -->
+<div class="test">
+  <h2>Test 1 — videos/website/thumbnail.mp4 (direct)</h2>
+  <video autoplay loop muted playsinline controls>
+    <source src="videos/website/thumbnail.mp4" type="video/mp4">
+  </video>
+  <p>If you see video above: file path is correct ✓</p>
+  <p>If black/empty: file not found at that path ✗</p>
+</div>
+
+<!-- TEST 2: printing video, direct path -->
+<div class="test">
+  <h2>Test 2 — videos/printing/thumbnail.mp4 (direct)</h2>
+  <video autoplay loop muted playsinline controls>
+    <source src="videos/printing/thumbnail.mp4" type="video/mp4">
+  </video>
+  <p>If you see video above: file path is correct ✓</p>
+  <p>If black/empty: file not found at that path ✗</p>
+</div>
+
+<!-- TEST 3: root-level test — put download.mp4 right next to index.html and test here -->
+<div class="test">
+  <h2>Test 3 — download.mp4 (root level, next to index.html)</h2>
+  <video autoplay loop muted playsinline controls>
+    <source src="download.mp4" type="video/mp4">
+  </video>
+  <p>If this one works but Test 1/2 don't: it's a PATH problem, not a video problem</p>
+  <p>If none work: it's a codec/format issue with the file itself</p>
+</div>
+
+<!-- TEST 4: inline data — confirms browser can play video at all -->
+<div class="test">
+  <h2>Test 4 — CSS transform context (simulates carousel)</h2>
+  <div style="perspective:1400px; width:500px; height:300px;">
+    <div style="transform:translateZ(0); width:500px; height:300px; position:relative;">
+      <video autoplay loop muted playsinline controls
+        style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;">
+        <source src="videos/website/thumbnail.mp4" type="video/mp4">
+      </video>
+    </div>
+  </div>
+  <p>If Test 1 works but this doesn't: it's the CSS 3D context causing the issue</p>
+</div>
+
+</body>
+</html>
