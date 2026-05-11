@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>Experience – Devon Shunn</title>
 
-<link rel="icon" type="image/png" href="favicon.png">
 <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
 <script src="nav.js"></script>
   
@@ -33,52 +32,6 @@ body{
   background: radial-gradient(circle at top, #0b1224, var(--bg));
   color:var(--text);
   overflow-x:hidden;
-}
-
-/* NAV */
-header{
-  position:fixed;
-  top:0;
-  width:100%;
-  backdrop-filter:blur(14px);
-  background:rgba(7,10,18,0.75);
-  border-bottom:1px solid var(--border);
-  z-index:100;
-}
-
-nav{
-  max-width:1100px;
-  margin:auto;
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  padding:14px 24px;
-}
-
-nav ul{
-  display:flex;
-  gap:26px;
-  list-style:none;
-  align-items:center;
-}
-
-.nav-link{
-  color:var(--muted);
-  text-decoration:none;
-  transition:0.2s ease;
-}
-
-.nav-link:hover{ color:var(--blue); }
-
-.logo img{
-  height:42px;
-  cursor:pointer;
-  transition:0.25s ease;
-}
-
-.logo img:hover{
-  transform:scale(1.05);
-  filter:drop-shadow(0 0 12px rgba(56,189,248,0.6));
 }
 
 /* PAGE HEADER */
@@ -129,6 +82,7 @@ nav ul{
   opacity:0;
   transform:translateY(30px);
   transition:opacity 0.9s ease, transform 0.9s ease, background 0.3s ease, box-shadow 0.3s ease;
+  cursor:pointer;
 }
 
 .featured-row.show{
@@ -161,6 +115,16 @@ nav ul{
   font-size:13px;
   font-weight:600;
   letter-spacing:1px;
+}
+
+.proj-title-link{
+  text-decoration:none;
+  color:var(--text);
+  transition:color 0.2s ease;
+}
+
+.proj-title-link:hover{
+  color:var(--blue);
 }
 
 .proj-text h2{
@@ -261,10 +225,10 @@ nav ul{
 <div class="projects-list">
 
   <!-- 1 — ISS PHYSICS -->
-  <div class="featured-row">
+  <div class="featured-row" onclick="window.location='experience-iss-physics.html'">
     <div class="proj-text">
       <div class="proj-label">Academic Experience</div>
-      <h2>ISS Physics Program</h2>
+      <h2><a class="proj-title-link" href="experience-iss-physics.html">ISS Physics Program</a></h2>
       <div class="proj-desc">
         Participated in the International Summer School for Physics, collaborating with students in advanced
         university-level physics topics and problem solving. The program emphasized analytical thinking,
@@ -284,64 +248,44 @@ nav ul{
   </div>
 
   <!-- 2 — MODEL RAILROAD MUSEUM -->
-  <div class="featured-row reverse">
+  <div class="featured-row reverse" style="cursor:default;">
     <div class="proj-text">
       <div class="proj-label">Volunteer Experience</div>
-      <h2>Railroad Museum Steam Department</h2>
+      <h2>Niles Canyon Railway</h2>
       <div class="proj-desc">
-        Worked alongside volunteers and restoration crews in a railroad steam department environment,
-        assisting with locomotive maintenance, restoration work, fabrication, and shop operations.
-        Gained exposure to large-scale mechanical systems, machining processes, and historical engineering practices.
+        Volunteer in the engineering and steam locomotion division at Niles Canyon Railway.
+        Working alongside restoration crews with exposure to large-scale mechanical systems,
+        steam locomotive maintenance, fabrication, and historic engineering practices.
       </div>
       <div class="proj-tags">
+        <span class="tag-pill">Steam Locomotion</span>
         <span class="tag-pill">Mechanical Systems</span>
         <span class="tag-pill">Restoration</span>
         <span class="tag-pill">Fabrication</span>
-        <span class="tag-pill">Engineering</span>
+        <span class="tag-pill" style="color:var(--blue);border-color:rgba(56,189,248,0.3);background:rgba(56,189,248,0.08);">🔧 Coming Soon</span>
       </div>
     </div>
     <div class="proj-image">
-      <img src="images/steam-department.jpg" alt="Steam Department" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>🚂</div>'"/>
+      <img src="images/steam-department.jpg" alt="Niles Canyon Railway" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>🚂</div>'"/>
     </div>
   </div>
 
-  <!-- 3 — SALUTATORIAN -->
-  <div class="featured-row">
-    <div class="proj-text">
-      <div class="proj-label">Leadership Experience</div>
-      <h2>High School Salutatorian</h2>
-      <div class="proj-desc">
-        Graduated as salutatorian while balancing advanced coursework, technical projects, and extracurricular
-        commitments. Developed strong communication, leadership, and presentation skills through public speaking,
-        collaborative work, and academic achievement across STEM-focused classes.
-      </div>
-      <div class="proj-tags">
-        <span class="tag-pill">Leadership</span>
-        <span class="tag-pill">Public Speaking</span>
-        <span class="tag-pill">Academics</span>
-        <span class="tag-pill">STEM</span>
-      </div>
-    </div>
-    <div class="proj-image">
-      <img src="images/salutatorian.jpg" alt="Salutatorian" onerror="this.parentElement.innerHTML='<div class=proj-image-placeholder>🎓</div>'"/>
-    </div>
-  </div>
-
-  <!-- 4 — DESIGN & FABRICATION -->
-  <div class="featured-row reverse">
+  <!-- 3 — DESIGN & FABRICATION -->
+  <div class="featured-row" onclick="window.location='project-3dprinting.html'">
     <div class="proj-text">
       <div class="proj-label">Technical Experience</div>
-      <h2>Design & Digital Fabrication</h2>
+      <h2><a class="proj-title-link" href="project-3dprinting.html">Design & Digital Fabrication</a></h2>
       <div class="proj-desc">
-        Extensive hands-on experience with CAD modeling, 3D printing, electronics integration, laser cutting,
-        and rapid prototyping workflows. Projects required iterative engineering design, troubleshooting,
-        and translating digital concepts into physical systems and functional assemblies.
+        Extensive hands-on experience with CAD modeling, 3D printing, electronics integration, and
+        rapid prototyping workflows. My design and fabrication work lives in the 3D Printing project
+        page — head there to see the full collection of builds, parts, and CAD projects.
       </div>
       <div class="proj-tags">
         <span class="tag-pill">CAD</span>
         <span class="tag-pill">3D Printing</span>
         <span class="tag-pill">Electronics</span>
         <span class="tag-pill">Prototyping</span>
+        <span class="tag-pill" style="color:var(--blue);border-color:rgba(56,189,248,0.3);background:rgba(56,189,248,0.08);">→ View 3D Printing Projects</span>
       </div>
     </div>
     <div class="proj-image">
@@ -357,15 +301,11 @@ nav ul{
 
 <script>
 const rows = document.querySelectorAll('.featured-row');
-
 const obs = new IntersectionObserver(entries=>{
   entries.forEach(entry=>{
-    if(entry.isIntersecting){
-      entry.target.classList.add('show');
-    }
+    if(entry.isIntersecting) entry.target.classList.add('show');
   });
 },{threshold:0.1});
-
 rows.forEach(row=>obs.observe(row));
 </script>
 
