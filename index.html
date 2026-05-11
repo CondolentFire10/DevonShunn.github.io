@@ -331,9 +331,8 @@ section{ padding:100px 24px; }
   width:100%; height:100%;
   object-fit:cover; display:block;
   filter:brightness(0.65);
-  position:absolute; top:0; left:0;
+  position:absolute; top:0; left:0; z-index:1;
   transform:translateZ(0);
-  will-change:filter;
 }
 .carousel-card.is-active img,
 .carousel-card.is-active video{ filter:brightness(0.82); }
@@ -342,12 +341,13 @@ section{ padding:100px 24px; }
   position:absolute; top:0; left:0;
   width:100%; height:100%;
   display:flex; align-items:center; justify-content:center;
-  font-size:72px; opacity:0.1;
+  font-size:72px; opacity:0.35;
   z-index:0;
+  background:linear-gradient(135deg, rgba(56,189,248,0.05), rgba(37,99,235,0.05));
 }
 
 .card-overlay{
-  position:absolute; inset:0;
+  position:absolute; inset:0; z-index:2;
   background:linear-gradient(to top,rgba(7,10,18,0.92) 0%,rgba(7,10,18,0.22) 55%,transparent 100%);
   pointer-events:none;
 }
@@ -841,7 +841,7 @@ footer{
       <div class="carousel-card" data-href="project-3dprinting.html">
         <div class="card-placeholder">🖨️</div>
         <video autoplay loop muted playsinline style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.65);transform:translateZ(0);">
-          <source src="videos/3dprinting-thumbnail.mp4" type="video/mp4">
+          <source src="videos/printing/thumbnail.mp4" type="video/mp4">
         </video>
         <div class="card-overlay"></div>
         <div class="card-text">
@@ -854,9 +854,9 @@ footer{
 
       <!-- 2 — BD-1 -->
       <div class="carousel-card" data-href="project-bd1.html">
+        <div class="card-placeholder">🤖</div>
         <img src="images/bd1/hero.jpg" alt="BD-1 Droid"
-          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="card-placeholder" style="display:none">🤖</div>
+          onerror="this.style.display='none'">
         <div class="card-overlay"></div>
         <div class="card-text">
           <span class="card-label">// ARDUINO · ELECTRONICS · IN PROGRESS</span>
@@ -868,9 +868,9 @@ footer{
 
       <!-- 3 — DELOREAN -->
       <div class="carousel-card" data-href="project-delorean.html">
-        <img src="images/animation-thumbnail.png" alt="DeLorean Animation"
-          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="card-placeholder" style="display:none">🎬</div>
+        <div class="card-placeholder">🎬</div>
+        <img src="images/delorean/hero-render.jpg" alt="DeLorean Animation"
+          onerror="this.style.display='none'">
         <div class="card-overlay"></div>
         <div class="card-text">
           <span class="card-label">// BLENDER · CYCLES · CINEMATIC RENDER</span>
@@ -882,9 +882,9 @@ footer{
 
       <!-- 4 — MODEL RAILROADING -->
       <div class="carousel-card" data-href="project-railroading.html">
+        <div class="card-placeholder">🚂</div>
         <img src="images/railroading/hero.jpg" alt="Model Railroading"
-          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="card-placeholder" style="display:none">🚂</div>
+          onerror="this.style.display='none'">
         <div class="card-overlay"></div>
         <div class="card-text">
           <span class="card-label">// HO SCALE · DCC · SCENERY · IN PROGRESS</span>
@@ -896,9 +896,9 @@ footer{
 
       <!-- 5 — PC BUILDING -->
       <div class="carousel-card" data-href="project-pcbuilding.html">
+        <div class="card-placeholder">🖥️</div>
         <img src="images/pcbuilding/hero.jpg" alt="PC Building"
-          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="card-placeholder" style="display:none">🖥️</div>
+          onerror="this.style.display='none'">
         <div class="card-overlay"></div>
         <div class="card-text">
           <span class="card-label">// HARDWARE · REPAIR · OMEN i7-13700K</span>
@@ -910,9 +910,9 @@ footer{
 
       <!-- 6 — CPB EVENT SYSTEM -->
       <div class="carousel-card" data-href="project-cpb.html">
+        <div class="card-placeholder">⚙️</div>
         <img src="images/cpb/hero.jpg" alt="CPB Event System"
-          onerror="this.style.display='none';this.nextElementSibling.style.display='flex'">
-        <div class="card-placeholder" style="display:none">⚙️</div>
+          onerror="this.style.display='none'">
         <div class="card-overlay"></div>
         <div class="card-text">
           <span class="card-label">// NODE.JS · SQLITE · FULL STACK · SELF-INITIATED</span>
@@ -926,7 +926,7 @@ footer{
       <div class="carousel-card" data-href="project-website.html">
         <div class="card-placeholder">🌐</div>
         <video autoplay loop muted playsinline style="position:absolute;top:0;left:0;width:100%;height:100%;object-fit:cover;filter:brightness(0.65);transform:translateZ(0);">
-          <source src="videos/website-thumbnail.mp4" type="video/mp4">
+          <source src="videos/website/thumbnail.mp4" type="video/mp4">
         </video>
         <div class="card-overlay"></div>
         <div class="card-text">
@@ -1245,6 +1245,25 @@ els.forEach(el=>obs.observe(el));
   layout();
   startProgress();
   scheduleNext();
+
+  /* ── custom placeholder image support ──
+     To use your own image as a placeholder on any card, add:
+       data-placeholder-img="images/your-placeholder.jpg"
+     to the .carousel-card div. The script will swap the emoji
+     for your image automatically if the main image/video fails.
+  ── */
+  cards.forEach(card => {
+    const phImg = card.dataset.placeholderImg;
+    if (!phImg) return;
+    const ph = card.querySelector('.card-placeholder');
+    if (ph) {
+      ph.innerHTML = '';
+      const img = document.createElement('img');
+      img.src = phImg;
+      img.style.cssText = 'width:100%;height:100%;object-fit:cover;opacity:0.5;';
+      ph.appendChild(img);
+    }
+  });
 
 })();
 </script>
